@@ -60,7 +60,7 @@ Version 1.0.0 — 9 October 2026
   so intentionally omitted categories cannot create an unfair ranking.
 
 ## Verification
-85 numerical/import/regression tests passed. Fixtures include real MAT level-5
+95 numerical/import/regression tests passed. Fixtures include real MAT level-5
 struct/cell arrays and compressed numeric matrices generated with SciPy. The
 synthetic demo runs two combinations across three loads; category/device sums
 match the total losses and reported efficiency definition.
@@ -84,3 +84,11 @@ MATLAB interpolation policy: linear per-iteration interpolation/extrapolation, f
 Results presentation: operating points use calculated Vin, Vout and Pout, sorted numerically in that order. Tables, chart labels, debug selectors and CSVs share the same label. Combination comparisons display ascending IDs while the best candidate remains selected by mean efficiency. Original waveform names and IDs remain in full JSON for provenance.
 
 Efficiency maps use a purple-to-yellow, perceptually ordered colour scale over the observed efficiency range, percentage labels and an explicit legend. Dashboard Vout slices share one scale per combination. Missing cells remain grey; repeated exact coordinates are averaged. HTML/print report maps use the same renderer and colours.
+
+## Analysis options — engine 1.1.0
+- Reference-first (default) preserves existing/MATLAB interpolation order. Forward-first interpolates a piecewise-linear forward family across dependencies, then inverts the resulting curve. Strict/clamp policies use the common reference X interval; extrapolation policies use the union. Ambiguous or flat combined branches are rejected. Exact dependency slices ignore zero-weight reference slices.
+- Weighted average uses inverse-distance squared with dependency coordinates normalised to their sampled ranges. It honours exact reference coordinates, is an explicit heuristic and does not claim superior physical accuracy. Domain-policy controls remain separate from method selection.
+- Diagnostics retain component, characteristic, requested input and dependency intervals, reference ranges, iteration notes and affected query counts. Errors include the requested characteristic/input/dependencies.
+- Sensitivity applies one parameter at a time to a selected combination and component, across all or one operating point. Vgs/Rg use ±percentage, reference temperature uses ±degrees Celsius, parallel count uses ±1 device. Frequency scales time for the whole converter and retains waveform shape. Total mean loss percentage and watt change, efficiency percentage-point change and elasticity are reported. Failed scenarios remain invalid; unrepresented dependencies can give zero response. This is a curve-model response with fixed imported waveforms, not circuit re-simulation or guaranteed savings.
+- Report configuration selects combinations, operating points, title, notes and optional efficiency/comparison/loss/component/map/alternative/device/diagnostic/sensitivity sections. Metrics are recomputed for the selected scope. Summary metrics, operating-point results, model settings, warnings and limitations remain mandatory. Sensitivity retains its own clearly labelled analysis scope.
+- Waveform/loss trace view is currently an illustrative in-conversation preview; not a deployed analysis feature. Browser interaction/print-layout QA unavailable.

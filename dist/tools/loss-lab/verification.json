@@ -1,9 +1,9 @@
 {
-  "engineVersion": "1.0.0",
+  "engineVersion": "1.1.0",
   "date": "2026-10-13",
   "numericalAndImportTests": {
-    "total": 85,
-    "passed": 85,
+    "total": 95,
+    "passed": 95,
     "failed": 0,
     "runner": "node --test tests/*.test.mjs"
   },
@@ -12,8 +12,9 @@
   "matlabRuntime": "unavailable; exporter and full real-data parity not executed",
   "browserQA": "unavailable in managed environment; no browser interaction or screenshot validation claimed",
   "physicalAccuracy": "not established",
-  "cllcRegression": "44/44 valid rows in MATLAB interpolation mode; warnings retained",
+  "cllcRegression": "Two-alternative CLLC project: 4/4 valid combinations under each of reference-first, forward-first and inverse-distance methods in MATLAB domain policy",
   "workflowCoverage": "79 total tests: characteristic filters, blank alternatives, unit menus, batch variable scan/conversion, hidden origins, temperature-independent assumptions, switching scaling defaults and full report structure",
   "presentationRegression": "Numeric operating-parameter labels; ascending Vin/Vout/Pout; filename provenance retained in full JSON; computation and best-alternative ranking unchanged",
-  "heatmapRegression": "Viridis-style observed-range scale, contrast-aware labels, missing cells, constant efficiencies, averaging and shared slice scale"
+  "heatmapRegression": "Viridis-style observed-range scale, contrast-aware labels, missing cells, constant efficiencies, averaging and shared slice scale",
+  "analysisOptions": "Forward-first inversion, inverse-distance weighting, one-parameter sensitivity, contextual diagnostics and selectable report scope/sections tested"
 }
