@@ -60,7 +60,7 @@ Version 1.0.0 — 9 October 2026
   so intentionally omitted categories cannot create an unfair ranking.
 
 ## Verification
-82 numerical/import/regression tests passed. Fixtures include real MAT level-5
+85 numerical/import/regression tests passed. Fixtures include real MAT level-5
 struct/cell arrays and compressed numeric matrices generated with SciPy. The
 synthetic demo runs two combinations across three loads; category/device sums
 match the total losses and reported efficiency definition.
@@ -82,3 +82,5 @@ MATLAB interpolation policy: linear per-iteration interpolation/extrapolation, f
 - Print/PDF renders a dedicated full report. MATLAB report categories are represented by combination efficiency plots, ranking charts, per-operating-point category stacks, per-component stacks, component alternative comparisons and Vin/Pout plus Vout/Pout efficiency maps. Exact points retained; missing map cells not fabricated. Tables repeat headings and maps split into printable column groups. SVGs and data are embedded in the HTML report. Browser visual QA unavailable.
 
 Results presentation: operating points use calculated Vin, Vout and Pout, sorted numerically in that order. Tables, chart labels, debug selectors and CSVs share the same label. Combination comparisons display ascending IDs while the best candidate remains selected by mean efficiency. Original waveform names and IDs remain in full JSON for provenance.
+
+Efficiency maps use a purple-to-yellow, perceptually ordered colour scale over the observed efficiency range, percentage labels and an explicit legend. Dashboard Vout slices share one scale per combination. Missing cells remain grey; repeated exact coordinates are averaged. HTML/print report maps use the same renderer and colours.

@@ -2,8 +2,8 @@
   "engineVersion": "1.0.0",
   "date": "2026-10-13",
   "numericalAndImportTests": {
-    "total": 82,
-    "passed": 82,
+    "total": 85,
+    "passed": 85,
     "failed": 0,
     "runner": "node --test tests/*.test.mjs"
   },
@@ -14,5 +14,6 @@
   "physicalAccuracy": "not established",
   "cllcRegression": "44/44 valid rows in MATLAB interpolation mode; warnings retained",
   "workflowCoverage": "79 total tests: characteristic filters, blank alternatives, unit menus, batch variable scan/conversion, hidden origins, temperature-independent assumptions, switching scaling defaults and full report structure",
-  "presentationRegression": "Numeric operating-parameter labels; ascending Vin/Vout/Pout; filename provenance retained in full JSON; computation and best-alternative ranking unchanged"
+  "presentationRegression": "Numeric operating-parameter labels; ascending Vin/Vout/Pout; filename provenance retained in full JSON; computation and best-alternative ranking unchanged",
+  "heatmapRegression": "Viridis-style observed-range scale, contrast-aware labels, missing cells, constant efficiencies, averaging and shared slice scale"
 }
