@@ -60,7 +60,7 @@ Version 1.0.0 — 9 October 2026
   so intentionally omitted categories cannot create an unfair ranking.
 
 ## Verification
-79 numerical/import/regression tests passed. Fixtures include real MAT level-5
+82 numerical/import/regression tests passed. Fixtures include real MAT level-5
 struct/cell arrays and compressed numeric matrices generated with SciPy. The
 synthetic demo runs two combinations across three loads; category/device sums
 match the total losses and reported efficiency definition.
@@ -80,3 +80,5 @@ MATLAB interpolation policy: linear per-iteration interpolation/extrapolation, f
 - Eon/Eoff temperature-independent checkbox suppresses Tj mismatch only, retains the reference temperature and records the assumption. Multiple reference temperatures must first be resolved; unrelated dependency warnings remain.
 - Waveform batches are parsed and consistency-checked before import; all files must share variables, independent of column order. One shared rename/time/unit confirmation applies to the complete batch. Conversion and validation finish before any file is added.
 - Print/PDF renders a dedicated full report. MATLAB report categories are represented by combination efficiency plots, ranking charts, per-operating-point category stacks, per-component stacks, component alternative comparisons and Vin/Pout plus Vout/Pout efficiency maps. Exact points retained; missing map cells not fabricated. Tables repeat headings and maps split into printable column groups. SVGs and data are embedded in the HTML report. Browser visual QA unavailable.
+
+Results presentation: operating points use calculated Vin, Vout and Pout, sorted numerically in that order. Tables, chart labels, debug selectors and CSVs share the same label. Combination comparisons display ascending IDs while the best candidate remains selected by mean efficiency. Original waveform names and IDs remain in full JSON for provenance.
