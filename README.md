@@ -1,34 +1,33 @@
 # Christian Verrecchia — Engineering Portfolio
 
-A responsive portfolio presenting power electronics, magnetics, embedded electronics and validation work, with direct access to Converter Loss Lab.
+Power electronics, magnetics, embedded electronics and validation, with a self-contained browser-based Converter Loss Lab.
 
-## Website
+- **Portfolio:** https://chrisver93.github.io/Portfolio/
+- **Loss Lab:** https://chrisver93.github.io/Portfolio/tools/loss-lab/
 
-Current live site: https://christian-verrecchia-portfolio.secretcrab1.chatgpt.site
+## One repository, one deployment
 
-Converter Loss Lab: https://christian-converter-loss-lab.secretcrab1.chatgpt.site
+The portfolio and loss tool deploy together to GitHub Pages. The tool requires no ChatGPT service, server, account or database. Calculations run locally in a browser worker; imported data stays in the browser. Browser storage is local: export project JSON to move between computers or domains.
 
 ## Structure
 
-- `dist/index.html` — portfolio content and semantic layout
-- `dist/style.css` — responsive styling
-- `dist/app.js` — mobile navigation, project filters and project details
-- `.github/workflows/pages.yml` — deployment to GitHub Pages
+- `dist/` — portfolio HTML, CSS and JavaScript
+- `dist/tools/loss-lab/` — complete runnable loss tool, MATLAB exporter and downloadable documentation
+- `tests/loss-lab/` — numerical, import and workflow regression tests with synthetic MAT fixtures
+- `.github/workflows/pages.yml` — verifies the engine, then deploys `dist/`
 
-The portfolio is plain HTML, CSS and JavaScript. It needs no dependencies, build step, database or application server. The calculation app stays in a separate maintained codebase; the portfolio links to it.
+## Development
 
-## GitHub Pages
+Run `npm test` with Node 22 or later. No dependency installation or build is needed. Serve `dist/` with a static HTTP server to work locally; opening HTML directly as `file://` may block module workers.
 
-For a profile website, use a repository named `<your-username>.github.io`. For a project website, use a name such as `engineering-portfolio`. Both layouts work because local asset URLs are relative.
+## Deploy
 
-In the repository settings, select **Pages → Build and deployment → Source: GitHub Actions**. Push the source to the `main` branch. The included workflow uploads `dist/` and deploys the site.
+GitHub Pages uses **Settings → Pages → Source: GitHub Actions**. Push to `main` to verify and publish both portfolio and tool. All asset links are relative, so the site can move to a custom domain without rewriting the tool.
 
-A custom domain can be configured in GitHub Pages settings later without rewriting the site.
+## Model coverage
 
-## Editing
+See `dist/tools/loss-lab/FEATURES.md` and `verification.json`. Numerical estimates depend on waveform mappings, curve coverage and model assumptions. Extrapolation warnings remain visible. Full MATLAB runtime parity and physical accuracy are not established.
 
-Update text and project content in `dist/index.html` and the project-detail entries in `dist/app.js`. Contact details are intentionally omitted until a public address or profile is provided. Illustrative graphics are explicitly labelled; the portfolio does not present them as measured results.
+## Portfolio content
 
-## Verification
-
-JavaScript syntax, unique HTML IDs, section-link targets and local asset presence were checked. Browser visual testing was unavailable in the creation environment.
+Project graphics are illustrative and labelled. Public contact information can be added when supplied. Browser interaction and print-layout QA were unavailable in the creation environment.

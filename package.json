@@ -1,0 +1,8 @@
+{
+  "name": "christian-verrecchia-portfolio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/loss-lab/*.test.mjs"
+  }
+}

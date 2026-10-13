@@ -1,0 +1,82 @@
+# Feature parity and corrected behaviour
+Version 1.0.0 — 9 October 2026
+
+| MATLAB workflow | Web workflow | Status |
+|---|---|---|
+| Project setup and snapshots | Named study, browser autosave, downloadable/openable versioned project JSON | Implemented; old MATLAB results discarded |
+| Device instances and alternatives | MOSFET/diode/capacitor/inductor instance editor and candidate models | Implemented with immutable IDs |
+| Extract/import characteristic curves | MAT/JSON import, manual SI editor, image digitiser | Implemented |
+| Image calibration, zoom, log axes | Three validated reference points, zoom/scroll, undo, linear/log axes | Implemented; MATLAB zero-start interpolation / extrapolation and forced energy origins |
+| Curve iterations and dependencies | Multiple iterations, per-iteration canonical units, optional scaling policy | Implemented |
+| Simulation files | CSV/TXT, numeric MAT level-5, JSON columns | Implemented |
+| Saved MATLAB tables/snapshots | MATLAB JSON export helper and snapshot migration | Implemented conversion route; helper not executed in MATLAB here |
+| Signal mapping and candidate bank counts | Current/voltage/gate selectors and series/parallel/replication counts | Implemented |
+| Operating conditions and phases | All selected real-power pairs summed; optional balanced single-phase ×3 | Implemented |
+| MOSFET conduction | Gate-on positive and reverse magnitude channel model | Corrected reverse-current categorisation; asymmetry not separately modelled |
+| Body diode conduction | Off-state negative current with Vsd characteristic | Implemented |
+| Eon/Eoff switching | Per-event energy with trace and explicit voltage scaling | Implemented; sample/commutation resolution still matters |
+| Reverse recovery | Current-to-blocking event with Err or Qrr × V and no zero-plateau duplicates | Implemented approximation; assumptions must be confirmed |
+| Capacitor ESR | Constant time I²R or harmonic resistance sum | Implemented |
+| Winding copper | Constant time I²R or harmonic AC sum plus DC resistance | Implemented |
+| Core loss | Balanced-voltage integration, ΔB/2 and Pv model with full dependency values | Implemented sinusoidal-equivalent approximation |
+| Thermal iteration | Damped fixed-point solver; per-device or bank Rth, convergence and temperature checks | Implemented; shared coupled sink not included |
+| Candidate precomputation | Unique alternative/point cache and bounded combination assembly | Implemented; max 2,000 combinations / 20,000 combined operating points |
+| Best combination | Consistent average-efficiency ranking; no incomplete candidates eligible | Corrected |
+| Loss-point debug views | Actual engine queries and per-device event traces | Implemented, sampled query preview |
+| Efficiency graphs and maps | Separate voltage traces and exact available map cells | Implemented; unknown cells not filled |
+| Reports and data exports | Self-contained HTML/print PDF, CSV, full result JSON | Implemented; no external image-path dependency |
+
+## Important compatibility and modelling limits
+- A browser does not execute desktop MATLAB .m GUI code directly. This is a web
+  implementation of its workflow and models, with intentional numerical fixes.
+- Browser MAT import supports real primitive level-5 data, including cells,
+  structs, characters, numeric types and zlib compression. MATLAB table/MCOS,
+  complex, sparse and v7.3 HDF5 require conversion or explicit unsupported handling.
+- JSON exporter is included for MATLAB tables and snapshots. Its source was
+  inspected, but it could not be tested in MATLAB in this environment.
+- Legacy normalised ESR is interpreted according to the supplied digitiser,
+  which already multiplies samples by raw Rbase. Samples are then converted
+  exactly once to ohms. Other exporters should supply canonical SI curve JSON.
+- Curve families use linear 1D, multilinear full grids, and normalised simplex
+  interpolation for sparse 2D/3D data. Sparse geometry can differ from MATLAB.
+  The first enclosing supported simplex may differ from a Delaunay interpolant;
+  this is disclosed in each result's notes. Strict domain rejection is default.
+- Single-reference dependencies produce explicit warnings when requested
+  conditions differ. They are not silently promoted to validated extrapolation.
+- Analytic accuracy is tested; physical accuracy is not demonstrated without
+  measured/validated source data. No real commercial devices are invented.
+- MOSFET reverse channel model uses forward-curve magnitude symmetry, not a full
+  third-quadrant current-sharing model. Hard/soft commutation and waveform
+  sampling still require engineering interpretation.
+- Core model is sinusoidal equivalent, not iGSE/minor-loop/DC-bias validation.
+- FFT estimates depend on recorded bandwidth, resolution and periodic windows.
+- Independent scalar thermal models do not solve a shared thermal network.
+- Transformer, IGBT, GaN-specific and auxiliary/control/interconnect models are
+  not separate supported classes in the supplied MATLAB workflow or this port.
+- Limits: one million samples per file, 2,000 combinations, 20,000 combined
+  operating-point results; browser-memory limits may be reached earlier for
+  many long files. No 36 GB dataset capability is claimed.
+- All alternatives in an instance must use the same enabled loss categories,
+  so intentionally omitted categories cannot create an unfair ranking.
+
+## Verification
+79 numerical/import/regression tests passed. Fixtures include real MAT level-5
+struct/cell arrays and compressed numeric matrices generated with SciPy. The
+synthetic demo runs two combinations across three loads; category/device sums
+match the total losses and reported efficiency definition.
+
+Static JS syntax and HTML/asset-reference checks are performed. Browser visual
+and interactive QA was unavailable in this managed environment. Exact agreement
+with the user's MATLAB datasets, execution of the exporter in MATLAB, hardware
+validation and measured accuracy remain unverified.
+
+MATLAB interpolation policy: linear per-iteration interpolation/extrapolation, first-occurrence duplicate-axis handling, sorted inverse axes, then linear interpolation across Vgs and temperature on rectangular families. Negative extrapolated channel Vds contributions clamp to zero as in the MATLAB source. Strict policy retains monotonic-branch and domain rejection. MATLAB runtime parity has not been executed. The supplied CLLC project produces 44/44 valid rows in this mode; extrapolation warnings remain.
+
+## Workflow and reporting update — 2026-10-13
+- Component-specific characteristic choices and quantity-specific axis-unit menus. Empty numeric inputs for new alternatives and digitiser sessions; no candidate cloning. Fresh digitiser on entry, image replacement, target/characteristic change and successful save.
+- Origin synthesis remains part of saved analysis data; synthesized points are hidden from digitiser, device and reference-curve plots, with explanatory notes.
+- Body-diode digitiser matches MATLAB characteristic axes, Tj/Vgs dependencies, negative-sample acceptance and magnitude storage. The engine retains its documented symmetric reverse gate-on channel approximation; full MATLAB event-mask parity is not claimed.
+- Eon/Eoff voltage scaling defaults enabled for newly created/imported curves, preserves explicit import opt-out, and can be changed in the editor or digitiser.
+- Eon/Eoff temperature-independent checkbox suppresses Tj mismatch only, retains the reference temperature and records the assumption. Multiple reference temperatures must first be resolved; unrelated dependency warnings remain.
+- Waveform batches are parsed and consistency-checked before import; all files must share variables, independent of column order. One shared rename/time/unit confirmation applies to the complete batch. Conversion and validation finish before any file is added.
+- Print/PDF renders a dedicated full report. MATLAB report categories are represented by combination efficiency plots, ranking charts, per-operating-point category stacks, per-component stacks, component alternative comparisons and Vin/Pout plus Vout/Pout efficiency maps. Exact points retained; missing map cells not fabricated. Tables repeat headings and maps split into printable column groups. SVGs and data are embedded in the HTML report. Browser visual QA unavailable.

@@ -1,0 +1,17 @@
+{
+  "engineVersion": "1.0.0",
+  "date": "2026-10-13",
+  "numericalAndImportTests": {
+    "total": 79,
+    "passed": 79,
+    "failed": 0,
+    "runner": "node --test tests/*.test.mjs"
+  },
+  "matFixtures": "SciPy-generated level-5 plain/compressed struct/cell and numeric matrices",
+  "demo": "2 combinations \u00d7 3 operating points; all complete, totals reconciled",
+  "matlabRuntime": "unavailable; exporter and full real-data parity not executed",
+  "browserQA": "unavailable in managed environment; no browser interaction or screenshot validation claimed",
+  "physicalAccuracy": "not established",
+  "cllcRegression": "44/44 valid rows in MATLAB interpolation mode; warnings retained",
+  "workflowCoverage": "79 total tests: characteristic filters, blank alternatives, unit menus, batch variable scan/conversion, hidden origins, temperature-independent assumptions, switching scaling defaults and full report structure"
+}
