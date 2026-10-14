@@ -1,9 +1,9 @@
 {
-  "engineVersion": "1.2.0",
+  "engineVersion": "1.3.0",
   "date": "2026-10-14",
   "numericalAndImportTests": {
-    "total": 103,
-    "passed": 103,
+    "total": 109,
+    "passed": 109,
     "failed": 0,
     "runner": "node --test tests/*.test.mjs"
   },
@@ -17,5 +17,6 @@
   "presentationRegression": "Numeric operating-parameter labels; ascending Vin/Vout/Pout; filename provenance retained in full JSON; computation and best-alternative ranking unchanged",
   "heatmapRegression": "Viridis-style observed-range scale, contrast-aware labels, missing cells, constant efficiencies, averaging and shared slice scale",
   "analysisOptions": "Forward-first inversion, inverse-distance weighting, one-parameter sensitivity, contextual diagnostics and selectable report scope/sections tested",
-  "lossModelEditor": "Real MOSFET loss groups, explicit engine-backed curve choices, live status checks, optional correction, scoped add/digitise/edit actions, project persistence; 4/4 CLLC regression combinations valid"
+  "lossModelEditor": "Real MOSFET loss groups, explicit engine-backed curve choices, live status checks, optional correction, scoped add/digitise/edit actions, project persistence; 4/4 CLLC regression combinations valid",
+  "componentLossEditors": "MOSFET, diode, capacitor and inductor grouped editors; engine-backed active curve selection, passive constants, reference checks and magnetic parameters covered"
 }

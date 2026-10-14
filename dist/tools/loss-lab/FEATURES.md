@@ -60,7 +60,7 @@ Version 1.0.0 — 9 October 2026
   so intentionally omitted categories cannot create an unfair ranking.
 
 ## Verification
-103 numerical/import/regression tests passed. Fixtures include real MAT level-5
+109 numerical/import/regression tests passed. Fixtures include real MAT level-5
 struct/cell arrays and compressed numeric matrices generated with SciPy. The
 synthetic demo runs two combinations across three loads; category/device sums
 match the total losses and reported efficiency definition.
@@ -99,3 +99,10 @@ Efficiency maps use a purple-to-yellow, perceptually ordered colour scale over t
 - Temperature correction can be disabled explicitly; double Tj correction is flagged and rejected by the engine. Voltage scaling, temperature-independent energy and recovery confirmation controls update the actual model.
 - Add and digitise actions filter to the chosen loss group. New curves become the group's active characteristic without silently enabling a disabled loss category. Other component editors remain unchanged.
 - Active choices are saved in project JSON. Engine notes record active semiconductor models for traceability in reports. Reference and configuration warnings are derived from the candidate, not illustrative states. Browser interaction/layout QA unavailable.
+
+## All-component loss editors — engine 1.3.0
+- All components use Loss models & curves. Diodes expose forward conduction and reverse recovery; capacitors expose ESR loss; inductors expose winding/copper and core loss. MOSFET groups remain unchanged.
+- Explicit selections are used by the engine and saved in lossModels. Existing defaults remain constant-resistance first, then frequency resistance, then temperature resistance; core defaults to B/Pv before f/Pv; diode recovery defaults to Err before Qrr. Duplicate models require selection.
+- Constant-resistance models show their SI value without fabricated curve plots. Passive reference checks use temperature/frequency as relevant and avoid transistor gate conditions. Normalised ESR imports retain their existing absolute-SI conversion.
+- Inductor winding groups expose DC resistance; core groups expose turns, effective area, volume, initial flux, excitation frequency and sinusoidal-equivalent confirmation. Required dimensions and confirmation are checked.
+- Add, digitise and edit actions are filtered by component and loss group. Numeric and unit input contracts are unchanged. Browser visual/layout QA unavailable.
