@@ -1,9 +1,9 @@
 {
-  "engineVersion": "1.1.0",
-  "date": "2026-10-13",
+  "engineVersion": "1.2.0",
+  "date": "2026-10-14",
   "numericalAndImportTests": {
-    "total": 95,
-    "passed": 95,
+    "total": 103,
+    "passed": 103,
     "failed": 0,
     "runner": "node --test tests/*.test.mjs"
   },
@@ -16,5 +16,6 @@
   "workflowCoverage": "79 total tests: characteristic filters, blank alternatives, unit menus, batch variable scan/conversion, hidden origins, temperature-independent assumptions, switching scaling defaults and full report structure",
   "presentationRegression": "Numeric operating-parameter labels; ascending Vin/Vout/Pout; filename provenance retained in full JSON; computation and best-alternative ranking unchanged",
   "heatmapRegression": "Viridis-style observed-range scale, contrast-aware labels, missing cells, constant efficiencies, averaging and shared slice scale",
-  "analysisOptions": "Forward-first inversion, inverse-distance weighting, one-parameter sensitivity, contextual diagnostics and selectable report scope/sections tested"
+  "analysisOptions": "Forward-first inversion, inverse-distance weighting, one-parameter sensitivity, contextual diagnostics and selectable report scope/sections tested",
+  "lossModelEditor": "Real MOSFET loss groups, explicit engine-backed curve choices, live status checks, optional correction, scoped add/digitise/edit actions, project persistence; 4/4 CLLC regression combinations valid"
 }

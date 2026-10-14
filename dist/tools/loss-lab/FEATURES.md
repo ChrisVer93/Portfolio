@@ -60,7 +60,7 @@ Version 1.0.0 — 9 October 2026
   so intentionally omitted categories cannot create an unfair ranking.
 
 ## Verification
-95 numerical/import/regression tests passed. Fixtures include real MAT level-5
+103 numerical/import/regression tests passed. Fixtures include real MAT level-5
 struct/cell arrays and compressed numeric matrices generated with SciPy. The
 synthetic demo runs two combinations across three loads; category/device sums
 match the total losses and reported efficiency definition.
@@ -92,3 +92,10 @@ Efficiency maps use a purple-to-yellow, perceptually ordered colour scale over t
 - Sensitivity applies one parameter at a time to a selected combination and component, across all or one operating point. Vgs/Rg use ±percentage, reference temperature uses ±degrees Celsius, parallel count uses ±1 device. Frequency scales time for the whole converter and retains waveform shape. Total mean loss percentage and watt change, efficiency percentage-point change and elasticity are reported. Failed scenarios remain invalid; unrepresented dependencies can give zero response. This is a curve-model response with fixed imported waveforms, not circuit re-simulation or guaranteed savings.
 - Report configuration selects combinations, operating points, title, notes and optional efficiency/comparison/loss/component/map/alternative/device/diagnostic/sensitivity sections. Metrics are recomputed for the selected scope. Summary metrics, operating-point results, model settings, warnings and limitations remain mandatory. Sensitivity retains its own clearly labelled analysis scope.
 - Waveform/loss trace view is currently an illustrative in-conversation preview; not a deployed analysis feature. Browser interaction/print-layout QA unavailable.
+
+## MOSFET loss model editor — engine 1.2.0
+- Components & curves → Loss models & curves groups channel, body-diode, turn-on, turn-off, recovery and temperature correction. Each displays real curve data, selected model, reference conditions, usage formula and status. Ready is a basic reference/configuration check, not full waveform-domain validation.
+- Channel Vds/Id versus Rds/Id and recovery Err versus Qrr can be explicitly selected. Duplicate curves of one family require an explicit choice. Unselected stored curves are identified. Existing projects preserve previous Vds-first / Err-first precedence until a choice is saved. Stale or incompatible active IDs fail explicitly.
+- Temperature correction can be disabled explicitly; double Tj correction is flagged and rejected by the engine. Voltage scaling, temperature-independent energy and recovery confirmation controls update the actual model.
+- Add and digitise actions filter to the chosen loss group. New curves become the group's active characteristic without silently enabling a disabled loss category. Other component editors remain unchanged.
+- Active choices are saved in project JSON. Engine notes record active semiconductor models for traceability in reports. Reference and configuration warnings are derived from the candidate, not illustrative states. Browser interaction/layout QA unavailable.
