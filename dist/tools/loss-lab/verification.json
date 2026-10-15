@@ -1,11 +1,11 @@
 {
-  "engineVersion": "1.3.0",
-  "date": "2026-10-14",
+  "engineVersion": "1.4.0",
+  "date": "2026-10-15",
   "numericalAndImportTests": {
-    "total": 109,
-    "passed": 109,
+    "total": 118,
+    "passed": 118,
     "failed": 0,
-    "runner": "node --test tests/*.test.mjs"
+    "runner": "node --test tests/loss-lab/*.test.mjs"
   },
   "matFixtures": "SciPy-generated level-5 plain/compressed struct/cell and numeric matrices",
   "demo": "2 combinations \u00d7 3 operating points; all complete, totals reconciled",
@@ -18,5 +18,6 @@
   "heatmapRegression": "Viridis-style observed-range scale, contrast-aware labels, missing cells, constant efficiencies, averaging and shared slice scale",
   "analysisOptions": "Forward-first inversion, inverse-distance weighting, one-parameter sensitivity, contextual diagnostics and selectable report scope/sections tested",
   "lossModelEditor": "Real MOSFET loss groups, explicit engine-backed curve choices, live status checks, optional correction, scoped add/digitise/edit actions, project persistence; 4/4 CLLC regression combinations valid",
-  "componentLossEditors": "MOSFET, diode, capacitor and inductor grouped editors; engine-backed active curve selection, passive constants, reference checks and magnetic parameters covered"
+  "componentLossEditors": "MOSFET, diode, capacitor and inductor grouped editors; engine-backed active curve selection, passive constants, reference checks and magnetic parameters covered",
+  "annotatedWorkflow": "Contextual digitiser session and finish action, iteration removal, interpolation help, explicit dependency reference slices, component JSON import with ID remapping, linked real waveform/query inspection. Numeric/import tests pass; browser interactions unverified."
 }
