@@ -123,3 +123,9 @@ Efficiency maps use a purple-to-yellow, perceptually ordered colour scale over t
 - Each curve/category independently keeps a bounded, adaptively thinned query list, preserving first/last queries and preventing long channel conduction from starving short body-diode intervals. Query counts and the range cursor expose the sampled points. Up to roughly 800 queries per curve/category are retained; display sampling does not affect loss integration.
 - A persistent range cursor updates linked plots without recreating the slider during dragging. Selected points use large magenta markers with white outlines, reference-domain queries blue, outside-domain queries red. Input/output guides and the evaluated interpolation family show how the selected query is obtained before external voltage scaling. Small energy/time-axis ticks use range-dependent precision.
 - 126 automated tests pass, including actual inspector HTML rendering. Touch, browser interaction and visual layout remain unverified.
+
+## Startup repair — engine 1.5.1
+- Restores the Method & compatibility page function accidentally removed during inspector replacement. Its missing reference prevented every main page from rendering at startup.
+- A full app startup regression covers initialisation and all main navigation routes. All module imports and both worker entry points now use the same release query to avoid mixing cached releases.
+- The entry loader reports startup errors visibly and offers a reload action without clearing browser-local projects.
+- 128 automated tests pass; live browser verification follows deployment.
