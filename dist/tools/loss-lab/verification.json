@@ -2,8 +2,8 @@
   "engineVersion": "1.4.0",
   "date": "2026-10-15",
   "numericalAndImportTests": {
-    "total": 118,
-    "passed": 118,
+    "total": 119,
+    "passed": 119,
     "failed": 0,
     "runner": "node --test tests/loss-lab/*.test.mjs"
   },
