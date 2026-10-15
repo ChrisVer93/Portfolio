@@ -17,3 +17,16 @@ export function importComponent(raw,fallbackType){
   c.lossModels=Object.fromEntries(Object.entries(c.lossModels||{}).map(([k,v])=>{if(v==='none')return [k,v];if(!ids.has(v))throw Error('Active curve selection does not exist: '+k);return [k,ids.get(v)];}));return c;
  });return instance;
 }
+
+// Reuse selected part characteristics without copying installation settings.
+export function importAlternative(raw,type,sourceIndex=0,curveIndices=[]){
+ const declared=raw.componentType||raw.type;if(declared&&declared!==type)throw Error('Uploaded part type does not match '+type);
+ if(raw.schemaVersion&&raw.instances)throw Error('Use an exported alternative JSON, not a project file');
+ const source=raw.candidate?[raw.candidate]:raw.candidates||[raw],part=source[sourceIndex];
+ if(!part||!Array.isArray(part.curves))throw Error('No alternative characteristics found');
+ if(!curveIndices.length)throw Error('Select at least one characteristic');
+ if(curveIndices.some(j=>!Number.isInteger(j)||!part.curves[j])||new Set(curveIndices).size!==curveIndices.length)throw Error('Invalid characteristic selection');
+ const curves=curveIndices.map(j=>part.curves[j]);
+ const validated=importComponent({componentType:type,candidate:{part:part.part,enabled:[],curves,lossModels:{}}}).candidates[0];
+ return {part:String(part.part||''),curves:validated.curves};
+}
