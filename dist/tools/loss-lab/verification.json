@@ -1,9 +1,9 @@
 {
-  "engineVersion": "1.5.1",
+  "engineVersion": "1.6.0",
   "date": "2026-10-15",
   "numericalAndImportTests": {
-    "total": 128,
-    "passed": 128,
+    "total": 138,
+    "passed": 138,
     "failed": 0,
     "runner": "node --test tests/loss-lab/*.test.mjs"
   },
@@ -21,5 +21,6 @@
   "componentLossEditors": "MOSFET, diode, capacitor and inductor grouped editors; engine-backed active curve selection, passive constants, reference checks and magnetic parameters covered",
   "annotatedWorkflow": "Contextual digitiser session and finish action, iteration removal, interpolation help, explicit dependency reference slices, component JSON import with ID remapping, linked real waveform/query inspection. Numeric/import tests pass; browser interactions unverified.",
   "v2Workflow": "Selective characteristic import into fresh/current alternatives without installation settings; exact switching current/voltage source indices and event energies; separate per-category time-domain powers and full-resolution integrals; per-characteristic bounded query sampling retaining short body conduction windows; interactive query slider and tested inspector HTML, input/output guides and evaluated dependency family. Numeric/import/render tests pass; browser interaction QA unavailable.",
-  "startupRegression": "Restored accidentally removed guide function; full app module initialisation and every main navigation route run in a lightweight DOM harness. Release versions are checked across every module/worker/entry point. Live browser verification pending deployment."
+  "startupRegression": "Restored accidentally removed guide function; full app module initialisation and every main navigation route run in a lightweight DOM harness. Release versions are checked across every module/worker/entry point. Live browser verification pending deployment.",
+  "analysisNotes": "Grouped device/characteristic warnings with expandable details; accepted assumptions and user-selected methods moved to summary; expected curve extrapolation not flagged. Exact zero-current Eon/Eoff rule, explicit scaling opt-out and 2D/3D/sparse linear dependency projection tested. Full diagnostic records retained."
 }

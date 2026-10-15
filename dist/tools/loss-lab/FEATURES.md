@@ -129,3 +129,11 @@ Efficiency maps use a purple-to-yellow, perceptually ordered colour scale over t
 - A full app startup regression covers initialisation and all main navigation routes. All module imports and both worker entry points now use the same release query to avoid mixing cached releases.
 - The entry loader reports startup errors visibly and offers a reload action without clearing browser-local projects.
 - 128 automated tests pass; live browser verification follows deployment.
+
+## Reviewable warnings and assumptions — engine 1.6.0
+- Results and reports show short grouped warnings by device/part and characteristic. Numerical ranges and operating-point details are expandable. Full curve diagnostics start collapsed in the app; full JSON retains the original notes and diagnostics. Summary CSV warning cells contain only high-level actionable warnings.
+- Expected curve extrapolation, selected interpolation methods, reverse gate-on conduction, voltage scaling, recovery detection/Qrr approximation, temperature independence, ignored dependencies, spectral/core assumptions and thermal convergence are separated from warnings. Active models have a details table/list without internal curve IDs.
+- Explicit voltage-scaling opt-out is an assumption, not a fixed-voltage warning. Missing energy-curve scaling flags default to enabled, consistent with imports and the editor.
+- Zero-current Eon/Eoff are forced to zero for the Id→energy queries used by the engine, regardless of curve intercept. Negative event current remains mapped to zero. This is the selected current-driven switching model; separate no-load/output-capacitance energy is not added.
+- Multidimensional dependency extrapolation now projects grid boundary segments instead of silently clamping. Sparse families use a nearby nondegenerate simplex for linear projection outside the hull. Explicit clamp remains available only as a selected policy; strict error mode still rejects out-of-domain inputs. Invalid negative physical outputs remain rejected, except the existing reported MATLAB channel-voltage zero-floor rule.
+- 138 automated tests pass, covering grouped notes, hidden diagnostic ranges, model summary, switching zero rule, scaling choices and grid/sparse projection.

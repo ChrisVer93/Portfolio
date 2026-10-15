@@ -1,5 +1,5 @@
-import {MOSFET_LOSS_GROUPS,lossGroups,lossGroupState} from './loss-models.js?v=1.5.1';
-import {QUANTITIES,characteristicName} from './characteristics.js?v=1.5.1';
+import {MOSFET_LOSS_GROUPS,lossGroups,lossGroupState} from './loss-models.js?v=1.6.0';
+import {QUANTITIES,characteristicName} from './characteristics.js?v=1.6.0';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const n=v=>Number.isFinite(v)?Number(v.toPrecision(6)).toString():'—';
 const title=c=>c.sourceId?characteristicName(c.sourceId):`${QUANTITIES[c.yName]?.[0]||c.yName} vs ${QUANTITIES[c.xName]?.[0]||c.xName}`;
 export function lossModelEditor(candidate,key,plot,type='MOSFET'){const groups=lossGroups(type);key=groups[key]?key:Object.keys(groups)[0];const states=Object.fromEntries(Object.keys(groups).map(k=>[k,lossGroupState(candidate,k,type)])),s=states[key],g=s.group,active=s.active,rds=active&&[active.xName,active.yName].includes('Rds'),qrr=active&&[active.xName,active.yName].includes('Qrr'),statusClass=status=>status==='Ready'?'ready':status==='Needs review'?'review':status==='Missing curve'?'missing':'';let formula=rds&&key==='channel'?'p(t) = Rds(on) × Id²':qrr?'Err ≈ Qrr × blocking Vds; Prr = Σ Err / window duration':g.formula;const allReferences=active?[...new Set((active.iterations||[]).flatMap(it=>Object.keys(it.deps||{})))]:[];
