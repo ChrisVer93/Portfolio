@@ -162,3 +162,7 @@ Efficiency maps use a purple-to-yellow, perceptually ordered colour scale over t
 - Project import shows a cancellable progress dialog. File reading reports byte progress; worker parsing, hydration and input checks show named indeterminate stages. The current project is replaced only after success. Calculation/screening/sensitivity show prominent cancellable progress dialogs.
 - Heatmap coordinates group numerical integration round-off at eight significant digits. Continuous view uses bilinear interpolation only within completely sampled neighbouring grid rectangles, with original sample markers and grey unsupported gaps. No extrapolation or fabricated missing data. Sampled-value tables remain available. Reports use fixed-other-voltage slices and the same grouping.
 - 166 automated tests pass, including a real worker import, malformed-file handling, inverse zero-current policy, unchanged samples, independent floor/origin settings, duplicate handling and supported-only heatmap interpolation.
+
+## Independent sensitivity steps — engine 1.10.0
+- Every parameter has its own perturbation input. Temperature supports percent of absolute Kelvin or °C; parallel count supports percent or whole-device steps. Too-small count percentages are flagged instead of silently changed.
+- Requested and actual changes are displayed and exported; used perturbations remain in result controls after a run. Existing shared-percentage configurations remain compatible. 168 automated tests pass.
