@@ -137,3 +137,10 @@ Efficiency maps use a purple-to-yellow, perceptually ordered colour scale over t
 - Zero-current Eon/Eoff are forced to zero for the Id→energy queries used by the engine, regardless of curve intercept. Negative event current remains mapped to zero. This is the selected current-driven switching model; separate no-load/output-capacitance energy is not added.
 - Multidimensional dependency extrapolation now projects grid boundary segments instead of silently clamping. Sparse families use a nearby nondegenerate simplex for linear projection outside the hull. Explicit clamp remains available only as a selected policy; strict error mode still rejects out-of-domain inputs. Invalid negative physical outputs remain rejected, except the existing reported MATLAB channel-voltage zero-floor rule.
 - 138 automated tests pass, covering grouped notes, hidden diagnostic ranges, model summary, switching zero rule, scaling choices and grid/sparse projection.
+
+## Early input checks — engine 1.7.0
+- Persistent readiness status and Check inputs page group missing inputs by component and alternative, with Open & fix navigation and inline field feedback. Blocking inputs are reviewed before starting a worker; reference notes remain nonblocking.
+- Characteristic editors validate live and identify duplicate lookup inputs by iteration and row, with red graph markers. Selected active curves are checked; unused stored curves do not block analysis.
+- Capacitors, diodes and inductors no longer require hidden MOSFET gate-resistance settings. MOSFET checks follow the enabled loss categories and selected gate model.
+- Selected-window spectral DC, output sign and core volt-second checks catch predictable failures early. Exact waveform-dependent curve queries and thermal convergence remain runtime checks.
+- 151 automated tests pass.

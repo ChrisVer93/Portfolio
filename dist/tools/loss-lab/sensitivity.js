@@ -1,4 +1,4 @@
-import {runProject,CATEGORIES} from './engine.js?v=1.6.0';
+import {runProject,CATEGORIES} from './engine.js?v=1.7.0';
 export const SENSITIVITY_PARAMETERS={vgsOn:'Gate-on Vgs',rgOn:'Turn-on gate resistance',rgOff:'Turn-off gate resistance',temperature:'Reference temperature',parallel:'Parallel device count',frequency:'Waveform frequency'};
 export function sensitivityScenario(project,config,parameter,direction){const p=structuredClone(project),inst=p.instances.find(i=>i.id===config.instanceId),c=inst?.candidates.find(c=>c.id===config.candidateId);if(!c)throw Error('Select a candidate in the chosen combination');const percent=Number(config.percent??2);if(!(percent>0&&percent<50))throw Error('Sensitivity percentage must be between 0 and 50');let before,after,unit='%',change;
  if(parameter==='frequency'){before=1;after=1+direction*percent/100;for(const w of p.waveforms)w.columns[w.time]=w.columns[w.time].map(t=>t/after);p.operating.window/=after;for(const i of p.instances)for(const candidate of i.candidates)if(candidate.coreFrequency>0)candidate.coreFrequency*=after;change=direction*percent;}
