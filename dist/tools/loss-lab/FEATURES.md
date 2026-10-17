@@ -166,3 +166,6 @@ Efficiency maps use a purple-to-yellow, perceptually ordered colour scale over t
 ## Independent sensitivity steps — engine 1.10.0
 - Every parameter has its own perturbation input. Temperature supports percent of absolute Kelvin or °C; parallel count supports percent or whole-device steps. Too-small count percentages are flagged instead of silently changed.
 - Requested and actual changes are displayed and exported; used perturbations remain in result controls after a run. Existing shared-percentage configurations remain compatible. 168 automated tests pass.
+
+### Sensitivity parameter correction — 1.10.1
+- Removed waveform frequency; added series device count with independent percent or whole-device steps. Total device count scales proportionally; engine uses per-device voltage division. Waveforms/frequency stay fixed, with ideal sharing assumed. 169 automated tests pass, including series voltage/scaling loss checks.

@@ -1,9 +1,9 @@
 {
-  "engineVersion": "1.10.0",
+  "engineVersion": "1.10.1",
   "date": "2026-10-17",
   "numericalAndImportTests": {
-    "total": 168,
-    "passed": 168,
+    "total": 169,
+    "passed": 169,
     "failed": 0,
     "runner": "node --test tests/loss-lab/*.test.mjs"
   },
@@ -28,5 +28,6 @@
   "capacitorDC": "Constant ESR uses total RMS current. Frequency-dependent ESR sums harmonic I_rms^2*ESR(f,T), plus mean-current^2*explicit DC equivalent series resistance when supplied. Significant capacitor DC without this resistance requires correction or input; insulation/leakage resistance is not used.",
   "projectionBrowserQA": "Live 1.8.0 demo completed; deliberately negative Rds projection caught by review dialog with raw query/dependencies and graph; screening debug records accessible; explicit zero consent allowed complete rerun. 1.8.1 clarifies provisional screening labels.",
   "v4Workflow": "Inverse ambiguity explains actual engine lookup; identical pairs are redundant warnings and deduplicated. Explicit calculation-only zero-current origin is separate from negative-output flooring, restricted to current/voltage/energy curves, persistent and reportable. Cancellable off-thread project import; accessible stage and percentage progress dialogs. Eight-significant-digit coordinate grouping, bilinear map inside complete neighbouring rectangles with sample markers, no unsupported fill/extrapolation; fixed-other-voltage report slices. Worker import and numeric regressions tested.",
-  "sensitivitySteps": "Independent per-parameter perturbations; percentages for each parameter, optional absolute Celsius/device steps, Kelvin basis for temperature percentages, transparent integer count rounding and requested-versus-actual results. Legacy shared configs remain supported."
+  "sensitivitySteps": "Independent per-parameter perturbations; percentages for each parameter, optional absolute Celsius/device steps, Kelvin basis for temperature percentages, transparent integer count rounding and requested-versus-actual results. Legacy shared configs remain supported.",
+  "seriesSensitivity": "Replaces waveform frequency with series device count. Independent percent/whole-device steps; scales total physical count and uses existing engine series voltage sharing; waveforms and frequency fixed. Analytic demo regression checks conduction and voltage-scaled switching losses."
 }

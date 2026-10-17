@@ -1,6 +1,6 @@
-import {makeInstance,makeCandidate,canonicalCurve,uid} from './io.js?v=1.10.0';
-import {CURVE_IDS} from './engine.js?v=1.10.0';
-import {characteristicIds} from './workflow.js?v=1.10.0';
+import {makeInstance,makeCandidate,canonicalCurve,uid} from './io.js?v=1.10.1';
+import {CURVE_IDS} from './engine.js?v=1.10.1';
+import {characteristicIds} from './workflow.js?v=1.10.1';
 export function importComponent(raw,fallbackType){
  if(raw.schemaVersion&&raw.instances)throw Error('This is a project file. Use Open project.');
  const type=raw.componentType||raw.type||fallbackType;
