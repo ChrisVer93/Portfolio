@@ -1,9 +1,9 @@
 {
-  "engineVersion": "1.7.0",
+  "engineVersion": "1.8.0",
   "date": "2026-10-17",
   "numericalAndImportTests": {
-    "total": 151,
-    "passed": 151,
+    "total": 158,
+    "passed": 158,
     "failed": 0,
     "runner": "node --test tests/loss-lab/*.test.mjs"
   },
@@ -23,5 +23,7 @@
   "v2Workflow": "Selective characteristic import into fresh/current alternatives without installation settings; exact switching current/voltage source indices and event energies; separate per-category time-domain powers and full-resolution integrals; per-characteristic bounded query sampling retaining short body conduction windows; interactive query slider and tested inspector HTML, input/output guides and evaluated dependency family. Numeric/import/render tests pass; browser interaction QA unavailable.",
   "startupRegression": "Restored accidentally removed guide function; full app module initialisation and every main navigation route run in a lightweight DOM harness. Release versions are checked across every module/worker/entry point. Live browser verification pending deployment.",
   "analysisNotes": "Grouped device/characteristic warnings with expandable details; accepted assumptions and user-selected methods moved to summary; expected curve extrapolation not flagged. Exact zero-current Eon/Eoff rule, explicit scaling opt-out and 2D/3D/sparse linear dependency projection tested. Full diagnostic records retained.",
-  "preAnalysisChecks": "Actionable missing-input checks, inline curve validation with duplicate lookup row/point identification, selected-window spectral DC/core checks, component-specific gate validation. Exact waveform-dependent queries and thermal convergence remain runtime checks."
+  "preAnalysisChecks": "Actionable missing-input checks, inline curve validation with duplicate lookup row/point identification, selected-window spectral DC/core checks, component-specific gate validation. Exact waveform-dependent queries and thermal convergence remain runtime checks.",
+  "projectionScreening": "Exact engine-query screening, including thermal iterations; negative magnitudes require per-characteristic zero-floor consent. Raw and corrected values, failure waveforms and query records retained. Screening totals withheld. Runtime guards remain active.",
+  "capacitorDC": "Constant ESR uses total RMS current. Frequency-dependent ESR sums harmonic I_rms^2*ESR(f,T), plus mean-current^2*explicit DC equivalent series resistance when supplied. Significant capacitor DC without this resistance requires correction or input; insulation/leakage resistance is not used."
 }

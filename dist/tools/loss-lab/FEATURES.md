@@ -144,3 +144,11 @@ Efficiency maps use a purple-to-yellow, perceptually ordered colour scale over t
 - Capacitors, diodes and inductors no longer require hidden MOSFET gate-resistance settings. MOSFET checks follow the enabled loss categories and selected gate model.
 - Selected-window spectral DC, output sign and core volt-second checks catch predictable failures early. Exact waveform-dependent curve queries and thermal convergence remain runtime checks.
 - 151 automated tests pass.
+
+## Projection review and failure inspection — engine 1.8.0
+- Exact engine-query screening runs after setup validation and before full analysis. Negative projected physical magnitudes are grouped by device/alternative/characteristic, with dependency conditions, affected operating-point count and a graph. No universal (0,0) rule is imposed on resistance or temperature curves.
+- Edit characteristic or explicitly accept a per-characteristic zero floor. Consent persists in project JSON and is reversible in the characteristic editor. MATLAB mode no longer silently floors negative channel-voltage projections. Raw and corrected values remain inspectable; accepted floors are assumptions in reports.
+- Screening uses temporary zeros only to discover further issues; provisional thermal conditions are not final results. Screening losses and efficiency are withheld. Full-run runtime guards remain active, including for sensitivity studies.
+- Failed device calculations preserve queries, error conditions, signed waveforms and device identity. Failed devices are selectable in debug. Failed queries with no output are marked explicitly. Setup failures before signal acquisition cannot supply waveform traces. Thermal failures retain the last evaluated trace.
+- Frequency-dependent capacitor ESR now supports a separate explicit DC equivalent series resistance, adding mean-current squared times this resistance to the harmonic sum. Constant ESR continues to use total RMS current. Significant capacitor mean current requires a mapping/window check or this explicit resistance; no DC resistance is inferred from an AC datasheet value or insulation resistance.
+- 158 automated tests pass, including exact negative query screening, opt-in persistence/assumptions, strict-domain and thermal failure traces, and an analytic DC-plus-AC capacitor loss test.
