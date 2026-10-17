@@ -1,4 +1,4 @@
-import {CURVE_IDS,si,validateTime,finite} from './engine.js?v=1.10.1';
+import {CURVE_IDS,si,validateTime,finite} from './engine.js?v=2.0.0';
 export function uid(prefix='item'){return prefix+'_'+(globalThis.crypto?.randomUUID?.()||Math.random().toString(36).slice(2));}
 const arr=v=>Array.isArray(v)?v:v==null?[]:[v];
 const scalar=v=>Array.isArray(v)&&v.length===1?scalar(v[0]):v;

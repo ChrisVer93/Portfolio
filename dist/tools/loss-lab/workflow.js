@@ -1,5 +1,5 @@
-import {CURVE_IDS} from './engine.js?v=1.10.1';
-import {makeCandidate} from './io.js?v=1.10.1';
+import {CURVE_IDS} from './engine.js?v=2.0.0';
+import {makeCandidate} from './io.js?v=2.0.0';
 export function characteristicIds(type){return Object.keys(CURVE_IDS).filter(id=>{const axes=CURVE_IDS[id];if(type==='MOSFET')return axes.some(x=>['Id','Vsd','Rds_normalised','Qrr','Err','Eon','Eoff'].includes(x))&&!axes.includes('Vf');if(type==='Diode')return axes.some(x=>['Vf','Qrr','Err'].includes(x));if(type==='Capacitor')return axes.some(x=>['ESR','ESR_normalised'].includes(x));if(type==='Inductor')return axes.some(x=>['ESR','ESR_normalised','Pv'].includes(x));return false;});}
 export function quantityUnits(q){if(['T','Tj'].includes(q))return ['degC','K'];if(q.includes('normalised'))return ['-'];if(['Id','If'].includes(q))return ['A','mA','uA'];if(['Vds','Vsd','Vf','Vgs'].includes(q))return ['V','mV','kV'];if(['Rds','ESR','Rg'].includes(q))return ['Ohm','mOhm','uOhm'];if(['Eon','Eoff','Err'].includes(q))return ['J','mJ','uJ','nJ'];if(q==='Qrr')return ['C','mC','uC','nC'];if(q==='di_dt')return ['A/s','A/ms','A/us','A/ns'];if(q==='f')return ['Hz','kHz','MHz'];if(q==='B')return ['T','mT'];if(q==='Pv')return ['W/m^3','kW/m^3','mW/cm^3','W/cm^3'];return ['-'];}
 export function blankCandidate(type){const c=makeCandidate(type);c.part='';for(const k of Object.keys(c))if(typeof c[k]==='number')c[k]=null;for(const k of Object.keys(c.thermal))if(typeof c.thermal[k]==='number')c.thermal[k]=null;return c;}

@@ -1,9 +1,9 @@
 {
-  "engineVersion": "1.10.1",
+  "engineVersion": "2.0.0",
   "date": "2026-10-17",
   "numericalAndImportTests": {
-    "total": 169,
-    "passed": 169,
+    "total": 179,
+    "passed": 179,
     "failed": 0,
     "runner": "node --test tests/loss-lab/*.test.mjs"
   },
@@ -29,5 +29,7 @@
   "projectionBrowserQA": "Live 1.8.0 demo completed; deliberately negative Rds projection caught by review dialog with raw query/dependencies and graph; screening debug records accessible; explicit zero consent allowed complete rerun. 1.8.1 clarifies provisional screening labels.",
   "v4Workflow": "Inverse ambiguity explains actual engine lookup; identical pairs are redundant warnings and deduplicated. Explicit calculation-only zero-current origin is separate from negative-output flooring, restricted to current/voltage/energy curves, persistent and reportable. Cancellable off-thread project import; accessible stage and percentage progress dialogs. Eight-significant-digit coordinate grouping, bilinear map inside complete neighbouring rectangles with sample markers, no unsupported fill/extrapolation; fixed-other-voltage report slices. Worker import and numeric regressions tested.",
   "sensitivitySteps": "Independent per-parameter perturbations; percentages for each parameter, optional absolute Celsius/device steps, Kelvin basis for temperature percentages, transparent integer count rounding and requested-versus-actual results. Legacy shared configs remain supported.",
-  "seriesSensitivity": "Replaces waveform frequency with series device count. Independent percent/whole-device steps; scales total physical count and uses existing engine series voltage sharing; waveforms and frequency fixed. Analytic demo regression checks conduction and voltage-scaled switching losses."
+  "seriesSensitivity": "Replaces waveform frequency with series device count. Independent percent/whole-device steps; scales total physical count and uses existing engine series voltage sharing; waveforms and frequency fixed. Analytic demo regression checks conduction and voltage-scaled switching losses.",
+  "resultsDashboard": "Persistent selected operating point, clickable heatmap samples/table, calculated-input power split and per-device/category losses with separate mapped-input discrepancy; alternative efficiency slice curves, stacked losses and temperatures; sampled characteristic coverage with raw projections; shared current/voltage/gate/loss time cursor; thermal trial history retained on convergence and failure; clear result states; explicit study review before user calculation. New report sections opt-in via report dialog.",
+  "sensitivityInterpretation": "Component-specific relevant controls, ESR/winding/core characteristic multipliers and iterative Rth; absent/disabled dependency distinguished from represented zero response; chosen-step and normalised tornado charts; category deltas; persisted target/steps/point selection in project JSON. Tests cover numeric resistance changes, inverse-axis core scaling and real app worker-result rendering."
 }
