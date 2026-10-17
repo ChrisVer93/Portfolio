@@ -155,3 +155,10 @@ Efficiency maps use a purple-to-yellow, perceptually ordered colour scale over t
 
 ### Screening labels — 1.8.1
 - Provisional debug selections are labelled SCREENING, rather than implying all components failed. The review explains temporary zeros and provisional thermal conditions. Live browser QA verified negative-projection review, raw values, debug access and successful explicit-consent rerun.
+
+## V4 workflow improvements — engine 1.9.0
+- Forward flat outputs remain valid. Inverse ambiguity names the actual lookup input/output; identical duplicate pairs are review notes and deduplicated for calculation.
+- Separate opt-in controls for calculation-only (0,0) zero-current voltage/energy and for negative-output flooring. The origin rule resolves ambiguous zero-current outputs, retains raw samples, is excluded from resistance/temperature curves, and is reported as an assumption. Nonzero ambiguity still needs correction.
+- Project import shows a cancellable progress dialog. File reading reports byte progress; worker parsing, hydration and input checks show named indeterminate stages. The current project is replaced only after success. Calculation/screening/sensitivity show prominent cancellable progress dialogs.
+- Heatmap coordinates group numerical integration round-off at eight significant digits. Continuous view uses bilinear interpolation only within completely sampled neighbouring grid rectangles, with original sample markers and grey unsupported gaps. No extrapolation or fabricated missing data. Sampled-value tables remain available. Reports use fixed-other-voltage slices and the same grouping.
+- 166 automated tests pass, including a real worker import, malformed-file handling, inverse zero-current policy, unchanged samples, independent floor/origin settings, duplicate handling and supported-only heatmap interpolation.

@@ -1,8 +1,9 @@
-import {resolveMosfetCurve,resolveComponentCurve} from './loss-models.js?v=1.8.1';
-import {dependencySlice} from './dependency-policy.js?v=1.8.1';
-import {interpolateCurve} from './curve-methods.js?v=1.8.1';
+import {boundaryCurve} from './curve-boundary.js?v=1.9.0';
+import {resolveMosfetCurve,resolveComponentCurve} from './loss-models.js?v=1.9.0';
+import {dependencySlice} from './dependency-policy.js?v=1.9.0';
+import {interpolateCurve} from './curve-methods.js?v=1.9.0';
 /* Converter Loss Lab — pure numerical engine. No DOM, files or globals. */
-export const ENGINE_VERSION='1.8.1';
+export const ENGINE_VERSION='1.9.0';
 export const CATEGORIES=['conduction','body','on','off','recovery','copper','core'];
 export const LABELS={conduction:'Channel / forward conduction',body:'Reverse / body conduction',on:'Turn-on',off:'Turn-off',recovery:'Reverse recovery',copper:'ESR / copper',core:'Core'};
 export const CURVE_IDS={
@@ -30,7 +31,7 @@ export function lerp(x,y,q,policy='error',notes=[]){if(!x.length||x.length!==y.l
 }
 function solve(A,b){let n=b.length,M=A.map((r,i)=>[...r,b[i]]);for(let k=0;k<n;k++){let p=k;for(let j=k+1;j<n;j++)if(Math.abs(M[j][k])>Math.abs(M[p][k]))p=j;if(Math.abs(M[p][k])<1e-11)return null;[M[p],M[k]]=[M[k],M[p]];let s=M[k][k];for(let j=k;j<=n;j++)M[k][j]/=s;for(let i=0;i<n;i++)if(i!==k){s=M[i][k];for(let j=k;j<=n;j++)M[i][j]-=s*M[k][j];}}return M.map(r=>r[n]);}
 function combos(arr,n,limit=6000){let out=[];function walk(at,s){if(out.length>=limit)return;if(s.length===n){out.push(s);return;}for(let i=at;i<=arr.length-(n-s.length);i++)walk(i+1,[...s,arr[i]]);}walk(0,[]);return out;}
-export function queryCurve(c,input,given,wanted,deps={},policy='error',notes=[],method='reference-first'){if(c&&given==='Id'&&['Eon','Eoff'].includes(wanted)&&input===0)return 0;return interpolateCurve(dependencySlice(c,notes),input,given,wanted,deps,policy,notes,method,queryCurveBase,lerp);}
+export function queryCurve(c,input,given,wanted,deps={},policy='error',notes=[],method='reference-first'){if(c&&given==='Id'&&['Eon','Eoff'].includes(wanted)&&input===0)return 0;return interpolateCurve(dependencySlice(boundaryCurve(c),notes),input,given,wanted,deps,policy,notes,method,queryCurveBase,lerp);}
 function queryCurveBase(c,input,given,wanted,deps={},policy='error',notes=[]){if(!c)throw Error('Required characteristic is missing');if(c.constant!==undefined){if(wanted!=='ESR')throw Error('Constant ESR cannot serve this query');return finite(c.constant);}
  const direct=c.xName===given&&c.yName===wanted,inv=c.yName===given&&c.xName===wanted;if(!direct&&!inv)throw Error(`Curve axes ${c.xName}/${c.yName} do not support ${given} → ${wanted}`);
  const matlab=policy==='matlab';const curvePolicy=matlab?'extrapolate':policy;const rows=c.iterations.map((it,iteration)=>{let x=direct?it.x:it.y,y=direct?it.y:it.x;if(matlab){if(inv)notes.push('MATLAB inverse interpolation: inverse-axis values sorted; no monotonic-branch rejection');const seen=new Set(),pairs=x.map((v,j)=>[v,y[j]]).filter(([v])=>{if(seen.has(v)){notes.push('MATLAB interpolation: duplicate axis value uses its first sampled point');return false;}seen.add(v);return true;});x=pairs.map(p=>p[0]);y=pairs.map(p=>p[1]);}if(inv&&!matlab){let delta=x.slice(1).map((v,i)=>v-x[i]);if(delta.some(v=>v>0)&&delta.some(v=>v<0))throw Error('Inverse curve is nonmonotonic; select a monotonic branch');}const iterationNotes=[],value=lerp(x,y,input,curvePolicy,iterationNotes);for(const message of iterationNotes)notes.push(`Iteration ${iteration+1} (${Object.entries(it.deps||{}).map(([k,v])=>k+'='+v).join(', ')}): ${message}; ${given} requested ${input}; range [${Math.min(...x)}, ${Math.max(...x)}]`);return {value,deps:it.deps||{}};});if(!rows.length)throw Error('Characteristic has no iterations');

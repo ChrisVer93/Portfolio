@@ -1,9 +1,9 @@
 {
-  "engineVersion": "1.8.1",
+  "engineVersion": "1.9.0",
   "date": "2026-10-17",
   "numericalAndImportTests": {
-    "total": 158,
-    "passed": 158,
+    "total": 166,
+    "passed": 166,
     "failed": 0,
     "runner": "node --test tests/loss-lab/*.test.mjs"
   },
@@ -26,5 +26,6 @@
   "preAnalysisChecks": "Actionable missing-input checks, inline curve validation with duplicate lookup row/point identification, selected-window spectral DC/core checks, component-specific gate validation. Exact waveform-dependent queries and thermal convergence remain runtime checks.",
   "projectionScreening": "Exact engine-query screening, including thermal iterations; negative magnitudes require per-characteristic zero-floor consent. Raw and corrected values, failure waveforms and query records retained. Screening totals withheld. Runtime guards remain active.",
   "capacitorDC": "Constant ESR uses total RMS current. Frequency-dependent ESR sums harmonic I_rms^2*ESR(f,T), plus mean-current^2*explicit DC equivalent series resistance when supplied. Significant capacitor DC without this resistance requires correction or input; insulation/leakage resistance is not used.",
-  "projectionBrowserQA": "Live 1.8.0 demo completed; deliberately negative Rds projection caught by review dialog with raw query/dependencies and graph; screening debug records accessible; explicit zero consent allowed complete rerun. 1.8.1 clarifies provisional screening labels."
+  "projectionBrowserQA": "Live 1.8.0 demo completed; deliberately negative Rds projection caught by review dialog with raw query/dependencies and graph; screening debug records accessible; explicit zero consent allowed complete rerun. 1.8.1 clarifies provisional screening labels.",
+  "v4Workflow": "Inverse ambiguity explains actual engine lookup; identical pairs are redundant warnings and deduplicated. Explicit calculation-only zero-current origin is separate from negative-output flooring, restricted to current/voltage/energy curves, persistent and reportable. Cancellable off-thread project import; accessible stage and percentage progress dialogs. Eight-significant-digit coordinate grouping, bilinear map inside complete neighbouring rectangles with sample markers, no unsupported fill/extrapolation; fixed-other-voltage report slices. Worker import and numeric regressions tested."
 }
