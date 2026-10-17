@@ -152,3 +152,6 @@ Efficiency maps use a purple-to-yellow, perceptually ordered colour scale over t
 - Failed device calculations preserve queries, error conditions, signed waveforms and device identity. Failed devices are selectable in debug. Failed queries with no output are marked explicitly. Setup failures before signal acquisition cannot supply waveform traces. Thermal failures retain the last evaluated trace.
 - Frequency-dependent capacitor ESR now supports a separate explicit DC equivalent series resistance, adding mean-current squared times this resistance to the harmonic sum. Constant ESR continues to use total RMS current. Significant capacitor mean current requires a mapping/window check or this explicit resistance; no DC resistance is inferred from an AC datasheet value or insulation resistance.
 - 158 automated tests pass, including exact negative query screening, opt-in persistence/assumptions, strict-domain and thermal failure traces, and an analytic DC-plus-AC capacitor loss test.
+
+### Screening labels — 1.8.1
+- Provisional debug selections are labelled SCREENING, rather than implying all components failed. The review explains temporary zeros and provisional thermal conditions. Live browser QA verified negative-projection review, raw values, debug access and successful explicit-consent rerun.

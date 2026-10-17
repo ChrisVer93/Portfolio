@@ -1,5 +1,5 @@
 {
-  "engineVersion": "1.8.0",
+  "engineVersion": "1.8.1",
   "date": "2026-10-17",
   "numericalAndImportTests": {
     "total": 158,
@@ -25,5 +25,6 @@
   "analysisNotes": "Grouped device/characteristic warnings with expandable details; accepted assumptions and user-selected methods moved to summary; expected curve extrapolation not flagged. Exact zero-current Eon/Eoff rule, explicit scaling opt-out and 2D/3D/sparse linear dependency projection tested. Full diagnostic records retained.",
   "preAnalysisChecks": "Actionable missing-input checks, inline curve validation with duplicate lookup row/point identification, selected-window spectral DC/core checks, component-specific gate validation. Exact waveform-dependent queries and thermal convergence remain runtime checks.",
   "projectionScreening": "Exact engine-query screening, including thermal iterations; negative magnitudes require per-characteristic zero-floor consent. Raw and corrected values, failure waveforms and query records retained. Screening totals withheld. Runtime guards remain active.",
-  "capacitorDC": "Constant ESR uses total RMS current. Frequency-dependent ESR sums harmonic I_rms^2*ESR(f,T), plus mean-current^2*explicit DC equivalent series resistance when supplied. Significant capacitor DC without this resistance requires correction or input; insulation/leakage resistance is not used."
+  "capacitorDC": "Constant ESR uses total RMS current. Frequency-dependent ESR sums harmonic I_rms^2*ESR(f,T), plus mean-current^2*explicit DC equivalent series resistance when supplied. Significant capacitor DC without this resistance requires correction or input; insulation/leakage resistance is not used.",
+  "projectionBrowserQA": "Live 1.8.0 demo completed; deliberately negative Rds projection caught by review dialog with raw query/dependencies and graph; screening debug records accessible; explicit zero consent allowed complete rerun. 1.8.1 clarifies provisional screening labels."
 }
