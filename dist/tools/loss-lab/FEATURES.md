@@ -195,3 +195,16 @@ Each alternative now has one aligned two-level loss chart. Coloured contribution
 New studies explicitly select forward-family interpolation before inversion. Previously saved explicit methods remain unchanged; older projects without a method retain reference-curve interpolation. Gate configuration displays analog hysteresis thresholds only for analog signals and mapped on/off voltages only for logic signals. User-facing explanations use descriptive reference/legacy terminology while persisted compatibility identifiers and import function names remain stable.
 
 194 automated tests cover numerical models, import, rendering, actual-app navigation and tooltip behaviour. Browser visual checks were unavailable for this release.
+
+
+## Component scope and integrated help (2.3.0)
+
+Independent component and combination checkboxes apply to whole-range and selected-point loss comparisons. All/clear controls are explicit. Selected loss totals and shares are recomputed from existing results without invoking the calculation worker; converter efficiency and original records are retained. Full-converter views and export/report scopes are labelled separately. Empty selections do not become fabricated zero results.
+
+Persistent Help opens a local setup assistant. Field and page help links, input-issue explanations, search and 18 documentation topics share help-content.js. The printable/offline manual.html is generated from the same articles. Guidance covers waveform preparation, mapping, component models, counts, curves, interpolation, zero-floor decisions, gates, switching/recovery, passives, thermal models, results, debug, sensitivity, troubleshooting, exports and calculation limits. Optional guided tours are not part of this release.
+
+201 automated checks pass, including selected-loss reconciliation, unchanged converter efficiency, no-worker display filtering, empty selections, failed-result treatment, content/search/link consistency and actual-app Help navigation. Browser visual checks were unavailable.
+
+The downloadable source/test ZIP remains explicitly labelled version 2.2.0. This release updates deployed tool and manual assets; the source/test archive was not republished.
+
+Validation scope: 201 local checks; the existing public CI suite retains 194 checks. New local regression tests and the documentation generator were not included in this deployment-only update.

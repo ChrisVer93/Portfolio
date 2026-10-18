@@ -1,6 +1,6 @@
-import {efficiencyHeatmap,efficiencyScale,continuousHeatmap,coordinateKey} from './heat-map.js?v=2.2.0';
-import {operatingPointLabel,orderedOperatingPoints,orderedCombinations} from './result-view.js?v=2.2.0';
-import {CATEGORIES,LABELS} from './engine.js?v=2.2.0';
+import {efficiencyHeatmap,efficiencyScale,continuousHeatmap,coordinateKey} from './heat-map.js?v=2.3.0';
+import {operatingPointLabel,orderedOperatingPoints,orderedCombinations} from './result-view.js?v=2.3.0';
+import {CATEGORIES,LABELS} from './engine.js?v=2.3.0';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const n=v=>Number.isFinite(v)?Number(v.toPrecision(5)).toString():'—';
 const colors=['#2980b9','#8e44ad','#e67e22','#c0392b','#16a085','#7f8c8d','#2c3e50'];

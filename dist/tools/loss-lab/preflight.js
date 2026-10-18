@@ -1,7 +1,7 @@
-import {supportsZeroOrigin} from './curve-boundary.js?v=2.2.0';
-import {lossGroups,resolveComponentCurve} from './loss-models.js?v=2.2.0';
-import {QUANTITIES,characteristicName} from './characteristics.js?v=2.2.0';
-import {outputPower,sliceWaveform,spectrum,average,rmsTime} from './engine.js?v=2.2.0';
+import {supportsZeroOrigin} from './curve-boundary.js?v=2.3.0';
+import {lossGroups,resolveComponentCurve} from './loss-models.js?v=2.3.0';
+import {QUANTITIES,characteristicName} from './characteristics.js?v=2.3.0';
+import {outputPower,sliceWaveform,spectrum,average,rmsTime} from './engine.js?v=2.3.0';
 const finite=Number.isFinite,positive=v=>finite(v)&&v>0;
 export const characteristicTitle=c=>c?.sourceId?characteristicName(c.sourceId).split(' — ')[0]:`${QUANTITIES[c?.yName]?.[0]||c?.yName} vs ${QUANTITIES[c?.xName]?.[0]||c?.xName}`;
 export function lookupQuantity(c){const axes=[c.xName,c.yName];for(const q of ['Id','If','di_dt','Tj'])if(axes.includes(q))return q;if(axes.includes('ESR'))return axes.includes('T')?'T':'f';return axes.includes('B')?'B':axes.includes('f')?'f':c.xName;}
