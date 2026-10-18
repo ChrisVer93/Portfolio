@@ -208,3 +208,12 @@ Persistent Help opens a local setup assistant. Field and page help links, input-
 The downloadable source/test ZIP remains explicitly labelled version 2.2.0. This release updates deployed tool and manual assets; the source/test archive was not republished.
 
 Validation scope: 201 local checks; the existing public CI suite retains 194 checks. New local regression tests and the documentation generator were not included in this deployment-only update.
+
+
+## Detailed component calculation reference (2.4.0)
+
+The Help Centre and manual now share five detailed calculation guides: MOSFET, diode, capacitor, inductor and numerical methods. Twenty native MathML equations, nine deterministic SVG graphs, characteristic-selection tables, units and worked examples explain every supported component loss path. Graphs are explicitly synthetic.
+
+Coverage includes Vds/Id versus Rds/Id channel methods, normalised temperature correction and reverse masks; Eon/Eoff event sampling and optional single-reference voltage scaling; direct Err versus Qrr times blocking voltage, with current-slope units and double-counting cautions; constant versus spectral ESR/winding resistance including DC; balanced voltage integration and ΔB/2 core-density lookup; trapezoidal integration, physical-count scaling, inverse-order interpolation and thermal fixed-point equations.
+
+Worked examples were checked with the numerical engine. All 209 local checks pass. SVG graphs were rendered for layout inspection and MathML structures validated; full browser/manual visual verification was unavailable. The existing public CI baseline remains 194 tests. The source/test ZIP remains labelled 2.2.0 and is not republished.
