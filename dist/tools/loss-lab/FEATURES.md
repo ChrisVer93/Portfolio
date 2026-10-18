@@ -217,3 +217,7 @@ The Help Centre and manual now share five detailed calculation guides: MOSFET, d
 Coverage includes Vds/Id versus Rds/Id channel methods, normalised temperature correction and reverse masks; Eon/Eoff event sampling and optional single-reference voltage scaling; direct Err versus Qrr times blocking voltage, with current-slope units and double-counting cautions; constant versus spectral ESR/winding resistance including DC; balanced voltage integration and ΔB/2 core-density lookup; trapezoidal integration, physical-count scaling, inverse-order interpolation and thermal fixed-point equations.
 
 Worked examples were checked with the numerical engine. All 209 local checks pass. SVG graphs were rendered for layout inspection and MathML structures validated; full browser/manual visual verification was unavailable. The existing public CI baseline remains 194 tests. The source/test ZIP remains labelled 2.2.0 and is not republished.
+
+## 2.5.0 documentation screen guides
+
+20 annotated SVG UI illustrations across all 23 help topics and the offline manual. Three numbered callouts per illustration explain the controls and checks. Illustrations are clearly labelled as examples rather than browser screenshots. 212 local tests pass; hosted CI retains its baseline suite.
