@@ -1,15 +1,15 @@
 # Feature parity and corrected behaviour
 Version 1.0.0 — 9 October 2026
 
-| MATLAB workflow | Web workflow | Status |
+| Legacy workflow | Web workflow | Status |
 |---|---|---|
-| Project setup and snapshots | Named study, browser autosave, downloadable/openable versioned project JSON | Implemented; old MATLAB results discarded |
+| Project setup and snapshots | Named study, browser autosave, downloadable/openable versioned project JSON | Implemented; old Legacy results discarded |
 | Device instances and alternatives | MOSFET/diode/capacitor/inductor instance editor and candidate models | Implemented with immutable IDs |
 | Extract/import characteristic curves | MAT/JSON import, manual SI editor, image digitiser | Implemented |
-| Image calibration, zoom, log axes | Three validated reference points, zoom/scroll, undo, linear/log axes | Implemented; MATLAB zero-start interpolation / extrapolation and forced energy origins |
+| Image calibration, zoom, log axes | Three validated reference points, zoom/scroll, undo, linear/log axes | Implemented; Legacy zero-start interpolation / extrapolation and forced energy origins |
 | Curve iterations and dependencies | Multiple iterations, per-iteration canonical units, optional scaling policy | Implemented |
 | Simulation files | CSV/TXT, numeric MAT level-5, JSON columns | Implemented |
-| Saved MATLAB tables/snapshots | MATLAB JSON export helper and snapshot migration | Implemented conversion route; helper not executed in MATLAB here |
+| Saved Legacy tables/snapshots | Legacy JSON export helper and snapshot migration | Implemented conversion route; helper not executed in Legacy here |
 | Signal mapping and candidate bank counts | Current/voltage/gate selectors and series/parallel/replication counts | Implemented |
 | Operating conditions and phases | All selected real-power pairs summed; optional balanced single-phase ×3 | Implemented |
 | MOSFET conduction | Gate-on positive and reverse magnitude channel model | Corrected reverse-current categorisation; asymmetry not separately modelled |
@@ -27,18 +27,18 @@ Version 1.0.0 — 9 October 2026
 | Reports and data exports | Self-contained HTML/print PDF, CSV, full result JSON | Implemented; no external image-path dependency |
 
 ## Important compatibility and modelling limits
-- A browser does not execute desktop MATLAB .m GUI code directly. This is a web
+- A browser does not execute desktop Legacy .m GUI code directly. This is a web
   implementation of its workflow and models, with intentional numerical fixes.
 - Browser MAT import supports real primitive level-5 data, including cells,
-  structs, characters, numeric types and zlib compression. MATLAB table/MCOS,
+  structs, characters, numeric types and zlib compression. Legacy table/MCOS,
   complex, sparse and v7.3 HDF5 require conversion or explicit unsupported handling.
-- JSON exporter is included for MATLAB tables and snapshots. Its source was
-  inspected, but it could not be tested in MATLAB in this environment.
+- JSON exporter is included for Legacy tables and snapshots. Its source was
+  inspected, but it could not be tested in Legacy in this environment.
 - Legacy normalised ESR is interpreted according to the supplied digitiser,
   which already multiplies samples by raw Rbase. Samples are then converted
   exactly once to ohms. Other exporters should supply canonical SI curve JSON.
 - Curve families use linear 1D, multilinear full grids, and normalised simplex
-  interpolation for sparse 2D/3D data. Sparse geometry can differ from MATLAB.
+  interpolation for sparse 2D/3D data. Sparse geometry can differ from Legacy.
   The first enclosing supported simplex may differ from a Delaunay interpolant;
   this is disclosed in each result's notes. Strict domain rejection is default.
 - Single-reference dependencies produce explicit warnings when requested
@@ -52,7 +52,7 @@ Version 1.0.0 — 9 October 2026
 - FFT estimates depend on recorded bandwidth, resolution and periodic windows.
 - Independent scalar thermal models do not solve a shared thermal network.
 - Transformer, IGBT, GaN-specific and auxiliary/control/interconnect models are
-  not separate supported classes in the supplied MATLAB workflow or this port.
+  not separate supported classes in the supplied Legacy workflow or this port.
 - Limits: one million samples per file, 2,000 combinations, 20,000 combined
   operating-point results; browser-memory limits may be reached earlier for
   many long files. No 36 GB dataset capability is claimed.
@@ -67,26 +67,26 @@ match the total losses and reported efficiency definition.
 
 Static JS syntax and HTML/asset-reference checks are performed. Browser visual
 and interactive QA was unavailable in this managed environment. Exact agreement
-with the user's MATLAB datasets, execution of the exporter in MATLAB, hardware
+with the user's Legacy datasets, execution of the exporter in Legacy, hardware
 validation and measured accuracy remain unverified.
 
-MATLAB interpolation policy: linear per-iteration interpolation/extrapolation, first-occurrence duplicate-axis handling, sorted inverse axes, then linear interpolation across Vgs and temperature on rectangular families. Negative extrapolated channel Vds contributions clamp to zero as in the MATLAB source. Strict policy retains monotonic-branch and domain rejection. MATLAB runtime parity has not been executed. The supplied CLLC project produces 44/44 valid rows in this mode; extrapolation warnings remain.
+Legacy interpolation policy: linear per-iteration interpolation/extrapolation, first-occurrence duplicate-axis handling, sorted inverse axes, then linear interpolation across Vgs and temperature on rectangular families. Negative extrapolated channel Vds contributions clamp to zero as in the Legacy source. Strict policy retains monotonic-branch and domain rejection. Legacy runtime parity has not been executed. The supplied CLLC project produces 44/44 valid rows in this mode; extrapolation warnings remain.
 
 ## Workflow and reporting update — 2026-10-13
 - Component-specific characteristic choices and quantity-specific axis-unit menus. Empty numeric inputs for new alternatives and digitiser sessions; no candidate cloning. Fresh digitiser on entry, image replacement, target/characteristic change and successful save.
 - Origin synthesis remains part of saved analysis data; synthesized points are hidden from digitiser, device and reference-curve plots, with explanatory notes.
-- Body-diode digitiser matches MATLAB characteristic axes, Tj/Vgs dependencies, negative-sample acceptance and magnitude storage. The engine retains its documented symmetric reverse gate-on channel approximation; full MATLAB event-mask parity is not claimed.
+- Body-diode digitiser matches Legacy characteristic axes, Tj/Vgs dependencies, negative-sample acceptance and magnitude storage. The engine retains its documented symmetric reverse gate-on channel approximation; full Legacy event-mask parity is not claimed.
 - Eon/Eoff voltage scaling defaults enabled for newly created/imported curves, preserves explicit import opt-out, and can be changed in the editor or digitiser.
 - Eon/Eoff temperature-independent checkbox suppresses Tj mismatch only, retains the reference temperature and records the assumption. Multiple reference temperatures must first be resolved; unrelated dependency warnings remain.
 - Waveform batches are parsed and consistency-checked before import; all files must share variables, independent of column order. One shared rename/time/unit confirmation applies to the complete batch. Conversion and validation finish before any file is added.
-- Print/PDF renders a dedicated full report. MATLAB report categories are represented by combination efficiency plots, ranking charts, per-operating-point category stacks, per-component stacks, component alternative comparisons and Vin/Pout plus Vout/Pout efficiency maps. Exact points retained; missing map cells not fabricated. Tables repeat headings and maps split into printable column groups. SVGs and data are embedded in the HTML report. Browser visual QA unavailable.
+- Print/PDF renders a dedicated full report. Legacy report categories are represented by combination efficiency plots, ranking charts, per-operating-point category stacks, per-component stacks, component alternative comparisons and Vin/Pout plus Vout/Pout efficiency maps. Exact points retained; missing map cells not fabricated. Tables repeat headings and maps split into printable column groups. SVGs and data are embedded in the HTML report. Browser visual QA unavailable.
 
 Results presentation: operating points use calculated Vin, Vout and Pout, sorted numerically in that order. Tables, chart labels, debug selectors and CSVs share the same label. Combination comparisons display ascending IDs while the best candidate remains selected by mean efficiency. Original waveform names and IDs remain in full JSON for provenance.
 
 Efficiency maps use a purple-to-yellow, perceptually ordered colour scale over the observed efficiency range, percentage labels and an explicit legend. Dashboard Vout slices share one scale per combination. Missing cells remain grey; repeated exact coordinates are averaged. HTML/print report maps use the same renderer and colours.
 
 ## Analysis options — engine 1.1.0
-- Reference-first (default) preserves existing/MATLAB interpolation order. Forward-first interpolates a piecewise-linear forward family across dependencies, then inverts the resulting curve. Strict/clamp policies use the common reference X interval; extrapolation policies use the union. Ambiguous or flat combined branches are rejected. Exact dependency slices ignore zero-weight reference slices.
+- Reference-first (default) preserves existing/Legacy interpolation order. Forward-first interpolates a piecewise-linear forward family across dependencies, then inverts the resulting curve. Strict/clamp policies use the common reference X interval; extrapolation policies use the union. Ambiguous or flat combined branches are rejected. Exact dependency slices ignore zero-weight reference slices.
 - Weighted average uses inverse-distance squared with dependency coordinates normalised to their sampled ranges. It honours exact reference coordinates, is an explicit heuristic and does not claim superior physical accuracy. Domain-policy controls remain separate from method selection.
 - Diagnostics retain component, characteristic, requested input and dependency intervals, reference ranges, iteration notes and affected query counts. Errors include the requested characteristic/input/dependencies.
 - Sensitivity applies one parameter at a time to a selected combination and component, across all or one operating point. Vgs/Rg use ±percentage, reference temperature uses ±degrees Celsius, parallel count uses ±1 device. Frequency scales time for the whole converter and retains waveform shape. Total mean loss percentage and watt change, efficiency percentage-point change and elasticity are reported. Failed scenarios remain invalid; unrepresented dependencies can give zero response. This is a curve-model response with fixed imported waveforms, not circuit re-simulation or guaranteed savings.
@@ -135,7 +135,7 @@ Efficiency maps use a purple-to-yellow, perceptually ordered colour scale over t
 - Expected curve extrapolation, selected interpolation methods, reverse gate-on conduction, voltage scaling, recovery detection/Qrr approximation, temperature independence, ignored dependencies, spectral/core assumptions and thermal convergence are separated from warnings. Active models have a details table/list without internal curve IDs.
 - Explicit voltage-scaling opt-out is an assumption, not a fixed-voltage warning. Missing energy-curve scaling flags default to enabled, consistent with imports and the editor.
 - Zero-current Eon/Eoff are forced to zero for the Id→energy queries used by the engine, regardless of curve intercept. Negative event current remains mapped to zero. This is the selected current-driven switching model; separate no-load/output-capacitance energy is not added.
-- Multidimensional dependency extrapolation now projects grid boundary segments instead of silently clamping. Sparse families use a nearby nondegenerate simplex for linear projection outside the hull. Explicit clamp remains available only as a selected policy; strict error mode still rejects out-of-domain inputs. Invalid negative physical outputs remain rejected, except the existing reported MATLAB channel-voltage zero-floor rule.
+- Multidimensional dependency extrapolation now projects grid boundary segments instead of silently clamping. Sparse families use a nearby nondegenerate simplex for linear projection outside the hull. Explicit clamp remains available only as a selected policy; strict error mode still rejects out-of-domain inputs. Invalid negative physical outputs remain rejected, except the existing reported Legacy channel-voltage zero-floor rule.
 - 138 automated tests pass, covering grouped notes, hidden diagnostic ranges, model summary, switching zero rule, scaling choices and grid/sparse projection.
 
 ## Early input checks — engine 1.7.0
@@ -147,7 +147,7 @@ Efficiency maps use a purple-to-yellow, perceptually ordered colour scale over t
 
 ## Projection review and failure inspection — engine 1.8.0
 - Exact engine-query screening runs after setup validation and before full analysis. Negative projected physical magnitudes are grouped by device/alternative/characteristic, with dependency conditions, affected operating-point count and a graph. No universal (0,0) rule is imposed on resistance or temperature curves.
-- Edit characteristic or explicitly accept a per-characteristic zero floor. Consent persists in project JSON and is reversible in the characteristic editor. MATLAB mode no longer silently floors negative channel-voltage projections. Raw and corrected values remain inspectable; accepted floors are assumptions in reports.
+- Edit characteristic or explicitly accept a per-characteristic zero floor. Consent persists in project JSON and is reversible in the characteristic editor. Legacy mode no longer silently floors negative channel-voltage projections. Raw and corrected values remain inspectable; accepted floors are assumptions in reports.
 - Screening uses temporary zeros only to discover further issues; provisional thermal conditions are not final results. Screening losses and efficiency are withheld. Full-run runtime guards remain active, including for sensitivity studies.
 - Failed device calculations preserve queries, error conditions, signed waveforms and device identity. Failed devices are selectable in debug. Failed queries with no output are marked explicitly. Setup failures before signal acquisition cannot supply waveform traces. Thermal failures retain the last evaluated trace.
 - Frequency-dependent capacitor ESR now supports a separate explicit DC equivalent series resistance, adding mean-current squared times this resistance to the harmonic sum. Constant ESR continues to use total RMS current. Significant capacitor mean current requires a mapping/window check or this explicit resistance; no DC resistance is inferred from an AC datasheet value or insulation resistance.
@@ -186,3 +186,12 @@ Efficiency maps use a purple-to-yellow, perceptually ordered colour scale over t
 Results open on whole-range comparisons with independent Vin, Vout and Pout filters and alternative selection. Rankings use equal weighting; incomplete alternatives are visible but cannot receive the best label. Loss charts group fixed Vin/Vout slices, with mean or individual point views. Each group has paired stacked charts for contributions and component instances, sharing totals and watt scales, with W/% controls.
 
 A separate point explorer compares alternatives, inspects only applicable selected-component loss categories (Excluded vs 0 W), and preserves query debugging, characteristic coverage, warnings, thermal traces, power flow and sensitivity. Select a component segment to inspect that bank; component identity is never merged by type. Failed/incomplete totals stay unavailable. No numerical loss model changed in this release.
+
+
+## Combined breakdown and clearer setup (2.2.0)
+
+Each alternative now has one aligned two-level loss chart. Coloured contributions are grouped within the component bank they belong to; the lower row labels each component's proportional share. Hover or keyboard focus shows watts and share of total immediately. Clicking either row opens the relevant component breakdown. W/% views and fixed-voltage groupings are retained; failed results remain unavailable.
+
+New studies explicitly select forward-family interpolation before inversion. Previously saved explicit methods remain unchanged; older projects without a method retain reference-curve interpolation. Gate configuration displays analog hysteresis thresholds only for analog signals and mapped on/off voltages only for logic signals. User-facing explanations use descriptive reference/legacy terminology while persisted compatibility identifiers and import function names remain stable.
+
+194 automated tests cover numerical models, import, rendering, actual-app navigation and tooltip behaviour. Browser visual checks were unavailable for this release.

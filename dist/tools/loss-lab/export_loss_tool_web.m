@@ -1,7 +1,7 @@
 function export_loss_tool_web(inputFile, outputFile)
 % EXPORT_LOSS_TOOL_WEB Export a loss-tool snapshot/curve/table to portable JSON.
 % Usage: export_loss_tool_web('snapshot.mat', 'web_project.json')
-% Works around MATLAB table/MCOS and v7.3 HDF5 browser import limitations.
+% Works around Legacy table/MCOS and v7.3 HDF5 browser import limitations.
 % Original inputs and saved results are not modified. The web tool recomputes.
 arguments
     inputFile (1,:) char

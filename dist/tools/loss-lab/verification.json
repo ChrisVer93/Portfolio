@@ -1,18 +1,17 @@
 {
-  "engineVersion": "2.1.0",
+  "engineVersion": "2.2.0",
   "date": "2026-10-18",
   "numericalAndImportTests": {
-    "total": 188,
-    "passed": 188,
+    "total": 194,
+    "passed": 194,
     "failed": 0,
     "runner": "node --test tests/loss-lab/*.test.mjs"
   },
   "matFixtures": "SciPy-generated level-5 plain/compressed struct/cell and numeric matrices",
   "demo": "2 combinations \u00d7 3 operating points; all complete, totals reconciled",
-  "matlabRuntime": "unavailable; exporter and full real-data parity not executed",
   "browserQA": "unavailable in managed environment; no browser interaction or screenshot validation claimed",
   "physicalAccuracy": "not established",
-  "cllcRegression": "Two-alternative CLLC project: 4/4 valid combinations under each of reference-first, forward-first and inverse-distance methods in MATLAB domain policy",
+  "cllcRegression": "Two-alternative CLLC project: 4/4 valid combinations under each of reference-first, forward-first and inverse-distance methods in Legacy domain policy",
   "workflowCoverage": "79 total tests: characteristic filters, blank alternatives, unit menus, batch variable scan/conversion, hidden origins, temperature-independent assumptions, switching scaling defaults and full report structure",
   "presentationRegression": "Numeric operating-parameter labels; ascending Vin/Vout/Pout; filename provenance retained in full JSON; computation and best-alternative ranking unchanged",
   "heatmapRegression": "Viridis-style observed-range scale, contrast-aware labels, missing cells, constant efficiencies, averaging and shared slice scale",
@@ -32,6 +31,9 @@
   "seriesSensitivity": "Replaces waveform frequency with series device count. Independent percent/whole-device steps; scales total physical count and uses existing engine series voltage sharing; waveforms and frequency fixed. Analytic demo regression checks conduction and voltage-scaled switching losses.",
   "resultsDashboard": "Persistent selected operating point, clickable heatmap samples/table, calculated-input power split and per-device/category losses with separate mapped-input discrepancy; alternative efficiency slice curves, stacked losses and temperatures; sampled characteristic coverage with raw projections; shared current/voltage/gate/loss time cursor; thermal trial history retained on convergence and failure; clear result states; explicit study review before user calculation. New report sections opt-in via report dialog.",
   "sensitivityInterpretation": "Component-specific relevant controls, ESR/winding/core characteristic multipliers and iterative Rth; absent/disabled dependency distinguished from represented zero response; chosen-step and normalised tornado charts; category deltas; persisted target/steps/point selection in project JSON. Tests cover numeric resistance changes, inverse-axis core scaling and real app worker-result rendering.",
-  "dashboardBrowserQA": "Historical 2.0.0 browser QA only; see previous revision. 2.1.0 has automated engine, rendering and actual-app interaction checks; no new live browser verification.",
-  "resultsExplorer": "Scope-first results: independent Vin/Vout/Pout filters, selected alternatives, complete-only best labels, voltage-grouped means/per-point paired category and component stacks with matching scales, selected component applicable models and excluded states. 9 new tests include numerical reconciliation, same-type identities, invalid states and actual-app controls for scope tabs, filters, component navigation and debug. Browser visual QA unavailable in this session."
+  "dashboardBrowserQA": "Historical 2.0.0 browser QA only; see previous revision. 2.2.0 has automated engine, rendering and actual-app interaction checks; no new live browser verification.",
+  "resultsExplorer": "Scope-first results: independent Vin/Vout/Pout filters, selected alternatives, complete-only best labels, voltage-grouped means/per-point paired category and component stacks with matching scales, selected component applicable models and excluded states. 9 new tests include numerical reconciliation, same-type identities, invalid states and actual-app controls for scope tabs, filters, component navigation and debug. Browser visual QA unavailable in this session.",
+  "legacyRuntime": "unavailable; exporter and full real-data parity not executed",
+  "combinedBreakdown": "Two aligned levels in one graph per alternative: per-component contribution stacks and component quota labels. Immediate pointer/keyboard tooltip, values table, W/% and component click navigation. Numerical reconciliation, safe labels, real app navigation and pointer/focus positioning tests pass.",
+  "setupClarity": "Forward-first default for new studies; explicit saved methods preserved; pre-method saved studies retain reference-first. Logic and analog gate fields rendered conditionally. Descriptive public method/import/policy naming; stable compatibility IDs retained."
 }
