@@ -1,9 +1,9 @@
 {
-  "engineVersion": "2.0.0",
-  "date": "2026-10-17",
+  "engineVersion": "2.1.0",
+  "date": "2026-10-18",
   "numericalAndImportTests": {
-    "total": 179,
-    "passed": 179,
+    "total": 188,
+    "passed": 188,
     "failed": 0,
     "runner": "node --test tests/loss-lab/*.test.mjs"
   },
@@ -32,5 +32,6 @@
   "seriesSensitivity": "Replaces waveform frequency with series device count. Independent percent/whole-device steps; scales total physical count and uses existing engine series voltage sharing; waveforms and frequency fixed. Analytic demo regression checks conduction and voltage-scaled switching losses.",
   "resultsDashboard": "Persistent selected operating point, clickable heatmap samples/table, calculated-input power split and per-device/category losses with separate mapped-input discrepancy; alternative efficiency slice curves, stacked losses and temperatures; sampled characteristic coverage with raw projections; shared current/voltage/gate/loss time cursor; thermal trial history retained on convergence and failure; clear result states; explicit study review before user calculation. New report sections opt-in via report dialog.",
   "sensitivityInterpretation": "Component-specific relevant controls, ESR/winding/core characteristic multipliers and iterative Rth; absent/disabled dependency distinguished from represented zero response; chosen-step and normalised tornado charts; category deltas; persisted target/steps/point selection in project JSON. Tests cover numeric resistance changes, inverse-axis core scaling and real app worker-result rendering.",
-  "dashboardBrowserQA": "Live 2.0.0: demo and imported six-point iterative-thermal project complete; selected point updates dashboard and debug; capacitor controls omit gate inputs; chosen and normalised tornado modes render; shared cursor updates; project review appears before calculation; convergence trace visible; HTML export includes power flow, thermal and coverage sections. No site errors observed. Screenshot: docs/qa/loss-lab-dashboard-2.0.0.jpg."
+  "dashboardBrowserQA": "Historical 2.0.0 browser QA only; see previous revision. 2.1.0 has automated engine, rendering and actual-app interaction checks; no new live browser verification.",
+  "resultsExplorer": "Scope-first results: independent Vin/Vout/Pout filters, selected alternatives, complete-only best labels, voltage-grouped means/per-point paired category and component stacks with matching scales, selected component applicable models and excluded states. 9 new tests include numerical reconciliation, same-type identities, invalid states and actual-app controls for scope tabs, filters, component navigation and debug. Browser visual QA unavailable in this session."
 }

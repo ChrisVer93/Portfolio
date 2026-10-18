@@ -170,7 +170,7 @@ Efficiency maps use a purple-to-yellow, perceptually ordered colour scale over t
 ### Sensitivity parameter correction — 1.10.1
 - Removed waveform frequency; added series device count with independent percent or whole-device steps. Total device count scales proportionally; engine uses per-device voltage division. Waveforms/frequency stay fixed, with ideal sharing assumed. 169 automated tests pass, including series voltage/scaling loss checks.
 
-## Connected engineering results — engine 2.0.0
+## Connected engineering results — engine 2.1.0
 - Shared operating-point selection persists across results, warning/coverage panels and debug. Heatmap samples and summary rows open the point dashboard. Complete, complete-with-assumptions, incomplete and failed states are distinct; missing loss totals remain unavailable.
 - Selected-point power flow uses calculated input = delivered output + included model losses. Mapped input discrepancy is separate and never becomes fabricated component loss. Per-component/category breakdown and temperature views accompany alternative efficiency slice curves, stacked losses and temperatures.
 - Characteristic coverage overlays retained engine queries on reference curves and shows out-of-range/reference-condition notes and accepted zero floors. Counts refer to retained display samples, not time-weighted coverage percentages.
@@ -179,3 +179,10 @@ Efficiency maps use a purple-to-yellow, perceptually ordered colour scale over t
 - Study summary reviews counts, active losses, temperature models and explicit curve assumptions before user-initiated runs. New dashboard, thermal and coverage report sections are selectable.
 - Component-specific sensitivity exposes gate settings only for applicable enabled MOSFET models; passive resistance and core-loss characteristic scales and iterative thermal resistance are supported. Zero response distinguishes absent/disabled dependencies from represented no-response conditions. Chosen-step and normalised tornado views, per-category mean watt changes and saved sensitivity settings are available. Scaling characteristics does not redesign a component or re-simulate the circuit.
 - 179 automated tests pass, including analytic contribution changes, failure-history retention, saved settings, power reconciliation and actual application rendering after worker results.
+
+
+## Results explorer (2.1.0)
+
+Results open on whole-range comparisons with independent Vin, Vout and Pout filters and alternative selection. Rankings use equal weighting; incomplete alternatives are visible but cannot receive the best label. Loss charts group fixed Vin/Vout slices, with mean or individual point views. Each group has paired stacked charts for contributions and component instances, sharing totals and watt scales, with W/% controls.
+
+A separate point explorer compares alternatives, inspects only applicable selected-component loss categories (Excluded vs 0 W), and preserves query debugging, characteristic coverage, warnings, thermal traces, power flow and sensitivity. Select a component segment to inspect that bank; component identity is never merged by type. Failed/incomplete totals stay unavailable. No numerical loss model changed in this release.
