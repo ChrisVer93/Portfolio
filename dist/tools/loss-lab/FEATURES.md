@@ -221,3 +221,9 @@ Worked examples were checked with the numerical engine. All 209 local checks pas
 ## 2.5.0 documentation screen guides
 
 20 annotated SVG UI illustrations across all 23 help topics and the offline manual. Three numbered callouts per illustration explain the controls and checks. Illustrations are clearly labelled as examples rather than browser screenshots. 212 local tests pass; hosted CI retains its baseline suite.
+
+
+
+## 2.5.2 Study overview contextual help
+
+Every analysis setting and input/output mapping field now opens its own detailed Help Centre topic. Conversion-mode help explains average/RMS reporting and the shared loss engine; window, FFT, interpolation and domain-policy help describes calculation effects and worked examples. Balanced input/output ×3 help explains phase selection, real-power scaling and the separate treatment of physical component losses. The duplicated inline interpolation section is removed. All topics are also in the printable offline manual. 197 automated checks pass; browser visual QA was unavailable.

@@ -1,5 +1,5 @@
-import {CATEGORIES,LABELS} from './engine.js?v=2.5.0';
-import {coordinateKey} from './heat-map.js?v=2.5.0';
+import {CATEGORIES,LABELS} from './engine.js?v=2.5.2';
+import {coordinateKey} from './heat-map.js?v=2.5.2';
 const e=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const n=v=>Number.isFinite(v)?Number(v.toPrecision(5)).toString():'—';
 export const applicable={MOSFET:['conduction','body','on','off','recovery'],Diode:['conduction','recovery'],Capacitor:['copper'],Inductor:['copper','core']};
