@@ -4,7 +4,7 @@ on:
     branches: [main]
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 concurrency:
@@ -25,6 +25,30 @@ jobs:
           node-version: 22
       - name: Verify loss engine
         run: npm test
+      - name: Set up Python for first-time manual captures
+        if: ${{ !hashFiles('dist/tools/loss-lab/screenshots/overview.png') }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install screenshot browser
+        if: ${{ !hashFiles('dist/tools/loss-lab/screenshots/overview.png') }}
+        run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Capture actual software screens and update manual
+        if: ${{ !hashFiles('dist/tools/loss-lab/screenshots/overview.png') }}
+        run: python .github/scripts/capture_loss_lab_manual.py
+      - name: Commit updated manual and actual screenshots
+        run: |
+          if [ -f dist/tools/loss-lab/screenshots/overview.png ]; then
+            git add dist/tools/loss-lab/manual.html dist/tools/loss-lab/screenshots dist/tools/loss-lab/Loss_Lab_Manual_Offline.zip
+            if ! git diff --cached --quiet; then
+              git config user.name "github-actions[bot]"
+              git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+              git commit -m "Replace manual UI mockups with real Loss Lab screenshots"
+              git push origin HEAD:main
+            fi
+          fi
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload static website
