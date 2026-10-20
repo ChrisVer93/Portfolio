@@ -38,6 +38,8 @@ jobs:
       - name: Capture actual software screens and update manual
         if: ${{ !hashFiles('dist/tools/loss-lab/screenshots/overview.png') }}
         run: python .github/scripts/capture_loss_lab_manual.py
+      - name: Refresh offline manual and screenshot bundle
+        run: python .github/scripts/refresh_loss_lab_offline.py
       - name: Commit updated manual and actual screenshots
         run: |
           if [ -f dist/tools/loss-lab/screenshots/overview.png ]; then
@@ -45,7 +47,7 @@ jobs:
             if ! git diff --cached --quiet; then
               git config user.name "github-actions[bot]"
               git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-              git commit -m "Replace manual UI mockups with real Loss Lab screenshots"
+              git commit -m "Keep offline Loss Lab manual in sync with published documentation"
               git push origin HEAD:main
             fi
           fi
