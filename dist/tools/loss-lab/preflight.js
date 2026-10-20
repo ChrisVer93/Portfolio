@@ -23,7 +23,7 @@ export function checkCharacteristic(c,{given=lookupQuantity(c),policy='error',me
  return issues;
 }
 const waveCache=new WeakMap(),powerCache=new WeakMap();
-function inspectWave(w){if(waveCache.has(w))return waveCache.get(w);const issues=[],t=w.columns?.[w.time],stats={};if(!Array.isArray(t)||t.length<2)issues.push('Choose a time column with at least two samples.');else if(t.length>1000000)issues.push('This file exceeds one million samples. Reduce or split it.');else{for(let j=0;j<t.length;j++)if(!finite(t[j])||(j&&t[j]<=t[j-1])){issues.push('Time must contain finite numbers in strictly increasing order; check row '+(j+1)+'.');break;}}
+function inspectWave(w){if(waveCache.has(w))return waveCache.get(w);const issues=[],t=w.columns?.[w.time],stats={};if(!Array.isArray(t)||t.length<2)issues.push('Choose a time column with at least two samples.');else if(t.length>200000)issues.push('This file exceeds 200,000 samples. Reduce or split it.');else{for(let j=0;j<t.length;j++)if(!finite(t[j])||(j&&t[j]<=t[j-1])){issues.push('Time must contain finite numbers in strictly increasing order; check row '+(j+1)+'.');break;}}
  for(const [name,a] of Object.entries(w.columns||{})){if(!Array.isArray(a)||a.length!==t?.length){issues.push(name+': the number of samples does not match time.');continue;}let lo=Infinity,hi=-Infinity,integral=0,bad=false;for(let j=0;j<a.length;j++){if(!finite(a[j])){issues.push(name+': replace the missing or nonnumeric value at row '+(j+1)+'.');bad=true;break;}lo=Math.min(lo,a[j]);hi=Math.max(hi,a[j]);if(j&&t)integral+=(t[j]-t[j-1])*(a[j]+a[j-1])/2;}if(!bad)stats[name]={min:lo,max:hi,absMax:Math.max(Math.abs(lo),Math.abs(hi)),mean:t?.length>1?integral/(t.at(-1)-t[0]):0};}
  const data={issues,stats};waveCache.set(w,data);return data;}
 function checkedPower(w,op){let cache=powerCache.get(w);if(!cache){cache=new Map();powerCache.set(w,cache);}const key=JSON.stringify([op.outputPairs,op.balancedOutput,op.window]);if(!cache.has(key)){const names=[...new Set([w.time,...(op.outputPairs||[]).flatMap(p=>[p.v,p.i])])].filter(k=>w.columns?.[k]);const selected=sliceWaveform({...w,columns:Object.fromEntries(names.map(k=>[k,w.columns[k]]))},op);cache.set(key,outputPower(selected,op));}return cache.get(key);}
@@ -60,6 +60,6 @@ export function checkProject(project){
 
   }
  }
- if(combinations>2000)add('Study size','Reduce the study to at most 2,000 alternative combinations.');if(combinations*waves.length>20000)add('Study size','Reduce the study to at most 20,000 combination–operating-point results.');
+ if(combinations>200)add('Study size','Reduce the study to at most 200 alternative combinations.');if(combinations*waves.length>2000)add('Study size','Reduce the study to at most 2,000 combination–operating-point results.');
  return {issues,errors:issues.filter(i=>i.severity==='error'),warnings:issues.filter(i=>i.severity==='warning'),ready:!issues.some(i=>i.severity==='error'),combinations};
 }
