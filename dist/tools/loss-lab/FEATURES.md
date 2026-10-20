@@ -227,3 +227,8 @@ Worked examples were checked with the numerical engine. All 209 local checks pas
 ## 2.5.2 Study overview contextual help
 
 Every analysis setting and input/output mapping field now opens its own detailed Help Centre topic. Conversion-mode help explains average/RMS reporting and the shared loss engine; window, FFT, interpolation and domain-policy help describes calculation effects and worked examples. Balanced input/output ×3 help explains phase selection, real-power scaling and the separate treatment of physical component losses. The duplicated inline interpolation section is removed. All topics are also in the printable offline manual. 197 automated checks pass; browser visual QA was unavailable.
+
+
+## 2.5.3 V6 quick help refinement
+
+Help buttons sit beside field labels across Study overview, Waveforms operating conditions and component/thermal settings. Dedicated component count, orientation, gate and thermal quick helpers contain no illustrations; full documentation retains existing figures. Study helper wording follows V6, with engine-verified interpolation examples and an explicit explanation of frequency-dependent spectral resistance calculations. Conversion-mode wording remains consistent with its actual average/RMS reporting role. Existing calculation behaviour is unchanged.

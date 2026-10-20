@@ -1,9 +1,9 @@
-import {boundaryCurve} from './curve-boundary.js?v=2.5.2';
-import {resolveMosfetCurve,resolveComponentCurve} from './loss-models.js?v=2.5.2';
-import {dependencySlice} from './dependency-policy.js?v=2.5.2';
-import {interpolateCurve} from './curve-methods.js?v=2.5.2';
+import {boundaryCurve} from './curve-boundary.js?v=2.5.3';
+import {resolveMosfetCurve,resolveComponentCurve} from './loss-models.js?v=2.5.3';
+import {dependencySlice} from './dependency-policy.js?v=2.5.3';
+import {interpolateCurve} from './curve-methods.js?v=2.5.3';
 /* Converter Loss Lab — pure numerical engine. No DOM, files or globals. */
-export const ENGINE_VERSION='2.5.2';
+export const ENGINE_VERSION='2.5.3';
 export const CATEGORIES=['conduction','body','on','off','recovery','copper','core'];
 export const LABELS={conduction:'Channel / forward conduction',body:'Reverse / body conduction',on:'Turn-on',off:'Turn-off',recovery:'Reverse recovery',copper:'ESR / copper',core:'Core'};
 export const CURVE_IDS={

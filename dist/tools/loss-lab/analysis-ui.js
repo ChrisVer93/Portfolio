@@ -1,6 +1,6 @@
-import {sensitivityTornado,contributionSensitivity} from './sensitivity-visuals.js?v=2.5.2';
-import {SENSITIVITY_PARAMETERS,sensitivityParameters} from './sensitivity.js?v=2.5.2';
-import {operatingPointLabel,orderedOperatingPoints} from './result-view.js?v=2.5.2';
+import {sensitivityTornado,contributionSensitivity} from './sensitivity-visuals.js?v=2.5.3';
+import {SENSITIVITY_PARAMETERS,sensitivityParameters} from './sensitivity.js?v=2.5.3';
+import {operatingPointLabel,orderedOperatingPoints} from './result-view.js?v=2.5.3';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const n=v=>Number.isFinite(v)?Number(v.toPrecision(5)).toString():'—';
 export function diagnosticTable(rows){const items=orderedOperatingPoints(rows).flatMap(r=>r.devices.flatMap(d=>(d.diagnostics||[]).map(q=>({r,d,q}))));if(!items.length)return '<p class="caption">No curve-query diagnostics recorded.</p>';return `<div class="table-wrap"><table><thead><tr><th>Operating point / component</th><th>Characteristic / condition</th><th>Requested input range</th><th>Reference input range</th><th>Requested dependencies</th><th>Queries affected</th></tr></thead><tbody>${items.map(({r,d,q})=>`<tr><td>${esc(operatingPointLabel(r))}<br>${esc(d.instanceName+' / '+d.part)}</td><td>${esc(q.characteristic)}<br>${esc(q.message)}</td><td>${q.requestedRange.map(n).join(' … ')} ${esc(q.given)}</td><td>${q.referenceRange?.map(n).join(' … ')||'—'} ${esc(q.given)}</td><td>${Object.entries(q.dependencies).map(([k,v])=>esc(k)+'='+v.map(n).join(' … ')).join('<br>')}</td><td>${q.count}</td></tr>`).join('')}</tbody></table></div>`;}

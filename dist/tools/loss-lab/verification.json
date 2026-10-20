@@ -1,9 +1,9 @@
 {
-  "engineVersion": "2.5.2",
+  "engineVersion": "2.5.3",
   "date": "2026-10-20",
   "numericalAndImportTests": {
-    "total": 197,
-    "passed": 197,
+    "total": 201,
+    "passed": 201,
     "failed": 0,
     "runner": "node --test tests/loss-lab/*.test.mjs"
   },
@@ -42,9 +42,10 @@
     "version": "2.2.0",
     "status": "Previous release archive retained; this release updates deployed tool/manual assets only."
   },
-  "validationScope": "197 automated checks on the current deployed-source baseline, including 3 new contextual-help checks. Browser visual QA unavailable.",
+  "validationScope": "201 automated checks, including V6 field routing, label placement, illustration-free quick mode and interpolation examples. Browser visual QA unavailable.",
   "detailedDocumentation": "23 Help topics including five detailed calculation references, 20 native MathML equations and nine synthetic SVG figures. Engine-verified examples cover channel voltage/resistance/normalisation, switching event energies, diode forward and both recovery methods, spectral/constant capacitor and winding loss, core flux and inverse interpolation order. All equations structurally validated and all figures rendered for internal layout review. Browser visual QA unavailable.",
   "screenGuides": "20 annotated native SVG UI illustrations across all 23 documentation topics, with three numbered explanations each. Explicitly labelled as illustrations, not browser screenshots. Embedded in Help Centre and offline manual; rasterised for layout review.",
   "studyOverviewHelp": "2.5.2: field-specific help, balanced input/output power semantics and regenerated offline manual. 197 automated checks pass; browser visual QA unavailable.",
-  "sourceOfTruth": "Current GitHub main baseline plus Study overview contextual-help changes."
+  "sourceOfTruth": "Current GitHub main baseline plus V6 quick-help changes.",
+  "v6QuickHelp": "Requested label placement and content edits; dedicated component/thermal topics; normal documentation figures retained."
 }
