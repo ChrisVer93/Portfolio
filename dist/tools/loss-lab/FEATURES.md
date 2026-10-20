@@ -237,3 +237,7 @@ Help buttons sit beside field labels across Study overview, Waveforms operating 
 ## 2.5.4 · V7 component guidance
 
 Shortens component, series, parallel and orientation help per V7. Uses body diode conduction and reverse recovery terminology. Check inputs and setup-assistant issue help now reuse the compact field helper articles, including V6 study guidance. 203 automated tests pass, including actual application issue-help interactions.
+
+## 2.5.5 · Quick-helper documentation recap
+
+Help Centre Documentation now collects the quick helpers into searchable expandable topics, grouped by study settings, component settings, and workflow/loss models. In-tool Help Centre articles use compact text rendering without visualisations. 204 tests pass.

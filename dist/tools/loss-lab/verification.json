@@ -1,9 +1,9 @@
 {
-  "engineVersion": "2.5.4",
+  "engineVersion": "2.5.5",
   "date": "2026-10-20",
   "numericalAndImportTests": {
-    "total": 203,
-    "passed": 203,
+    "total": 204,
+    "passed": 204,
     "failed": 0,
     "runner": "node --test tests/loss-lab/*.test.mjs"
   },
@@ -48,5 +48,6 @@
   "studyOverviewHelp": "2.5.2: field-specific help, balanced input/output power semantics and regenerated offline manual. 197 automated checks pass; browser visual QA unavailable.",
   "sourceOfTruth": "Current GitHub main baseline plus V6 quick-help changes.",
   "v6QuickHelp": "Requested label placement and content edits; dedicated component/thermal topics; normal documentation figures retained.",
-  "v7Help": "Components & Curves guide shortened per V7 markup; body diode conduction and reverse recovery terminology clarified. Series/parallel reminders and orientation loss-effect paragraph removed as requested. Check inputs issue help and setup-assistant issue links use the same field article and compact mode as V6/V7 quick helpers. Field-specific routing takes priority over broad negative-message matching. 203 tests pass including actual-app issue-help clicks."
+  "v7Help": "Components & Curves guide shortened per V7 markup; body diode conduction and reverse recovery terminology clarified. Series/parallel reminders and orientation loss-effect paragraph removed as requested. Check inputs issue help and setup-assistant issue links use the same field article and compact mode as V6/V7 quick helpers. Field-specific routing takes priority over broad negative-message matching. 203 tests pass including actual-app issue-help clicks.",
+  "helpRecap": "Help Centre Documentation opens a searchable grouped recap of the same study/component/workflow quick-helper articles. Every article in the in-tool Help Centre uses compact rendering without UI illustrations or scientific figures. Full printable manual remains separate. 204 tests pass including actual-app Documentation navigation/search."
 }
