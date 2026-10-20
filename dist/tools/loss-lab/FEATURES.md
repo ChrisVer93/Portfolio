@@ -232,3 +232,8 @@ Every analysis setting and input/output mapping field now opens its own detailed
 ## 2.5.3 V6 quick help refinement
 
 Help buttons sit beside field labels across Study overview, Waveforms operating conditions and component/thermal settings. Dedicated component count, orientation, gate and thermal quick helpers contain no illustrations; full documentation retains existing figures. Study helper wording follows V6, with engine-verified interpolation examples and an explicit explanation of frequency-dependent spectral resistance calculations. Conversion-mode wording remains consistent with its actual average/RMS reporting role. Existing calculation behaviour is unchanged.
+
+
+## 2.5.4 · V7 component guidance
+
+Shortens component, series, parallel and orientation help per V7. Uses body diode conduction and reverse recovery terminology. Check inputs and setup-assistant issue help now reuse the compact field helper articles, including V6 study guidance. 203 automated tests pass, including actual application issue-help interactions.

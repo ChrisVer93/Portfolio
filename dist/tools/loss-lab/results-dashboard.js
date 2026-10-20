@@ -1,6 +1,6 @@
-import {CATEGORIES,LABELS,outputPower,sliceWaveform} from './engine.js?v=2.5.3';
-import {collectAnalysisNotes} from './analysis-notes.js?v=2.5.3';
-import {characteristicTitle} from './preflight.js?v=2.5.3';
+import {CATEGORIES,LABELS,outputPower,sliceWaveform} from './engine.js?v=2.5.4';
+import {collectAnalysisNotes} from './analysis-notes.js?v=2.5.4';
+import {characteristicTitle} from './preflight.js?v=2.5.4';
 const e=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const n=v=>Number.isFinite(v)?Number(v.toPrecision(5)).toString():'—';
 const palette=['#c6f278','#82bfff','#c6a0f6','#f6b56d','#79d8c1','#f49cac','#a6b6c8'];
 export function resultState(row,project){if(!row)return 'Not calculated';if(!row.valid)return row.devices?.some(d=>d.valid)?'Incomplete':'Failed';const notes=collectAnalysisNotes([row],project);return notes.warnings.length||notes.assumptions.length?'Complete with assumptions':'Complete';}

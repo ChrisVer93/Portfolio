@@ -1,6 +1,6 @@
-import {characteristicName,QUANTITIES} from './characteristics.js?v=2.5.3';
-import {INTERPOLATION_METHODS} from './curve-methods.js?v=2.5.3';
-import {operatingPointLabel} from './result-view.js?v=2.5.3';
+import {characteristicName,QUANTITIES} from './characteristics.js?v=2.5.4';
+import {INTERPOLATION_METHODS} from './curve-methods.js?v=2.5.4';
+import {operatingPointLabel} from './result-view.js?v=2.5.4';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const curveLabel=c=>c.sourceId?characteristicName(c.sourceId).split(' — ')[0]:`${QUANTITIES[c.yName]?.[0]||c.yName} vs ${QUANTITIES[c.xName]?.[0]||c.xName}`;
 export function noteKind(message){
