@@ -1,5 +1,5 @@
 import {characteristicName,QUANTITIES} from './characteristics.js?v=2.5.5';
-import {INTERPOLATION_METHODS} from './curve-methods.js?v=2.5.5';
+import {INTERPOLATION_METHODS} from './curve-methods.js?v=2.5.8';
 import {operatingPointLabel} from './result-view.js?v=2.5.5';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const curveLabel=c=>c.sourceId?characteristicName(c.sourceId).split(' — ')[0]:`${QUANTITIES[c.yName]?.[0]||c.yName} vs ${QUANTITIES[c.xName]?.[0]||c.xName}`;
@@ -33,7 +33,7 @@ export function collectAnalysisNotes(rows,project){
    if(candidate){for(const curve of curves.filter(c=>(c.originPolicy==='zero'||c.negativeOutputPolicy==='zero'||c.voltageScaling===false||c.temperatureIndependent||Object.values(c.dependencyPolicy||{}).some(v=>v.enabled===false)))){if(!models.size&&!device.notes?.length)continue;const active=(device.queries||[]).some(q=>q.curveId===curve.id)||(device.notes||[]).some(n=>n.includes('['+curve.id+']'));if(!active)continue;const nameCurve=curveLabel(curve);if(curve.originPolicy==='zero')assumptions.set(name+'|origin|'+curve.id,{device:name,text:nameCurve+': zero-current voltage/energy is explicitly set to zero; stored samples are retained.'});if(curve.negativeOutputPolicy==='zero')assumptions.set(name+'|zero|'+curve.id,{device:name,text:nameCurve+': negative physical projections use a user-selected zero floor; loss may be underestimated.'});if(curve.voltageScaling===false&&['Eon','Eoff'].some(k=>[curve.xName,curve.yName].includes(k)))assumptions.set(name+'|voltage|'+curve.id,{device:name,text:nameCurve+': voltage scaling disabled by user.'});}}
   }
  }
- const operating=project?.operating||{};const settings=[`Interpolation: ${INTERPOLATION_METHODS[operating.interpolationMethod||'reference-first']||operating.interpolationMethod}.`,`Out-of-domain policy: ${operating.domainPolicy==='matlab'?'Legacy compatibility':operating.domainPolicy||'error'}.`];
+ const operating=project?.operating||{};const settings=[`Interpolation: ${INTERPOLATION_METHODS[operating.interpolationMethod||'reference-first']||operating.interpolationMethod}.`,`Out-of-domain policy: ${({error:'Error',clamp:'Clamp',extrapolate:'Linear extrapolation'}[operating.domainPolicy]||'Error')}.`];
  if(rows.some(r=>(r.devices||[]).some(d=>(d.trace||[]).some(e=>['on','off'].includes(e.category)))))settings.push('Switching model: Eon and Eoff are zero at zero current; negative event current is treated as zero. Separate no-load / output-capacitance energy is not added.');
  return {warnings:[...warnings.values()].map(w=>({...w,details:[...w.details]})),assumptions:[...assumptions.values()],models:[...models.values()],settings};
 }

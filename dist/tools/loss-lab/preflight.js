@@ -1,7 +1,7 @@
 import {supportsZeroOrigin} from './curve-boundary.js?v=2.5.5';
 import {lossGroups,resolveComponentCurve} from './loss-models.js?v=2.5.5';
 import {QUANTITIES,characteristicName} from './characteristics.js?v=2.5.5';
-import {outputPower,sliceWaveform,spectrum,average,rmsTime} from './engine.js?v=2.5.5';
+import {outputPower,sliceWaveform,spectrum,average,rmsTime} from './engine.js?v=2.5.8';
 const finite=Number.isFinite,positive=v=>finite(v)&&v>0;
 export const characteristicTitle=c=>c?.sourceId?characteristicName(c.sourceId).split(' — ')[0]:`${QUANTITIES[c?.yName]?.[0]||c?.yName} vs ${QUANTITIES[c?.xName]?.[0]||c?.xName}`;
 export function lookupQuantity(c){const axes=[c.xName,c.yName];for(const q of ['Id','If','di_dt','Tj'])if(axes.includes(q))return q;if(axes.includes('ESR'))return axes.includes('T')?'T':'f';return axes.includes('B')?'B':axes.includes('f')?'f':c.xName;}
@@ -34,7 +34,7 @@ export function checkProject(project){
  if(!instances.length)add('Components','Add a component to this study.',{page:'devices'});if(!waves.length)add('Waveforms','Import your simulation waveforms.',{page:'waveforms'});
  if(!positive(op.window))add('Analysis settings','Enter an analysis window greater than zero seconds.',{field:'op.window'});
  if(!['reference-first','forward-first','inverse-distance',undefined].includes(op.interpolationMethod))add('Analysis settings','Choose one of the supported interpolation methods.',{field:'op.interpolationMethod'});
- if(!['error','clamp','extrapolate','matlab',undefined].includes(op.domainPolicy))add('Analysis settings','Choose a supported out-of-domain policy.',{field:'op.domainPolicy'});
+ if(!['error','clamp','extrapolate',undefined].includes(op.domainPolicy))add('Analysis settings','Choose a supported out-of-domain policy.',{field:'op.domainPolicy'});
  if(![256,512,1024,2048,4096].includes(Number(op.fftSize||1024)))add('Analysis settings','Choose a supported spectral sample count.',{field:'op.fftSize'});
  const signature=c=>[...(c.enabled||[])].sort().join(',');let combinations=instances.length?1:0;const ids=new Set();
  const waveInfo=new Map(waves.map(w=>[w,inspectWave(w)]));for(const w of waves)for(const msg of waveInfo.get(w).issues)add('Waveforms',w.name+': '+msg,{page:'waveforms',waveformId:w.id});

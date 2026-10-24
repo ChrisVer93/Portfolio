@@ -1,7 +1,7 @@
 import {boundaryCurve} from './curve-boundary.js?v=2.5.5';
 import {resolveMosfetCurve,resolveComponentCurve} from './loss-models.js?v=2.5.5';
 import {dependencySlice} from './dependency-policy.js?v=2.5.5';
-import {interpolateCurve} from './curve-methods.js?v=2.5.5';
+import {interpolateCurve} from './curve-methods.js?v=2.5.8';
 /* Converter Loss Lab — pure numerical engine. No DOM, files or globals. */
 export const ENGINE_VERSION='2.5.5';
 export const CATEGORIES=['conduction','body','on','off','recovery','copper','core'];
