@@ -28,7 +28,7 @@ test('V8 manual removes the marked overview sections in print and quick help', (
 
 test('V8 corrections are reflected in Help Centre and full manual', () => {
   const get = id => HELP_ARTICLES.find(a => a.id === id);
-  assert.ok(get('waveforms').sections[0].paragraphs[0].includes('MATLAB level-5 MAT'));
+  assert.ok(get('waveforms').sections[0].paragraphs[0].includes('CSV or TXT format only'));
   assert.ok(!get('waveforms').sections.some(s => s.heading === 'Current limits'));
   assert.ok(!get('waveforms').sections[0].paragraphs.join(' ').includes('invalid unused column'));
   assert.equal(get('passives').title, 'Capacitor ESR, inductor winding and core loss');
