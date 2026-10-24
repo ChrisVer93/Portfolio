@@ -46,8 +46,8 @@ test('V8 corrections are reflected in Help Centre and full manual', () => {
 
 test('V8 supported upload types match picker and drag-and-drop validation', () => {
   const html = read('index.html'), app = read('app.js');
-  assert.ok(html.includes('id="waveFiles" multiple accept=".csv,.txt,.json,.mat"'));
-  assert.match(app, /Unsupported file type\. Import CSV, TXT, JSON or MATLAB level-5 MAT/);
+  assert.ok(html.includes('id="waveFiles" multiple accept=".csv,.txt"'));
+  assert.match(app, /assertImportFileType\(file\.name,'waveform'\)/);
   assert.ok(manual.includes('JSON files with a columns object or a named numeric matrix'));
 });
 
