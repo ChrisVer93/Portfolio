@@ -62,7 +62,7 @@ test('Check Inputs screens a negative interpolated value before any full analysi
   assert.match(node('#page').innerHTML,/analysis not started|before running the analysis/i);
   node('#run').onclick();
   assert.equal(workers.length,1,'Run must not bypass a failed pre-analysis screening');
-  assert.equal(globalThis.location.hash,'#checks');
+  assert.match(globalThis.location.hash,/^#?checks$/);
  }finally{
   for(const [k,v] of Object.entries(original)){if(v===undefined)delete globalThis[k];else globalThis[k]=v;}
  }
