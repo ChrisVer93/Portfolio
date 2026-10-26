@@ -12,8 +12,23 @@ export function checkCharacteristic(c,{given=lookupQuantity(c),policy='error',me
  const keys=[...new Set(c.iterations.flatMap(it=>Object.keys(it.deps||{})))];
  c.iterations.forEach((it,j)=>{const context={iteration:j,field:'points'+j};if(!Array.isArray(it.x)||!Array.isArray(it.y)||it.x.length!==it.y.length||it.x.length===0){add('points','Enter at least two X/Y pairs, one pair per line.',context);return;}
   if(it.x.length===1)add('single-point','This characteristic has one point and will be treated as a constant. Add more points if it should vary.',{...context,severity:'warning'});const bad=it.x.map((x,k)=>!finite(x)||!finite(it.y[k])?k+1:null).filter(Boolean);if(bad.length){add('numeric','Use two finite numbers on each line. Check rows '+bad.join(', ')+'.',{...context,rows:bad});return;}
-  const axis=given===c.yName?'y':'x',values=it[axis],locations=new Map();values.forEach((v,k)=>locations.set(v,[...(locations.get(v)||[]),k+1]));for(const [value,rows] of locations)if(rows.length>1){const outputs=rows.map(row=>it[axis==='x'?'y':'x'][row-1]),identical=outputs.every(v=>v===outputs[0]),zeroRule=value===0&&['Id','If'].includes(given)&&c.originPolicy==='zero'&&supportsZeroOrigin(c);if(zeroRule)continue;add('duplicate',`${QUANTITIES[given]?.[0]||given} = ${value} ${QUANTITIES[given]?.[1]||''} is repeated on rows ${rows.join(', ')}. ${identical?'These identical pairs are redundant; keep one copy.':given===c.yName?'The engine looks up '+given+' → '+c.xName+': this flat forward segment gives more than one output for the same engine input. '+(value===0&&supportsZeroOrigin(c)?'Select the explicit zero-current (0, 0) rule, or edit the branch.':'Select a single-valued branch.'):'Different outputs share the same lookup input. Keep one output or split the branches.'}`,{...context,rows,value,axis,severity:identical||policy==='matlab'?'warning':'error'});} 
-  if(given===c.yName&&policy!=='matlab'){const deltas=values.slice(1).map((v,k)=>v-values[k]);if(deltas.some(v=>v>0)&&deltas.some(v=>v<0))add('inverse','This inverse lookup turns back on itself. Keep one steadily increasing or decreasing branch.',context);}
+  // A recorded characteristic must be a function of its stored X axis.
+  // An inverse lookup additionally requires unique values on the Y axis.
+  // Curve-First reconstructs the stored forward family before inversion,
+  // so checking only the requested inverse axis misses malformed X samples.
+  const inverse=given===c.yName,axesToCheck=inverse?['x','y']:['x'];
+  for(const axis of axesToCheck){
+   const values=it[axis],quantity=axis==='x'?c.xName:c.yName,locations=new Map();
+   values.forEach((v,k)=>locations.set(v,[...(locations.get(v)||[]),k+1]));
+   for(const [value,rows] of locations)if(rows.length>1){
+    const outputs=rows.map(row=>it[axis==='x'?'y':'x'][row-1]),identical=outputs.every(v=>v===outputs[0]);
+    const currentAxis=['Id','If'].includes(quantity),zeroRule=value===0&&currentAxis&&c.originPolicy==='zero'&&supportsZeroOrigin(c);
+    if(zeroRule)continue;
+    const guidance=identical?'These identical pairs are redundant; keep one copy.':axis==='x'?'The stored forward characteristic must have one output for each X value.':'This inverse lookup would return several voltages or other outputs for one input. Select a single-valued branch.';
+    add('duplicate',`${QUANTITIES[quantity]?.[0]||quantity} = ${value} ${QUANTITIES[quantity]?.[1]||''} is repeated on rows ${rows.join(', ')}. ${guidance}`,{...context,rows,value,axis,severity:identical?'warning':'error'});
+   }
+  }
+  if(inverse&&policy!=='matlab'){const ordered=it.x.map((v,k)=>({x:v,y:it.y[k]})).sort((a,b)=>a.x-b.x),deltas=ordered.slice(1).map((v,k)=>v.y-ordered[k].y);if(deltas.some(v=>v>0)&&deltas.some(v=>v<0))add('inverse','This inverse lookup turns back on itself. Keep one steadily increasing or decreasing branch.',context);}
   const outputAxis=given===c.yName?'x':'y',outputName=given===c.yName?c.xName:c.yName;if(!['T','Tj','Vgs'].includes(outputName)&&it[outputAxis].some(v=>v<0))add('negative',`The ${QUANTITIES[outputName]?.[0]||outputName} values include a negative magnitude. Check the curve sign and units.`,context);
   for(const key of keys)if(!finite(it.deps?.[key]))add('dependency',`Enter ${QUANTITIES[key]?.[0]||key} for iteration ${j+1}.`,{iteration:j,dependency:key,field:'dependency:'+key});
  });

@@ -20,3 +20,20 @@ test('output-power validation uses the selected window instead of a discarded tr
 test('recoveries, magnetic dimensions and thermal requirements show before analysis',()=>{const {p,i,c}=passive('Inductor');c.enabled.push('core');c.N=null;c.Ae=null;c.Vcore=null;c.coreApproxConfirmed=false;c.thermal.mode='iterative';c.thermal.Rth=null;const r=checkProject(p);assert.ok(r.errors.some(e=>e.field==='cand.N'));assert.ok(r.errors.some(e=>e.field==='cand.thermal.Rth'));assert.ok(r.errors.some(e=>e.group==='core'));assert.ok(r.errors.some(e=>e.field==='cand.coreApproxConfirmed'));});
 test('an imported single-point characteristic remains a review note, not a new hard failure',()=>{const c={id:'single',xName:'Id',yName:'Rds',iterations:[{x:[10],y:[.02],deps:{}}]};const issues=checkCharacteristic(c);assert.equal(issues.length,1);assert.equal(issues[0].severity,'warning');});
 test('capacitor DC offset and inductor volt-second imbalance are detected in the selected window',()=>{const {p,c}=passive();c.curves=[{id:'f',xName:'f',yName:'ESR',iterations:[{x:[0,1000],y:[.01,.01],deps:{}}]}];assert.ok(checkProject(p).errors.some(i=>i.category==='Capacitor current'));const l=passive('Inductor');l.c.enabled.push('core');l.c.coreApproxConfirmed=true;l.c.curves.push({id:'pv',xName:'B',yName:'Pv',iterations:[{x:[0,1],y:[0,1000],deps:{}}]});assert.ok(checkProject(l.p).errors.some(i=>i.category==='Core waveform'));});
+
+test('Curve-First preflight checks duplicate stored forward axis even for inverse Id→Vds lookup',()=>{
+ const p=demoProject(),candidate=p.instances[0].candidates[0];
+ const curve={id:'forward-axis-duplicate',xName:'Vds',yName:'Id',iterations:[{x:[0,.1,.1,.2],y:[0,3,5,8],deps:{Vgs:15,Tj:100}}]};
+ candidate.curves.push(curve);candidate.lossModels={...candidate.lossModels,channel:curve.id};candidate.enabled=['conduction'];
+ const report=checkProject(p);
+ assert.ok(report.errors.some(i=>i.curveId===curve.id&&i.code==='duplicate'&&i.rows?.join(',')==='2,3'),JSON.stringify(report.issues.filter(i=>i.curveId===curve.id)));
+ assert.equal(checkCharacteristic(curve,{given:'Id',method:'forward-first'}).find(i=>i.code==='duplicate')?.axis,'x');
+});
+test('Curve-First preflight checks duplicate inverse axis and rejects real duplicate branches but accepts redundant pairs',()=>{
+ const curve={id:'inverse-axis',xName:'Vds',yName:'Id',iterations:[{x:[0,.1,.2],y:[0,3,3],deps:{}}]};
+ const issues=checkCharacteristic(curve,{given:'Id',method:'forward-first'});
+ assert.ok(issues.some(i=>i.code==='duplicate'&&i.axis==='y'&&i.severity==='error'));
+ curve.iterations[0]={x:[0,.1,.1,.2],y:[0,3,3,6],deps:{}};
+ const redundant=checkCharacteristic(curve,{given:'Id',method:'forward-first'});
+ assert.ok(redundant.some(i=>i.code==='duplicate'&&i.axis==='x'&&i.severity==='warning'));
+});
