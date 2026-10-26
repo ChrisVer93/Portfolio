@@ -24,7 +24,7 @@ export function checkCharacteristic(c,{given=lookupQuantity(c),policy='error',me
     const outputs=rows.map(row=>it[axis==='x'?'y':'x'][row-1]),identical=outputs.every(v=>v===outputs[0]);
     const currentAxis=['Id','If'].includes(quantity),zeroRule=value===0&&currentAxis&&c.originPolicy==='zero'&&supportsZeroOrigin(c);
     if(zeroRule)continue;
-    const guidance=identical?'These identical pairs are redundant; keep one copy.':axis==='x'?'The stored forward characteristic must have one output for each X value.':'This inverse lookup would return several voltages or other outputs for one input. Select a single-valued branch.';
+    const guidance=identical?'These identical pairs are redundant; keep one copy.':axis==='x'?'The stored forward characteristic must have one output for each X value.':`The engine looks up ${given} → ${c.xName}: this flat forward segment gives more than one output for the same engine input. ${value===0&&supportsZeroOrigin(c)?'Select the explicit zero-current (0, 0) rule, or edit the branch.':'Select a single-valued branch.'}`;
     add('duplicate',`${QUANTITIES[quantity]?.[0]||quantity} = ${value} ${QUANTITIES[quantity]?.[1]||''} is repeated on rows ${rows.join(', ')}. ${guidance}`,{...context,rows,value,axis,severity:identical?'warning':'error'});
    }
   }
