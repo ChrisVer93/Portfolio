@@ -241,3 +241,16 @@ Shortens component, series, parallel and orientation help per V7. Uses body diod
 ## 2.5.5 · Quick-helper documentation recap
 
 Help Centre Documentation now collects the quick helpers into searchable expandable topics, grouped by study settings, component settings, and workflow/loss models. In-tool Help Centre articles use compact text rendering without visualisations. 204 tests pass.
+
+## UI 2.5.13 · Restore visible pre-analysis checks
+
+History audit:
+- `d75ac9c` (1.7.0, 17 October 2026) introduced live characteristic validation and the Check inputs page.
+- `d135117` (1.8.0, 17 October 2026) added exact waveform-dependent negative-projection screening before analysis.
+- `cabfab5` (2.0.0, 17 October 2026) moved that screening behind a study-summary confirmation. Check inputs still displayed only static checks, so opening it did not reveal interpolated-value problems. The screening engine was retained.
+- Duplicate checks historically inspected only the engine's lookup axis. Inverse lookups could therefore miss conflicting stored X-axis samples; 2.2.0 (`c108a23`) made forward-family interpolation the default for new studies, exposing this gap more directly.
+- `279e1d5` through `53ef1b8` (26 October 2026, module revision 2.5.12) restored automatic exact screening in Check inputs and validation of both stored and inverse axes. Its cached failed-screen path still prevented Run from opening the existing projection-decision dialog.
+
+This revision restores immediate screening on Run, before the study confirmation. Check inputs and Run both provide the projection-review dialog with edit, explicit per-characteristic zero-floor decisions, and screening-only debug. Saving a decision rechecks the inputs; full analysis remains user initiated. Debug preparation copies screening data instead of changing the retained evidence. The readiness banner distinguishes pending, failed and passed interpolation checks. Input changes invalidate the screening result. Conflicting duplicate samples block analysis; redundant identical pairs remain review notes. Existing interpolation method names and calculation policies remain unchanged.
+
+Validation: 222 automated tests pass, including actual-app routes, worker messages, duplicate blockers, immediate Run screening, negative-value review, explicit consent and recheck, successful confirmation, input invalidation and worker-error retry. Numerical engine version remains 2.5.5; this is UI revision 2.5.13.
