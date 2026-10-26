@@ -1,4 +1,4 @@
-import {checkCharacteristic} from './preflight.js?v=2.5.5';
+import {checkCharacteristic} from './preflight.js?v=2.5.12';
 import {MOSFET_LOSS_GROUPS,lossGroups,lossGroupState} from './loss-models.js?v=2.5.5';
 import {QUANTITIES,characteristicName} from './characteristics.js?v=2.5.5';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const n=v=>Number.isFinite(v)?Number(v.toPrecision(6)).toString():'—';
