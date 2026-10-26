@@ -29,7 +29,7 @@ export function checkCharacteristic(c,{given=lookupQuantity(c),policy='error',me
    }
   }
   if(inverse&&policy!=='matlab'){const ordered=it.x.map((v,k)=>({x:v,y:it.y[k]})).sort((a,b)=>a.x-b.x),deltas=ordered.slice(1).map((v,k)=>v.y-ordered[k].y);if(deltas.some(v=>v>0)&&deltas.some(v=>v<0))add('inverse','This inverse lookup turns back on itself. Keep one steadily increasing or decreasing branch.',context);}
-  const outputAxis=given===c.yName?'x':'y',outputName=given===c.yName?c.xName:c.yName;if(!['T','Tj','Vgs'].includes(outputName)&&it[outputAxis].some(v=>v<0))add('negative',`The ${QUANTITIES[outputName]?.[0]||outputName} values include a negative magnitude. Check the curve sign and units.`,context);
+  const outputAxis=given===c.yName?'x':'y',outputName=given===c.yName?c.xName:c.yName;if(!['T','Tj','Vgs'].includes(outputName)&&it[outputAxis].some(v=>v<0))add('negative',`The ${QUANTITIES[outputName]?.[0]||outputName} values include a negative magnitude. Check the curve sign and units.`,{...context,rows:it[outputAxis].map((v,k)=>v<0?k+1:null).filter(Boolean)});
   for(const key of keys)if(!finite(it.deps?.[key]))add('dependency',`Enter ${QUANTITIES[key]?.[0]||key} for iteration ${j+1}.`,{iteration:j,dependency:key,field:'dependency:'+key});
  });
  if(c.temperatureIndependent&&new Set(c.iterations.map(it=>it.deps?.Tj)).size>1)add('temperature-independent','Temperature-independent switching energy needs one reference temperature. Keep one temperature slice or enable temperature dependence.');

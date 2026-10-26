@@ -37,3 +37,10 @@ test('Curve-First preflight checks duplicate inverse axis and rejects real dupli
  const redundant=checkCharacteristic(curve,{given:'Id',method:'forward-first'});
  assert.ok(redundant.some(i=>i.code==='duplicate'&&i.axis==='x'&&i.severity==='warning'));
 });
+
+
+test('negative characteristic samples identify exact rows for inline graph highlighting',()=>{
+ const curve={id:'bad-values',xName:'Id',yName:'Rds',iterations:[{x:[0,1,2,3],y:[.1,-.2,.3,-.1],deps:{}}]};
+ const issue=checkCharacteristic(curve).find(v=>v.code==='negative');
+ assert.equal(issue.iteration,0);assert.deepEqual(issue.rows,[2,4]);
+});

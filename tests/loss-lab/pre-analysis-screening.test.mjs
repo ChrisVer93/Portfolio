@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {emptyProject,makeInstance,makeCandidate} from '../../dist/tools/loss-lab/io.js';
 import {checkProject} from '../../dist/tools/loss-lab/preflight.js';
 import {screenProject} from '../../dist/tools/loss-lab/projection-screen.js';
+import {characteristicFeedback,curveFingerprint} from '../../dist/tools/loss-lab/curve-feedback.js';
 import {readinessBanner} from '../../dist/tools/loss-lab/preflight-ui.js';
 
 function fixture(){
@@ -21,14 +22,14 @@ function fixture(){
 async function withApp(project,tag,body,hash='#overview'){
  const keys=['document','window','location','localStorage','Worker','setTimeout'];
  const original=Object.fromEntries(keys.map(k=>[k,globalThis[k]])),nodes=new Map(),workers=[];
- let navigate,selected=[];
+ let navigate,selected=[];const subtabs=['settings','curves','thermal'].map(subtab=>({dataset:{subtab}}));
  const node=id=>{
   if(!nodes.has(id))nodes.set(id,{value:'',textContent:'',innerHTML:'',hidden:false,disabled:false,open:false,
    classList:{toggle(){},add(){},remove(){}},remove(){},focus(){},setAttribute(){},
    showModal(){this.open=true;},close(){this.open=false;},querySelectorAll(){return []}});
   return nodes.get(id);
  };
- globalThis.document={querySelector:node,querySelectorAll:q=>q==='[data-screen-zero]:checked'?selected:[],activeElement:null};
+ globalThis.document={querySelector:node,querySelectorAll:q=>q==='[data-screen-zero]:checked'?selected:q==='[data-subtab]'?subtabs:[],activeElement:null};
  globalThis.window={addEventListener:(event,fn)=>{if(event==='hashchange')navigate=fn;}};
  let currentHash=hash;globalThis.location={get hash(){return currentHash;},set hash(v){currentHash='#'+v.replace(/^#/,'');}};
  globalThis.localStorage={getItem:()=>JSON.stringify(project),setItem(){}};
@@ -36,7 +37,7 @@ async function withApp(project,tag,body,hash='#overview'){
  globalThis.setTimeout=()=>0;
  try{
   await import('../../dist/tools/loss-lab/app.js?'+tag);
-  await body({node,workers,navigate,selectZero:()=>{selected=[{dataset:{screenZero:'0'}}];}});
+  await body({node,workers,navigate,subtabs,selectZero:()=>{selected=[{dataset:{screenZero:'0'}}];}});
  }finally{for(const [k,v] of Object.entries(original)){if(v===undefined)delete globalThis[k];else globalThis[k]=v;}}
 }
 
@@ -123,4 +124,62 @@ test('readiness never labels unscreened or failed interpolation as ready for ana
  assert.match(readinessBanner(report,{screen:{issues:[],failures:[{}]}}),/characteristic issue needs review/);
  assert.doesNotMatch(readinessBanner(report,{error:'failed'}),/Ready for analysis/);
  assert.match(readinessBanner(report,{screen:{issues:[],failures:[]}}),/Input and interpolation checks passed/);
+});
+
+
+test('screened errors mark the selected characteristic Needs review and overlay its original graph',async()=>{
+ const project=fixture();
+ await withApp(project,'inline-characteristic',({node,workers,navigate,subtabs})=>{
+  workers[0].onmessage({data:{screen:screenProject(project)}});
+  location.hash='#devices';navigate();subtabs.find(v=>v.dataset.subtab==='curves').onclick();
+  const html=node('#page').innerHTML;
+  assert.match(html,/loss-model-status review">Needs review/);
+  assert.doesNotMatch(html,/loss-model-status ready">Ready/);
+  const inline=html.split('data-characteristic-feedback="negative-example"')[1].split('</section>')[0];
+  assert.match(inline,/Negative interpolated value: -0.9 V at 0.1 A/);
+  assert.match(inline,/Negative interpolated values/);
+  assert.match(inline,/Evaluated family/);
+  assert.match(inline,/#ff6565/);
+  assert.equal((inline.match(/<svg /g)||[]).length,1,'bad projections must be on the characteristic graph, not a separate error-only plot');
+  assert.doesNotMatch(inline,/Curve points pass|checks passed|values passed/);
+ },'#checks');
+});
+
+test('curve feedback retains exact recorded raw values and respects component/alternative identity',()=>{
+ const p=fixture(),i=p.instances[0],c=i.candidates[0],curve=c.curves[0],screen=screenProject(p),before=JSON.stringify(screen);
+ const feedback=characteristicFeedback(curve,{screen,instanceId:i.id,candidateId:c.id,policy:'extrapolate'});
+ assert.equal(feedback.screened,true);assert.equal(feedback.projections[0].minRaw,-.9);
+ assert.equal(feedback.issues.find(v=>v.code==='projection').severity,'error');
+ for(const scope of [{instanceId:'other',candidateId:c.id},{instanceId:i.id,candidateId:'other'}]){
+  const unrelated=characteristicFeedback(curve,{screen,...scope,policy:'extrapolate'});
+  assert.equal(unrelated.screened,false);assert.equal(unrelated.projections.length,0);
+ }
+ assert.equal(JSON.stringify(screen),before);
+});
+
+test('editing a characteristic removes obsolete error markers and requires a new interpolation check',()=>{
+ const p=fixture(),i=p.instances[0],c=i.candidates[0],curve=c.curves[0],screen=screenProject(p),draft=structuredClone(curve);
+ draft.iterations[0].y=[1,2];
+ const feedback=characteristicFeedback(draft,{screen,instanceId:i.id,candidateId:c.id,policy:'extrapolate'});
+ assert.equal(feedback.stale,true);assert.equal(feedback.screened,false);assert.equal(feedback.projections.length,0);
+ assert.ok(feedback.issues.some(v=>v.code==='screen-stale'));
+ assert.ok(!feedback.issues.some(v=>v.code==='projection'));
+ const equivalent={...curve,originPolicy:'measured',negativeOutputPolicy:'reject',dependencyPolicy:{Tj:{enabled:true,reference:25}}};
+ assert.equal(curveFingerprint(equivalent),curveFingerprint(curve),'editor defaults must not invalidate unchanged calculation data');
+});
+
+test('a rejected out-of-domain query is shown on its characteristic with its actual input',()=>{
+ const p=fixture();p.operating.domainPolicy='error';const i=p.instances[0],c=i.candidates[0];
+ const feedback=characteristicFeedback(c.curves[0],{screen:screenProject(p),instanceId:i.id,candidateId:c.id});
+ assert.equal(feedback.screened,true);assert.equal(feedback.projections.length,0);
+ assert.ok(feedback.issues.some(v=>v.code==='query'&&v.severity==='error'&&v.message.includes('0.1 A')));
+ assert.equal(feedback.failedQueries[0].output,null,'failed queries must not invent a plotted output');
+});
+
+test('accepted zero floors keep raw negative graph evidence and a visible assumption',()=>{
+ const p=fixture(),i=p.instances[0],c=i.candidates[0],curve=c.curves[0];curve.negativeOutputPolicy='zero';
+ const feedback=characteristicFeedback(curve,{screen:screenProject(p),instanceId:i.id,candidateId:c.id,policy:'extrapolate'});
+ assert.equal(feedback.projections[0].minRaw,-.9);assert.equal(feedback.projections[0].query.output,0);
+ assert.equal(feedback.issues.find(v=>v.code==='projection').severity,'warning');
+ assert.match(feedback.issues.find(v=>v.code==='projection').message,/Explicit zero floor/);
 });
