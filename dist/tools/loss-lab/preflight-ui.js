@@ -1,4 +1,4 @@
-import {characteristicTitle} from './preflight.js?v=2.5.14';
+import {characteristicTitle} from './preflight.js?v=2.5.15';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function readinessBanner(report,{screen=null,error=null,running=false}={}){
  const problems=(screen?.issues.length||0)+(screen?.failures.length||0),blocked=report.errors.length||problems||error;

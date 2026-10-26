@@ -183,3 +183,14 @@ test('accepted zero floors keep raw negative graph evidence and a visible assump
  assert.equal(feedback.issues.find(v=>v.code==='projection').severity,'warning');
  assert.match(feedback.issues.find(v=>v.code==='projection').message,/Explicit zero floor/);
 });
+
+
+test('repeated interpolation failures are grouped on the characteristic with the input range',()=>{
+ const p=fixture(),i=p.instances[0],c=i.candidates[0];p.operating.domainPolicy='error';
+ const screen=screenProject(p),device=screen.result.rows[0].devices[0],first=device.queries[0];
+ device.queries=[first,{...first,input:.2},{...first,input:.3}];
+ const feedback=characteristicFeedback(c.curves[0],{screen,instanceId:i.id,candidateId:c.id});
+ assert.equal(feedback.failedQueries.length,1);assert.equal(feedback.issues.filter(v=>v.code==='query').length,1);
+ assert.deepEqual(feedback.failedQueries[0].inputRange,[.1,.3]);
+ assert.match(feedback.issues.find(v=>v.code==='query').message,/0.1 to 0.3 A/);
+});

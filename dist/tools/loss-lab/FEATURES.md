@@ -264,3 +264,15 @@ A shared characteristic-feedback path now combines static row issues and actual 
 Feedback is scoped to component, alternative and curve. Screening records a fingerprint of calculation-relevant curve inputs; edited drafts discard obsolete projection markers and require a recheck. Explicit editor defaults do not invalidate unchanged data. Pending interpolation is labelled separately from passed reference-point checks. Numerical calculations are unchanged.
 
 Validation: 228 automated tests pass, including the actual component-page rendering with a failed screened curve, same-graph overlays, identity scoping, stale draft handling, strict-domain failures, accepted-floor evidence and exact negative source rows. Live verification follows deployment.
+
+## 2.5.15 · Method A validation and calculation-only origin
+
+Method A retains its numerical order: interpolate the stored forward family at the requested dependencies, then invert the combined family once. Its static precheck previously also required each reference Y axis to be individually invertible. That restriction belongs to Query-First/IDW; a flat or turning source reference can combine with another into a valid monotonic family. Method A now validates stored X-axis conflicts immediately and checks combined-family invertibility at screening conditions. An actually flat/nonmonotonic combined family still fails; Method B/IDW keep their per-reference inverse checks.
+
+The explicit (0,0) boundary option could previously add a duplicate stored X=0 point when an inverse-oriented curve contained a nonzero current at zero voltage. The calculation copy now replaces zero-current and stored-X-zero samples with one origin. Original samples are retained. This applies only when the user explicitly chooses the origin policy; resistance/temperature curves remain excluded. Measured-origin extrapolations may still be negative and require review.
+
+Repeated characteristic query errors are grouped by cause and lookup direction, showing the affected input/dependency ranges and operating-point count instead of repeating one message for every retained query. All module URLs use release 2.5.15 to prevent mixed cached calculation modules.
+
+Reproduction: using the provided NSF040120T2A1 forward reference family at 25 °C, Vgs=15 V, Id=2.3380979 A and linear extrapolation, measured-origin Method A yields Vds=-0.3735717151 V (a physical-value error). Explicit-zero-origin Method A previously raised Duplicate curve-axis values; it now yields Vds=0.1174352392 V. No original reference points are modified. A successful Method A family is no longer blocked merely by an individual reference's flat current segment.
+
+Validation: 232 automated tests pass, including the A/B order distinction, method-specific prechecks, combined-family plateaus and turns, zero-origin insertion with nonzero intercepts, raw-data preservation and grouped query diagnostics.

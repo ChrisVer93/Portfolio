@@ -1,5 +1,7 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import {queryCurve,runProject,computeDevice} from '../../dist/tools/loss-lab/engine.js';import {demoProject,makeInstance} from '../../dist/tools/loss-lab/io.js';
+import {checkCharacteristic} from '../../dist/tools/loss-lab/preflight.js';
+import {boundaryCurve} from '../../dist/tools/loss-lab/curve-boundary.js';
 import {runSensitivity,sensitivityScenario} from '../../dist/tools/loss-lab/sensitivity.js';import {selectReportResults} from '../../dist/tools/loss-lab/analysis-ui.js';import {comparisonVisuals} from '../../dist/tools/loss-lab/reporting.js';
 const near=(a,b)=>assert.ok(Math.abs(a-b)<1e-9,`${a} != ${b}`);
 const family={xName:'Vds',yName:'Id',iterations:[{x:[0,4],y:[0,4],deps:{Vgs:10}},{x:[0,4],y:[0,16],deps:{Vgs:20}}]};
@@ -16,3 +18,44 @@ test('curve diagnostics identify characteristic, requested interval and affected
 test('sensitivity applies independent percentages to each selected parameter',()=>{const {p,config}=setup();config.perturbations={vgsOn:{value:2,unit:'%'},rgOn:{value:10,unit:'%'},rgOff:{value:5,unit:'%'}};for(const [key,percent] of [['vgsOn',2],['rgOn',10],['rgOff',5]]){const v=sensitivityScenario(p,config,key,1);near(v.change,percent);assert.deepEqual(v.requested,config.perturbations[key]);}config.parameters=['vgsOn','rgOn'];const result=runSensitivity(p,config);assert.equal(result.scenarios.find(s=>s.parameter==='rgOn'&&s.direction===1).requested.value,10);assert.equal(result.perturbations.vgsOn.value,2);});
 test('temperature percentage uses Kelvin while count percentages round transparently and reject zero steps',()=>{const {p,config}=setup();config.perturbations={temperature:{value:2,unit:'%'},parallel:{value:2,unit:'%'}};const t=sensitivityScenario(p,config,'temperature',1);near(t.after,100+373.15*.02);near(t.change,2);assert.throws(()=>sensitivityScenario(p,config,'parallel',1),/at least one/);p.instances[0].candidates[0].parallel=10;p.instances[0].candidates[0].totalCount=10;config.perturbations.parallel.value=15;const count=sensitivityScenario(p,config,'parallel',1);assert.equal(count.after,12);near(count.change,20);config.perturbations.temperature={value:7,unit:'°C'};near(sensitivityScenario(p,config,'temperature',1).after,107);});
 test('series sensitivity scales per-device voltage and physical device count without changing the imported circuit waveforms',()=>{const {p,config}=setup();p.instances=p.instances.slice(0,1);p.instances[0].candidates=p.instances[0].candidates.slice(0,1);const baseline=runProject(p).rows[0].devices[0],changed=sensitivityScenario(p,config,'series',1),after=runProject(changed.project).rows[0].devices[0];near(after.categories.conduction,2*baseline.categories.conduction);near(after.categories.on,baseline.categories.on);near(after.categories.off,baseline.categories.off);assert.equal(after.count,2);assert.deepEqual(changed.project.waveforms,p.waveforms);config.perturbations={series:{value:20,unit:'%'}};p.instances[0].candidates[0].series=10;p.instances[0].candidates[0].totalCount=10;const percent=sensitivityScenario(p,config,'series',1);assert.equal(percent.after,12);assert.equal(percent.project.instances[0].candidates[0].totalCount,12);});
+
+
+test('Method A accepts a plateau in one reference when the interpolated forward family is invertible',()=>{
+ const c={id:'source-plateau',xName:'Vds',yName:'Id',iterations:[
+  {x:[0,1,2,3],y:[0,1,1,2],deps:{Vgs:7,Tj:25}},
+  {x:[0,1,2,3],y:[0,3,6,9],deps:{Vgs:20,Tj:25}}
+ ]};
+ assert.equal(checkCharacteristic(c,{method:'forward-first',policy:'extrapolate'}).filter(v=>v.severity==='error').length,0);
+ const notes=[];
+ near(queryCurve(c,2,'Id','Vds',{Vgs:13.5,Tj:25},'extrapolate',notes,'forward-first'),1);
+ assert.ok(notes.includes('Forward-family interpolation: dependencies interpolated before inversion'));
+ assert.throws(()=>queryCurve(c,2,'Id','Vds',{Vgs:13.5,Tj:25},'extrapolate',[],'reference-first'),/Duplicate curve-axis/);
+ assert.throws(()=>queryCurve(c,.5,'Id','Vds',{Vgs:7,Tj:25},'extrapolate',[],'forward-first'),/flat segment/,'an exact reference plateau remains ambiguous');
+});
+
+test('Method A validates monotonicity after combining references rather than inverting each first',()=>{
+ const c={id:'source-turn',xName:'Vds',yName:'Id',iterations:[
+  {x:[0,1,2],y:[0,2,1],deps:{Vgs:10}},
+  {x:[0,1,2],y:[0,4,8],deps:{Vgs:20}}
+ ]};
+ assert.ok(!checkCharacteristic(c,{method:'forward-first'}).some(v=>v.code==='inverse'));
+ assert.ok(checkCharacteristic(c,{method:'reference-first'}).some(v=>v.code==='inverse'));
+ near(queryCurve(c,3,'Id','Vds',{Vgs:15},'extrapolate',[],'forward-first'),1);
+ assert.throws(()=>queryCurve(c,1,'Id','Vds',{Vgs:10},'extrapolate',[],'forward-first'),/nonmonotonic/);
+});
+
+test('an explicit zero origin cannot introduce duplicate stored voltage-axis values',()=>{
+ const c={id:'origin-intercept',xName:'Vds',yName:'Id',originPolicy:'zero',iterations:[
+  {x:[0,1,2],y:[2,4,6],deps:{Vgs:7,Tj:25}},
+  {x:[0,1,2],y:[4,8,12],deps:{Vgs:20,Tj:25}}
+ ]},before=JSON.stringify(c.iterations),effective=boundaryCurve(c);
+ assert.equal(JSON.stringify(c.iterations),before);
+ for(const it of effective.iterations){assert.equal(it.x.filter(v=>v===0).length,1);assert.equal(it.y[0],0);}
+ assert.equal(checkCharacteristic(c,{method:'forward-first'}).length,0);
+ near(queryCurve(c,0,'Id','Vds',{Vgs:13.5,Tj:25},'extrapolate',[],'forward-first'),0);
+ near(queryCurve(c,3,'Id','Vds',{Vgs:13.5,Tj:25},'extrapolate',[],'forward-first'),.5);
+ assert.equal(JSON.stringify(c.iterations),before);
+ // Without the explicit origin, retain the measured nonzero intercept.
+ const measured={...c,originPolicy:'measured'};
+ near(queryCurve(measured,0,'Id','Vds',{Vgs:13.5,Tj:25},'extrapolate',[],'forward-first'),-1);
+});

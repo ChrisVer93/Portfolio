@@ -3,7 +3,7 @@ import {checkProject,checkCharacteristic} from '../../dist/tools/loss-lab/prefli
 import {readinessBanner,readinessList,curveIssueHTML} from '../../dist/tools/loss-lab/preflight-ui.js';
 import {makeInstance,demoProject,emptyProject} from '../../dist/tools/loss-lab/io.js';
 import {blankCandidate} from '../../dist/tools/loss-lab/workflow.js';
-import {computeDevice,runProject} from '../../dist/tools/loss-lab/engine.js';
+import {computeDevice,runProject,queryCurve} from '../../dist/tools/loss-lab/engine.js';
 import {lossGroupState} from '../../dist/tools/loss-lab/loss-models.js';
 const wave={id:'w',name:'Test point',time:'t',columns:{t:[0,.5,1],I:[2,2,2],V:[10,10,10],G:[1,1,1]}};
 function passive(type='Capacitor'){const p=emptyProject(),i=makeInstance(type),c=blankCandidate(type);Object.assign(c,{series:1,parallel:1,totalCount:1,curves:[{id:'r',sourceId:'Constant_ESR',xName:'Constant',yName:'ESR',constant:.01,iterations:[]}]});c.thermal.temperature=100;i.candidates=[c];i.mapping={current:'I',voltage:'V'};p.instances=[i];p.waveforms=[structuredClone(wave)];p.operating.window=1;p.operating.outputPairs=[{v:'V',i:'I',polarity:1}];return {p,i,c};}
@@ -29,10 +29,12 @@ test('Curve-First preflight checks duplicate stored forward axis even for invers
  assert.ok(report.errors.some(i=>i.curveId===curve.id&&i.code==='duplicate'&&i.rows?.join(',')==='2,3'),JSON.stringify(report.issues.filter(i=>i.curveId===curve.id)));
  assert.equal(checkCharacteristic(curve,{given:'Id',method:'forward-first'}).find(i=>i.code==='duplicate')?.axis,'x');
 });
-test('Curve-First preflight checks duplicate inverse axis and rejects real duplicate branches but accepts redundant pairs',()=>{
+test('Curve-First defers inverse ambiguity to the combined family; Query-First still validates reference inverse axes',()=>{
  const curve={id:'inverse-axis',xName:'Vds',yName:'Id',iterations:[{x:[0,.1,.2],y:[0,3,3],deps:{}}]};
  const issues=checkCharacteristic(curve,{given:'Id',method:'forward-first'});
- assert.ok(issues.some(i=>i.code==='duplicate'&&i.axis==='y'&&i.severity==='error'));
+ assert.ok(!issues.some(i=>i.code==='duplicate'&&i.axis==='y'));
+ assert.ok(checkCharacteristic(curve,{given:'Id',method:'reference-first'}).some(i=>i.code==='duplicate'&&i.axis==='y'&&i.severity==='error'));
+ assert.throws(()=>queryCurve(curve,1,'Id','Vds',{},'extrapolate',[],'forward-first'),/flat segment/);
  curve.iterations[0]={x:[0,.1,.1,.2],y:[0,3,3,6],deps:{}};
  const redundant=checkCharacteristic(curve,{given:'Id',method:'forward-first'});
  assert.ok(redundant.some(i=>i.code==='duplicate'&&i.axis==='x'&&i.severity==='warning'));
