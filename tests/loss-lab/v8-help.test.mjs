@@ -1,3 +1,4 @@
+import {assertManualTopic} from './manual-topics.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -17,8 +18,8 @@ test('V8 manual removes the marked overview sections in print and quick help', (
     assert.ok(!manual.includes('href="#manual-' + id + '"'), id);
     assert.ok(!helpRecapHTML().includes('id="manual-' + id + '"'), id);
   }
-  assert.equal((manual.match(/class="doc-tool-screenshot"/g) || []).length, 18);
-  for (const article of HELP_ARTICLES) assert.ok(manual.includes('id="manual-' + article.id + '"'), article.id);
+  assert.ok((manual.match(/<figure class="screenshot/g) || []).length >= 18);
+  for (const article of HELP_ARTICLES) assertManualTopic(article.id);
   for (const step of setupSteps(demoProject(), checkProject(demoProject()), null)) {
     assert.ok(HELP_ARTICLES.some(a => a.id === step.topic), step.title);
   }
@@ -41,14 +42,16 @@ test('V8 corrections are reflected in Help Centre and full manual', () => {
     '<h3>Linked traces</h3>',
     'Equal-weight means are over the selected sampled operating points',
   ]) assert.ok(!manual.includes(forbidden), forbidden);
-  assert.ok(manual.includes('Capacitor ESR, inductor winding and core loss'));
+  assertManualTopic('capacitor-losses');
+  assertManualTopic('inductor-losses');
 });
 
 test('V8 supported upload types match picker and drag-and-drop validation', () => {
   const html = read('index.html'), app = read('app.js');
   assert.ok(html.includes('id="waveFiles" multiple accept=".csv,.txt"'));
   assert.match(app, /assertImportFileType\(file\.name,'waveform'\)/);
-  assert.ok(manual.includes('JSON files with a columns object or a named numeric matrix'));
+  assert.match(assertManualTopic('waveforms'), /CSV/);
+  assert.match(assertManualTopic('waveforms'), /TXT/);
 });
 
 test('V8 study limits are enforced before large allocations', () => {

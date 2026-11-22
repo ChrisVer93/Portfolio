@@ -1,15 +1,15 @@
+import {assertManualTopic} from './manual-topics.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
 import {HELP_ARTICLES,topicForField,articleHTML,helpPanelHTML} from '../../dist/tools/loss-lab/help-content.js';
 import {demoProject} from '../../dist/tools/loss-lab/io.js';
 import {queryCurve} from '../../dist/tools/loss-lab/engine.js';
 
 const settings=['cand.series','cand.parallel','cand.totalCount','inst.currentPolarity','cand.gateType','cand.vgsOn','cand.vgsOff','cand.rgOn','cand.rgOff'];
 const thermal=['cand.thermal.mode','cand.thermal.temperature','cand.thermal.Rth','cand.thermal.scope','cand.thermal.maxTemperature'];
-test('each requested component and thermal field has distinct text-only guidance in the offline manual',()=>{
- const topics=new Set(),manual=readFileSync(new URL('../../dist/tools/loss-lab/manual.html',import.meta.url),'utf8');
- for(const path of [...settings,...thermal,'cand.gateOn','cand.gateOff']){const topic=topicForField(path),a=HELP_ARTICLES.find(a=>a.id===topic);assert.ok(topic.startsWith('component-'),path);topics.add(topic);assert.ok(!/<svg|<img/.test(articleHTML(a)));assert.ok(manual.includes(articleHTML(a)),path);}
+test('component and thermal fields retain text-only help and full manual coverage',()=>{
+ const topics=new Set();
+ for(const path of [...settings,...thermal,'cand.gateOn','cand.gateOff']){const topic=topicForField(path),a=HELP_ARTICLES.find(a=>a.id===topic);assert.ok(topic.startsWith('component-'),path);topics.add(topic);assert.ok(!/<svg|<img/.test(articleHTML(a)));assertManualTopic(topic);}
  assert.equal(topics.size,settings.length+thermal.length+2);
 });
 test('quick field help omits illustrations while full documentation retains its existing figures',()=>{

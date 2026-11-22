@@ -1,15 +1,14 @@
+import {assertManualTopic} from './manual-topics.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
 import {HELP_ARTICLES,topicForField,articleHTML} from '../../dist/tools/loss-lab/help-content.js';
 import {demoProject} from '../../dist/tools/loss-lab/io.js';
 import {runProject,outputPower,sliceWaveform} from '../../dist/tools/loss-lab/engine.js';
 
-test('every study field has guidance and unchanged topics remain in the deployed manual',()=>{
+test('every study field has quick guidance and a chapter in the deployed manual',()=>{
  const fields=['mode','window','interpolationMethod','domainPolicy','fftSize','balancedOutput','balancedInput'].map(k=>'op.'+k);
  for(const side of ['inputPairs','outputPairs'])for(const index of [0,4])for(const field of ['v','i','polarity'])fields.push(`op.${side}.${index}.${field}`);
- const manual=readFileSync(new URL('../../dist/tools/loss-lab/manual.html',import.meta.url),'utf8');
- for(const path of fields){const topic=topicForField(path),article=HELP_ARTICLES.find(a=>a.id===topic);assert.ok(topic.startsWith('study-'),path);assert.ok(article,path);if(!['study-interpolation','study-domain'].includes(topic))assert.ok(manual.includes(articleHTML(article)),path);}
+ for(const path of fields){const topic=topicForField(path),article=HELP_ARTICLES.find(a=>a.id===topic);assert.ok(topic.startsWith('study-'),path);assert.ok(article,path);assertManualTopic(topic);}
  assert.equal(new Set(HELP_ARTICLES.map(a=>a.id)).size,HELP_ARTICLES.length);
 });
 
