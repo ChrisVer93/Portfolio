@@ -1,0 +1,294 @@
+{
+  "reference_release": "Maxwell 2026 R1",
+  "scope": "stationary magnetics; motion deferred",
+  "implementation_release": "0.9.33",
+  "inventory_complete": false,
+  "note": "Initial register; full release-specific combination audit is still pending. No feature is declared Maxwell-equivalent without reference evidence.",
+  "features": [
+    {
+      "id": "mesh_adaptive_2d_linear",
+      "status": "implemented_internally_verified",
+      "evidence_or_next": "Task 001; residual-guided conforming operating-point refinement; external error-bound and Maxwell correlation pending"
+    },
+    {
+      "id": "mesh_quality_local",
+      "status": "implemented_limited",
+      "evidence_or_next": "Longest-edge closure and transition diagonal selection; no smoothing or coarsening"
+    },
+    {
+      "id": "mesh_adaptive_3d",
+      "status": "implemented_internally_verified_limited",
+      "evidence_or_next": "Native tetrahedron refinement using uncalibrated HCurl recovery of H\u2212T for linear sheet-source cases. Budget limits often prevent target completion."
+    },
+    {
+      "id": "mesh_adaptive_nonlinear",
+      "status": "not_implemented",
+      "evidence_or_next": "Requires nonlinear residual/energy formulation and tests"
+    },
+    {
+      "id": "mesh_matrix_excitation_adaptation",
+      "status": "not_implemented",
+      "evidence_or_next": "Current refinement follows one prescribed operating point"
+    },
+    {
+      "id": "magnetostatic_2d",
+      "status": "implemented_limited",
+      "evidence_or_next": "Linear and reversible isotropic nonlinear; planar and closed domain"
+    },
+    {
+      "id": "magnetostatic_3d",
+      "status": "implemented_limited",
+      "evidence_or_next": "Linear isotropic edge elements with ideal rectangular winding sheets"
+    },
+    {
+      "id": "ac_eddy_current_2d",
+      "status": "implemented_internally_verified_limited",
+      "evidence_or_next": "Task 002: linear RMS planar diffusion, explicit solid current constraints, analytical finite-rectangle comparison, current/power checks; AC refinement, multiport extraction, core/litz losses and external correlation pending"
+    },
+    {
+      "id": "ac_eddy_current_3d",
+      "status": "not_implemented",
+      "evidence_or_next": "Separate later task"
+    },
+    {
+      "id": "nonlinear_3d",
+      "status": "not_implemented",
+      "evidence_or_next": "Separate later task"
+    },
+    {
+      "id": "field_circuit_transient",
+      "status": "not_implemented",
+      "evidence_or_next": "Circuit/winding hierarchy exists but no network or time-domain field solver"
+    },
+    {
+      "id": "losses_core_and_litz",
+      "status": "not_implemented",
+      "evidence_or_next": "Resolved FEM core/litz loss solve remains pending. D001 separately adds actual upstream component-model core and conductor loss estimates; this does not qualify resolved field losses."
+    },
+    {
+      "id": "electrostatic_capacitance",
+      "status": "not_implemented",
+      "evidence_or_next": "Separate stationary scope task"
+    },
+    {
+      "id": "thermal_coupling",
+      "status": "not_implemented",
+      "evidence_or_next": "Coupled thermal FEM remains pending. D001 separately rechecks upstream component thermal-network temperatures with default assumptions, not user-qualified cooling or coupled field/thermal solution."
+    },
+    {
+      "id": "motion",
+      "status": "deferred",
+      "evidence_or_next": "Explicitly out of current user scope"
+    },
+    {
+      "id": "ac_skin_depth_local_refinement",
+      "status": "pending_backend_selection",
+      "evidence_or_next": "B001 evaluate established FEM/mesher and refinement first; no requirement to retain custom refinement as production backend."
+    },
+    {
+      "id": "openmagnetics_reuse",
+      "status": "implemented_internally_verified_core_pilot_only",
+      "evidence_or_next": "P001 core calculation/CAD bridge now exposed through isolated GUI job/projection/STEP-STL downloads. Full winding/MAS/FEM geometry mapping remains pending."
+    },
+    {
+      "id": "windows_desktop_executable",
+      "status": "deferred_until_final_feature_complete",
+      "evidence_or_next": "Explicit user instruction: no application executable, installer or frozen/test build during source-form development."
+    },
+    {
+      "id": "external_fem_mesh_backend",
+      "status": "limited_backend_integrated",
+      "evidence_or_next": "Netgen/NGSolve 6.2.2608 pilot. See Task B001 and CAPABILITY_TARGETS.md; not broad commercial solver coverage."
+    },
+    {
+      "id": "native_ngsolve_linear_2d_3d",
+      "status": "implemented_internally_verified_limited",
+      "evidence_or_next": "Task B001; real native unstructured fields, recovery refinement, source/energy/reciprocity checks, 3D Biot-Savart/gauge checks; commercial references pending."
+    },
+    {
+      "id": "native_optional_gui_and_workers",
+      "status": "implemented_internally_verified",
+      "evidence_or_next": "Real DOM/canvas and real HTTP native jobs, 2D/refinement/3D volume/core CAD/downloads; native Windows/browser/file pickers pending."
+    },
+    {
+      "id": "inductance_current_frequency_study_charts",
+      "status": "implemented_internally_verified_limited",
+      "evidence_or_next": "S001: actual reference 2D/3D linkage/current chords and finite-interval slopes; AC coupled operating-point Ls/Rop; latest-study GUI correction. No native sweep, nonlinear tangent matrix, isolated AC impedance matrix or mesh qualification."
+    },
+    {
+      "id": "material_digitiser_responsive_workspace",
+      "status": "implemented_internally_verified",
+      "evidence_or_next": "U001: 181 real Linux headless-Chromium assertions over 20 layout states/eight viewport sizes; actual calibration/point edit/drag/undo/session/export/material apply and standalone offline. Numerical math unchanged; other browsers/Windows unverified."
+    },
+    {
+      "id": "source_port_integrity_F001",
+      "status": "implemented_internally_verified_reference",
+      "evidence_or_next": "Canonical legacy series migration; split/whole 2D and 3D field equivalence; real CLLC grouped matrix vs swept linkage; rejected static AC-solid requests preserve accepted results. Native grouping source-inspected only in this run. Full electrical network and commercial validation remain pending."
+    },
+    {
+      "id": "mas_functional_exchange",
+      "status": "implemented_internally_verified_limited",
+      "evidence_or_next": "P002A: source CLI/authenticated HTTP, pinned MAS coil/wire and optional full operating-point schema checks, exact recipe/geometry and same-model 2D/3D field/matrix preservation. Full MAS/core/layer/turn/CAD mapping, GUI, native PyOpenMagnetics consumption and external validation remain pending."
+    },
+    {
+      "id": "checked_rectangular_field_cad_export",
+      "status": "implemented_internally_verified_limited",
+      "evidence_or_next": "P002B1: actual optional isolated STEP export/reimport of last-region-wins rectangles, 3D ideal source sheets and display-only envelopes; Analysis/CLI; gaps/volume/material/source identity checks and DOM/HTTP integration. No general CAD-to-FEM import, curved/MAS/turn solids or finite copper. Independent commercial/Windows qualification pending."
+    },
+    {
+      "id": "checked_planar_polygon_field_cad_export",
+      "status": "implemented_internally_verified_limited",
+      "evidence_or_next": "P002B2: actual STEP prisms retain convex planar wire/core facets, last-region material priority, air holes, sources and SI depth; analytical/ray occupancy, real field mesh/source vectors and native transferred-byte checks. No true curved 3D core, closed turn/end leads, arbitrary CAD-to-FEM import, full MAS core/layer mapping, manufacturing or external/Windows qualification."
+    },
+    {
+      "id": "editable_mas_EE_shape_gap_geometry",
+      "status": "implemented_internally_verified_limited",
+      "evidence_or_next": "P002C1: actual nominal A-F/gap decoding, 2D/3D core/source geometry and full workflow preservation, real fields/matrices and changed-gap response, pinned schema, DOM/HTTP/CLI and separate native MVB nominal-shape checks. Material name unresolved; no full MAS assembly/manufacturing/coil geometry, production dependency unification or external solver validation."
+    },
+    {
+      "id": "supervised_verification_profiles",
+      "status": "implemented_internally_verified_limited",
+      "evidence_or_next": "Q001: actual per-module isolated execution, source-bound atomic receipts, observed exits, exact case/event accounting, pause/resume and POSIX writer locking. Synthetic failures and full isolated numerical/CAD/source suite executed. Not new FEA physics or commercial validation; previous incomplete-run cause, monolithic native profile and Windows remain pending. P002C2B: two later full-ledger raw-log hash defects observed; cause unestablished/Q002 open. Original ledgers preserved; final CAD qualification uses explicit source-identical per-module composite, not an intact full profile. Q002/v0.9.11: format2 parent-owned pipe/EOF, final/read-only source/log/receipt/count audits; one intact19-module148-case profile143passed5skipped plus15focused105JS. Historical cause remains unestablished; original rejected records exact. No new physics/platform qualification."
+    },
+    {
+      "id": "editable_mas_material_points",
+      "status": "implemented_internally_verified_limited",
+      "evidence_or_next": "P002C2A: exact pinned native point schema checks; real linear 2D/3D and reversible nonlinear 2D direct-model field/linkage equality and changed-mu response; full saved workflow/source-region binding, explicit edit provenance, CLI/HTTP/DOM preview. No complete MAS material/catalogue, hysteresis/loss/thermal scaling or nonlinear 3D. P002C2B coil/closed-turn geometry next; commercial references pending."
+    },
+    {
+      "id": "source_associated_closed_turn_CAD",
+      "status": "implemented_internally_verified_limited",
+      "evidence_or_next": "P002C2B: source-consistent3D builder packing to real round/foil/litz-envelope closed-loop STEP; original winding/layer/source identities, explicit sleeves, native units/bounds/volume/bore/penetration guards and source UI/CLI/HTTP. No FEM/connected winding, leads, complete bobbin, native MAS layer/turn consumption or external/Windows qualification. Full saved-design sleeve inference intersects bundle geometry and is rejected. Evidence basis:17valid second-run modules plus independently rerun6-case server module;136passed/5skipped, no intact full-profile claim. See Q002 integrity issue."
+    },
+    {
+      "id": "verification_output_integrity",
+      "status": "implemented_internally_verified_limited",
+      "evidence_or_next": "Q002: actual inherited seekable-output failure class reproduced; pipe capture/EOF/byte caps, file fsync and final/resume/read-only audits protect tested conditions. One intact profile. Not historical-cause attribution, hostile-test sandbox, all native descendants, Windows or power-loss qualification."
+    },
+    {
+      "id": "explicit_bobbin_ring_parts",
+      "status": "implemented_limited_geometry_export",
+      "evidence_or_next": "P002C2C1: strict exact-snapshot source/anchor binding;1-16 explicit SI sleeve segments/flanges with original layer/electrical ownership, domain/identity/mode guards; actual draft/editor/save/API/CLI and native transferred STEP topology/units/bounds/volume/bore/collision checks. Small segment/shared flange and saved51-turn/14-layer/6-winding local segment actually export.155-case intact profile150passed5skipped plus105JS and new/prior DOM/HTTP/native checks. No complete bobbin, leads/connections, dielectric field region, finite solved copper, native MAS layer/turn consumption, manufacturing clearance or external/Windows qualification. Next P002C2C2."
+    },
+    {
+      "id": "slit_turn_geometric_terminals",
+      "status": "implemented_limited_geometry_export",
+      "evidence_or_next": "P002C2C2A: source-bound1-16explicit SI straight-side cuts; actual planar terminal centres/areas/outward normals measured after STEP transfer/reimport with one-solid,bounds,volume,empty-slit/surviving-wire checks. Foil/round two-cut cases and saved51turn/14layer/6winding litz-turn_8 cut. UI/API/CLI preserve original ideal-sheet fields/currents and prior accepted state.162-case21module audited profile157passed5skipped,105JS,new/prior DOM/HTTP/native. No leads,joined winding,FEM terminal source,finite copper,manufacturing clearance or external/Windows qualification. Next explicit connection paths/topology; full P002 pending."
+    },
+    {
+      "id": "explicit_same_owner_round_connection_cad",
+      "status": "implemented_limited_export_geometry",
+      "evidence_or_next": "P002C2C2B: source/cut-bound consecutive bare-round same-owner miter paths; actual STEP cap contacts,fused one-solid volume/bounds,two exposed ends and unintended contact rejection; physical/reference split; UI/API/CLI and retained ideal-sheet fields. Two-turn native example; full saved51/14/6 draft identity only. Broader section/foil/litz/bends,full MAS,finite solved copper/FEM terminals,commercial/Windows qualification pending."
+    },
+    {
+      "id": "explicit_foil_connection_cad",
+      "status": "implemented_limited_export_geometry",
+      "evidence_or_next": "P002C2C2C: matching rectangular profiles;explicit globalYwidth/Zheight start frame,conservative circumcircle path bounds,native full-cap orientation rejection and valid two-turn XZjoined STEP. Actual fields retained;no FEM terminal/current/loss/manufacturing/full saved51-turn/native MAS or Windows qualification."
+    },
+    {
+      "id": "source_bound_section_chain_coverage",
+      "status": "implemented_limited_export_geometry",
+      "evidence_or_next": "P002C2C2D: planned complete/partial/disconnected/unconnected source coverage,stable section traversal and free ends;protected API/CLI/UI without job replacement;actual native verified_chain end binding and four-primary-turn/two-section joined STEP around independent secondary. Full saved51/14/6 pure inspection only. No native MAS geometry consumption,FEM/network/finite-current/manufacturing/Windows qualification."
+    },
+    {
+      "id": "mas_rectangular_e_coil_geometry",
+      "status": "implemented_internally_verified_limited",
+      "evidence_or_next": "P002D1: opt-in MAS sections/radial layers/turns from shared CAD packing, 6 windings/14 sections/36 rows/51 turns, planar centre matching, spatial same-model fields, pinned schema and actual PyOpenMagnetics layer readback/turn-length DC consumption with detached QA copper. Native window fit, curved CAD association and terminal FEM pending."
+    },
+    {
+      "id": "mas_nominal_central_bobbin_window",
+      "status": "implemented_internally_verified_limited",
+      "evidence_or_next": "P002D2: rectangular symmetric EE middle-limb window association, exact section containment, two builders, actual native window/fit, real spatial consistency. Multi-limb and physical bobbin/field geometry pending."
+    },
+    {
+      "id": "mas_limb_bobbin_views",
+      "status": "implemented_internally_verified_limited",
+      "evidence_or_next": "P002D3: checked local fit views for 6 windings/14 sections/51 turns, native readback all, outer fits accepted and centre rejected. Whole assembly, physical CAD and terminal fields pending."
+    },
+    {
+      "id": "mas_native_single_turn_orientation",
+      "status": "implemented_internally_verified_limited",
+      "evidence_or_next": "P002D4: pinned PyOpenMagnetics 1.7.35 accepts all three local fits and the full CLLC nominal bobbin array with global window indices. Physical CAD and terminal fields pending."
+    },
+    {
+      "id": "cad_field_region_binding",
+      "status": "implemented_internally_verified_limited",
+      "evidence_or_next": "P002E1: native reimport validates original core regions and separate complete round and foil chains with measured geometric cap IDs. Tagged mesh, DC/AC, external returns and Maxwell pending."
+    },
+    {
+      "id": "dc_homogeneous_conductor_benchmarks",
+      "status": "implemented_internally_verified_limited",
+      "evidence_or_next": "P002E2: tagged straight/sector tetrahedra, current/energy checks and analytical resistance and local current density. Native winding mesh, magnetic source transfer, external returns and Maxwell benchmarks pending."
+    },
+    {
+      "id": "native_foil_winding_dc",
+      "status": "implemented_internally_verified_limited",
+      "evidence_or_next": "P002E3: verified STEP IDs survive native tetrahedral meshing and DC on an actual two-turn foil chain. Four native meshes. Round chain exceeds budget. Local current reconstruction, magnetic return and external validation pending."
+    },
+    {
+      "id": "native_round_winding_dc",
+      "status": "implemented_internally_verified_limited",
+      "evidence_or_next": "P002E4 solves original four-turn joined round STEP with explicit curvature control and optional SuperLU. Three actual linear meshes, CAD caps and volumes quantified, same-mesh PCG cross-check. Local current reconstruction, return and Maxwell comparison pending."
+    },
+    {
+      "id": "conservative_dc_current_reconstruction",
+      "status": "implemented_internally_verified_limited",
+      "evidence_or_next": "P002E5: weighted face-flux projection and RT0 reconstruction, exact bar and analytical sector convergence, saved round/foil cell continuity and insulated-wall checks. Constitutive/energy and return-path magnetic transfer qualification pending."
+    },
+    {
+      "id": "finite_closed_loop_free_space_field",
+      "status": "implemented_internally_verified_limited",
+      "evidence_or_next": "P002E6: complete finite annulus with coincident voltage cut, conservative RT0 circulation and nonsingular free-space Biot\u2013Savart probes. Four-mesh analytical resistance/full-vector field/moment checks; finest three probe differences 0.0554\u20130.0930%. No Hcurl/core/actual winding magnetic transfer, magnetic energy, near-copper quadrature, nonlinear/AC or external correlation."
+    },
+    {
+      "id": "finite_closed_current_hcurl_transfer",
+      "status": "implemented_internally_verified_limited",
+      "evidence_or_next": "P002E7: exact conforming annular current/air mesh, unchanged reference Hcurl with two tree gauges and optional NGSolve mixed-gauge orders0/2/3. Actual source-gradient, full-volume backend/gauge, field, energy, source-mode L and nested-domain checks. Coarse source/distant field remain error-limited; no actual transformer/core/curved CAD/nonlinear/AC or external comparison."
+    },
+    {
+      "id": "finite_current_native_h_adaptation",
+      "status": "implemented_internally_verified_limited",
+      "evidence_or_next": "P002E8 order-zero curl residual/tangential-H jump marking, Netgen refinement, exact nested affine-current and parent-volume binding, accepted-field retention and 45000-DOF p-enrichment fallback. Residual proxy falls and energy grows; point accuracy remains nonmonotonic. Separate finer-source/expanded-domain case worst current-matched smooth difference5.603%; no certified bound or actual transformer/core solve."
+    },
+    {
+      "id": "finite_loop_signed_surface_flux",
+      "status": "implemented_limited_internally_verified",
+      "evidence_or_next": "P002E9: 1\u201316 oriented triangular pickups, actual tetrahedron clipping, full area coverage, native order-0/2/3 field quadrature, separate CLI and seven h/p/source/domain comparisons. Measurement only; no calibrated flux error or QoI stopping; no physical pickup coil/network. See docs/LOOP_SURFACE_FLUX.md."
+    },
+    {
+      "id": "finite_loop_empirical_flux_stopping",
+      "status": "implemented_limited_internally_verified",
+      "evidence_or_next": "P002E10: separate order-zero fixed-source h controller, all signed pickups, absolute+relative tolerances and consecutive accepted intervals; actual strict/loose/budget CLI evidence. Empirical stability only, not an error bound. See docs/FLUX_ADAPTIVE.md."
+    },
+    {
+      "id": "requirements_driven_magnetics_design",
+      "status": "implemented_limited_component_adviser_internally_verified",
+      "evidence_or_next": "D001: actual pinned full OpenMagnetics two-winding standard concentric ferrite adviser; Lm/optional primary leakage/ratio bands, explicit V/I waveforms at1..4corners, nominal-fit/B/loss/temperature/core-envelope rechecks, isolated cancellable GUI/API/CLI, complete MAS and retained original FEM. Bounded candidate pool only; functional insulation, default thermal estimates and nominal fit do not establish safety/manufacturing or matched FEM. See docs/TRANSFORMER_DESIGNER.md."
+    },
+    {
+      "id": "transformer_candidate_to_matched_FEM",
+      "status": "not_implemented_or_qualified",
+      "evidence_or_next": "D001 native generated MAS remains separate from original project/fields. Need explicit source-bound candidate core/gap/material/winding/terminal mapping, measured geometry and matched numerical checks before automatic FEM verification."
+    },
+    {
+      "id": "online_reference_browser_preview",
+      "status": "implemented_live_internally_verified_limited",
+      "evidence_or_next": "R002 original UI + original reference Python in Pyodide0.27.7 worker; genuine2D/3D/2DAC, exports and actual worker cancellation; native Chromium controls/import/download and live2D observations. Initial24000cells/240s, no compiled native adviser/CAD/FEM in browser. Fixed GitHub Pages URL; see docs/ONLINE_AND_DESKTOP.md."
+    },
+    {
+      "id": "windows_development_executable",
+      "status": "built_and_smoke_verified_windows_server_2025",
+      "evidence_or_next": "R002 native Windows one-folder PyInstaller build; actual frozen reference solve and PyOpenMagnetics adviser/cancel/export with Python absent from childPATH. Build host has Python; no Windows10/11 clean offline/OS-picker or final release qualification. Legacy core-only CadQuery2.6.1 guard remains unavailable in shared2.7.0 package; native field/CAD metadata are not new Windows numerical qualification."
+    },
+    {
+      "id": "linear_multiwinding_short_measurement",
+      "status": "implemented_internally_verified_limited",
+      "evidence_or_next": "S002: explicit simultaneous ideal shorts from a reciprocal positive-energy electrical matrix; analytical/actual2D3D field-energy/cancellation and source/HTTP/browser integration. Not a unique Lm/leakage T split, loaded/resistiveAC/transient solve, mesh/domain accuracy or independent Maxwell validation. See PORT_REDUCTION.md and separate S002 report."
+    }
+  ],
+  "requirements_revision": "2026-11-22 user authorises development executable and GitHub preview now; final clean-Windows release/physical qualification requirements remain",
+  "targets": {
+    "2d": "FEMM magnetic mesh/solver capability coverage, not achieved",
+    "3d": "stationary Maxwell/COMSOL/Altair Flux reference capability coverage, not achieved"
+  }
+}
