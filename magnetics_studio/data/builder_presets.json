@@ -1,0 +1,1259 @@
+[
+  {
+    "id": "ee_basic",
+    "name": "EE \u00b7 P\u2013S blocks",
+    "spec": {
+      "name": "Builder transformer",
+      "mode": "2d",
+      "family": "e_core",
+      "part_number": "Custom EE",
+      "core": {
+        "limbs_mm": [
+          10,
+          20,
+          10
+        ],
+        "windows_mm": [
+          20,
+          20
+        ],
+        "window_height_mm": 50,
+        "top_yoke_mm": 10,
+        "bottom_yoke_mm": 10,
+        "depth_mm": 30,
+        "inner_diameter_mm": 35,
+        "outer_diameter_mm": 65,
+        "gaps": [
+          {
+            "limb": 1,
+            "count": 1,
+            "length_mm": 0.5
+          }
+        ]
+      },
+      "material": {
+        "name": "Custom ferrite",
+        "mu_r": 2200,
+        "law": "linear",
+        "bh": [],
+        "conductivity_MSm": 0,
+        "temperature_C": 25,
+        "density_kg_m3": 0
+      },
+      "packing": {
+        "representation": "blocks",
+        "orientation": "radial",
+        "bobbin_mm": 0.5,
+        "clearance_mm": 0.5,
+        "section_insulation_mm": 0.5,
+        "turn_insulation_mm": 0.1,
+        "circle_segments": 20
+      },
+      "sections": [
+        {
+          "circuit": "P",
+          "name": "Primary",
+          "limb": 1,
+          "turns": 12,
+          "current_A": 1,
+          "conductor": "round",
+          "diameter_mm": 1.4,
+          "width_mm": 1.4,
+          "height_mm": 1.4,
+          "turns_per_layer": 12,
+          "build_mm": 3,
+          "height_override_mm": 36,
+          "strands": 100,
+          "strand_diameter_mm": 0.1
+        },
+        {
+          "circuit": "S",
+          "name": "Secondary",
+          "limb": 1,
+          "turns": 12,
+          "current_A": 0,
+          "conductor": "round",
+          "diameter_mm": 1.4,
+          "width_mm": 1.4,
+          "height_mm": 1.4,
+          "turns_per_layer": 12,
+          "build_mm": 3,
+          "height_override_mm": 36,
+          "strands": 100,
+          "strand_diameter_mm": 0.1
+        }
+      ],
+      "nameplate": {
+        "frequency_min_Hz": 80000,
+        "frequency_max_Hz": 150000,
+        "voltage_min_V": 400,
+        "voltage_max_V": 800,
+        "current_min_A": 0,
+        "current_max_A": 40,
+        "power_min_W": 0,
+        "power_max_W": 27000,
+        "electrical_angle_deg": 0
+      },
+      "air_padding_mm": 25,
+      "mesh_subdivisions": 28
+    }
+  },
+  {
+    "id": "ee_psp",
+    "name": "EE \u00b7 P\u2013S\u2013P blocks",
+    "spec": {
+      "name": "EE \u00b7 P\u2013S\u2013P interleaving",
+      "mode": "2d",
+      "family": "e_core",
+      "part_number": "Custom EE",
+      "core": {
+        "limbs_mm": [
+          10,
+          20,
+          10
+        ],
+        "windows_mm": [
+          20,
+          20
+        ],
+        "window_height_mm": 50,
+        "top_yoke_mm": 10,
+        "bottom_yoke_mm": 10,
+        "depth_mm": 30,
+        "inner_diameter_mm": 35,
+        "outer_diameter_mm": 65,
+        "gaps": [
+          {
+            "limb": 1,
+            "count": 1,
+            "length_mm": 0.5
+          }
+        ]
+      },
+      "material": {
+        "name": "Custom ferrite",
+        "mu_r": 2200,
+        "law": "linear",
+        "bh": [],
+        "conductivity_MSm": 0,
+        "temperature_C": 25,
+        "density_kg_m3": 0
+      },
+      "packing": {
+        "representation": "blocks",
+        "orientation": "radial",
+        "bobbin_mm": 0.5,
+        "clearance_mm": 0.5,
+        "section_insulation_mm": 0.5,
+        "turn_insulation_mm": 0.1,
+        "circle_segments": 20
+      },
+      "sections": [
+        {
+          "circuit": "P",
+          "name": "Primary inner",
+          "limb": 1,
+          "turns": 6,
+          "current_A": 1,
+          "conductor": "round",
+          "diameter_mm": 1.4,
+          "width_mm": 1.4,
+          "height_mm": 1.4,
+          "turns_per_layer": 12,
+          "build_mm": 3,
+          "height_override_mm": 36,
+          "strands": 100,
+          "strand_diameter_mm": 0.1
+        },
+        {
+          "circuit": "S",
+          "name": "Secondary",
+          "limb": 1,
+          "turns": 12,
+          "current_A": 0,
+          "conductor": "round",
+          "diameter_mm": 1.4,
+          "width_mm": 1.4,
+          "height_mm": 1.4,
+          "turns_per_layer": 12,
+          "build_mm": 3,
+          "height_override_mm": 36,
+          "strands": 100,
+          "strand_diameter_mm": 0.1
+        },
+        {
+          "circuit": "P",
+          "name": "Primary outer",
+          "limb": 1,
+          "turns": 6,
+          "current_A": 1,
+          "conductor": "round",
+          "diameter_mm": 1.4,
+          "width_mm": 1.4,
+          "height_mm": 1.4,
+          "turns_per_layer": 12,
+          "build_mm": 3,
+          "height_override_mm": 36,
+          "strands": 100,
+          "strand_diameter_mm": 0.1
+        }
+      ],
+      "nameplate": {
+        "frequency_min_Hz": 80000,
+        "frequency_max_Hz": 150000,
+        "voltage_min_V": 400,
+        "voltage_max_V": 800,
+        "current_min_A": 0,
+        "current_max_A": 40,
+        "power_min_W": 0,
+        "power_max_W": 27000,
+        "electrical_angle_deg": 0
+      },
+      "air_padding_mm": 25,
+      "mesh_subdivisions": 28
+    }
+  },
+  {
+    "id": "ee_turns",
+    "name": "EE \u00b7 round turns / odd final layer",
+    "spec": {
+      "name": "EE \u00b7 individual round turns",
+      "mode": "2d",
+      "family": "e_core",
+      "part_number": "Custom EE",
+      "core": {
+        "limbs_mm": [
+          10,
+          20,
+          10
+        ],
+        "windows_mm": [
+          20,
+          20
+        ],
+        "window_height_mm": 50,
+        "top_yoke_mm": 10,
+        "bottom_yoke_mm": 10,
+        "depth_mm": 30,
+        "inner_diameter_mm": 35,
+        "outer_diameter_mm": 65,
+        "gaps": [
+          {
+            "limb": 1,
+            "count": 1,
+            "length_mm": 0.5
+          }
+        ]
+      },
+      "material": {
+        "name": "Custom ferrite",
+        "mu_r": 2200,
+        "law": "linear",
+        "bh": [],
+        "conductivity_MSm": 0,
+        "temperature_C": 25,
+        "density_kg_m3": 0
+      },
+      "packing": {
+        "representation": "turns",
+        "orientation": "radial",
+        "bobbin_mm": 0.5,
+        "clearance_mm": 0.5,
+        "section_insulation_mm": 0.5,
+        "turn_insulation_mm": 0.1,
+        "circle_segments": 20
+      },
+      "sections": [
+        {
+          "circuit": "P",
+          "name": "Primary",
+          "limb": 1,
+          "turns": 7,
+          "current_A": 1,
+          "conductor": "round",
+          "diameter_mm": 1.4,
+          "width_mm": 1.4,
+          "height_mm": 1.4,
+          "turns_per_layer": 4,
+          "build_mm": 0,
+          "height_override_mm": 0,
+          "strands": 100,
+          "strand_diameter_mm": 0.1
+        },
+        {
+          "circuit": "S",
+          "name": "Secondary",
+          "limb": 1,
+          "turns": 7,
+          "current_A": 0,
+          "conductor": "round",
+          "diameter_mm": 1.4,
+          "width_mm": 1.4,
+          "height_mm": 1.4,
+          "turns_per_layer": 4,
+          "build_mm": 0,
+          "height_override_mm": 0,
+          "strands": 100,
+          "strand_diameter_mm": 0.1
+        }
+      ],
+      "nameplate": {
+        "frequency_min_Hz": 80000,
+        "frequency_max_Hz": 150000,
+        "voltage_min_V": 400,
+        "voltage_max_V": 800,
+        "current_min_A": 0,
+        "current_max_A": 40,
+        "power_min_W": 0,
+        "power_max_W": 27000,
+        "electrical_angle_deg": 0
+      },
+      "air_padding_mm": 25,
+      "mesh_subdivisions": 28
+    }
+  },
+  {
+    "id": "user_e100",
+    "name": "Your E100 \u00b7 14:16 litz / three centre gaps",
+    "spec": {
+      "name": "User E100 60 28 \u00b7 imported dimensions",
+      "mode": "2d",
+      "family": "e_core",
+      "part_number": "E100_60_28_TDK",
+      "core": {
+        "limbs_mm": [
+          13.57,
+          27.5,
+          13.57
+        ],
+        "windows_mm": [
+          35,
+          35
+        ],
+        "window_height_mm": 46.85,
+        "top_yoke_mm": 12.55,
+        "bottom_yoke_mm": 12.55,
+        "depth_mm": 27.5,
+        "inner_diameter_mm": 35,
+        "outer_diameter_mm": 65,
+        "gaps": [
+          {
+            "limb": 1,
+            "count": 3,
+            "length_mm": 0.86
+          }
+        ]
+      },
+      "material": {
+        "name": "Custom ferrite",
+        "mu_r": 2200,
+        "law": "linear",
+        "bh": [],
+        "conductivity_MSm": 0,
+        "temperature_C": 25,
+        "density_kg_m3": 0
+      },
+      "packing": {
+        "representation": "blocks",
+        "orientation": "radial",
+        "bobbin_mm": 0.5,
+        "clearance_mm": 0.5,
+        "section_insulation_mm": 0.5,
+        "turn_insulation_mm": 0.1,
+        "circle_segments": 20
+      },
+      "sections": [
+        {
+          "circuit": "P",
+          "name": "Primary",
+          "limb": 1,
+          "turns": 14,
+          "current_A": 1,
+          "conductor": "litz",
+          "diameter_mm": 4.68,
+          "width_mm": 1.4,
+          "height_mm": 1.4,
+          "turns_per_layer": 7,
+          "build_mm": 0,
+          "height_override_mm": 0,
+          "strands": 1050,
+          "strand_diameter_mm": 0.1
+        },
+        {
+          "circuit": "S",
+          "name": "Secondary",
+          "limb": 1,
+          "turns": 16,
+          "current_A": 0,
+          "conductor": "litz",
+          "diameter_mm": 4.4,
+          "width_mm": 1.4,
+          "height_mm": 1.4,
+          "turns_per_layer": 8,
+          "build_mm": 0,
+          "height_override_mm": 0,
+          "strands": 945,
+          "strand_diameter_mm": 0.1
+        }
+      ],
+      "nameplate": {
+        "frequency_min_Hz": 80000,
+        "frequency_max_Hz": 150000,
+        "voltage_min_V": 400,
+        "voltage_max_V": 800,
+        "current_min_A": 0,
+        "current_max_A": 40,
+        "power_min_W": 0,
+        "power_max_W": 27000,
+        "electrical_angle_deg": 0
+      },
+      "air_padding_mm": 25,
+      "mesh_subdivisions": 28,
+      "provenance": {
+        "source": "Uploaded LLC_Transformer.mat: core.geometry.overall",
+        "note": "Saved normalized windows say 22.82 mm, overall says 35 mm. This preset explicitly uses overall (35 mm). Verify which revision you intend."
+      }
+    }
+  },
+  {
+    "id": "two_limb",
+    "name": "Two-limb core",
+    "spec": {
+      "name": "Two-limb transformer",
+      "mode": "2d",
+      "family": "two_limb",
+      "part_number": "Custom EE",
+      "core": {
+        "limbs_mm": [
+          15,
+          15
+        ],
+        "windows_mm": [
+          30
+        ],
+        "window_height_mm": 50,
+        "top_yoke_mm": 10,
+        "bottom_yoke_mm": 10,
+        "depth_mm": 30,
+        "inner_diameter_mm": 35,
+        "outer_diameter_mm": 65,
+        "gaps": [
+          {
+            "limb": 0,
+            "count": 1,
+            "length_mm": 0.5
+          }
+        ]
+      },
+      "material": {
+        "name": "Custom ferrite",
+        "mu_r": 2200,
+        "law": "linear",
+        "bh": [],
+        "conductivity_MSm": 0,
+        "temperature_C": 25,
+        "density_kg_m3": 0
+      },
+      "packing": {
+        "representation": "blocks",
+        "orientation": "radial",
+        "bobbin_mm": 0.5,
+        "clearance_mm": 0.5,
+        "section_insulation_mm": 0.5,
+        "turn_insulation_mm": 0.1,
+        "circle_segments": 20
+      },
+      "sections": [
+        {
+          "circuit": "P",
+          "name": "Primary",
+          "limb": 0,
+          "turns": 12,
+          "current_A": 1,
+          "conductor": "round",
+          "diameter_mm": 1.4,
+          "width_mm": 1.4,
+          "height_mm": 1.4,
+          "turns_per_layer": 12,
+          "build_mm": 3,
+          "height_override_mm": 36,
+          "strands": 100,
+          "strand_diameter_mm": 0.1
+        },
+        {
+          "circuit": "S",
+          "name": "Secondary",
+          "limb": 0,
+          "turns": 12,
+          "current_A": 0,
+          "conductor": "round",
+          "diameter_mm": 1.4,
+          "width_mm": 1.4,
+          "height_mm": 1.4,
+          "turns_per_layer": 12,
+          "build_mm": 3,
+          "height_override_mm": 36,
+          "strands": 100,
+          "strand_diameter_mm": 0.1
+        }
+      ],
+      "nameplate": {
+        "frequency_min_Hz": 80000,
+        "frequency_max_Hz": 150000,
+        "voltage_min_V": 400,
+        "voltage_max_V": 800,
+        "current_min_A": 0,
+        "current_max_A": 40,
+        "power_min_W": 0,
+        "power_max_W": 27000,
+        "electrical_angle_deg": 0
+      },
+      "air_padding_mm": 25,
+      "mesh_subdivisions": 28
+    }
+  },
+  {
+    "id": "five_limb",
+    "name": "Five-limb core",
+    "spec": {
+      "name": "Five-limb transformer",
+      "mode": "2d",
+      "family": "five_limb",
+      "part_number": "Custom EE",
+      "core": {
+        "limbs_mm": [
+          10,
+          15,
+          20,
+          15,
+          10
+        ],
+        "windows_mm": [
+          15,
+          20,
+          20,
+          15
+        ],
+        "window_height_mm": 50,
+        "top_yoke_mm": 10,
+        "bottom_yoke_mm": 10,
+        "depth_mm": 30,
+        "inner_diameter_mm": 35,
+        "outer_diameter_mm": 65,
+        "gaps": [
+          {
+            "limb": 2,
+            "count": 1,
+            "length_mm": 0.5
+          }
+        ]
+      },
+      "material": {
+        "name": "Custom ferrite",
+        "mu_r": 2200,
+        "law": "linear",
+        "bh": [],
+        "conductivity_MSm": 0,
+        "temperature_C": 25,
+        "density_kg_m3": 0
+      },
+      "packing": {
+        "representation": "blocks",
+        "orientation": "radial",
+        "bobbin_mm": 0.5,
+        "clearance_mm": 0.5,
+        "section_insulation_mm": 0.5,
+        "turn_insulation_mm": 0.1,
+        "circle_segments": 20
+      },
+      "sections": [
+        {
+          "circuit": "P",
+          "name": "Primary",
+          "limb": 2,
+          "turns": 12,
+          "current_A": 1,
+          "conductor": "round",
+          "diameter_mm": 1.4,
+          "width_mm": 1.4,
+          "height_mm": 1.4,
+          "turns_per_layer": 12,
+          "build_mm": 3,
+          "height_override_mm": 36,
+          "strands": 100,
+          "strand_diameter_mm": 0.1
+        },
+        {
+          "circuit": "S",
+          "name": "Secondary",
+          "limb": 2,
+          "turns": 12,
+          "current_A": 0,
+          "conductor": "round",
+          "diameter_mm": 1.4,
+          "width_mm": 1.4,
+          "height_mm": 1.4,
+          "turns_per_layer": 12,
+          "build_mm": 3,
+          "height_override_mm": 36,
+          "strands": 100,
+          "strand_diameter_mm": 0.1
+        }
+      ],
+      "nameplate": {
+        "frequency_min_Hz": 80000,
+        "frequency_max_Hz": 150000,
+        "voltage_min_V": 400,
+        "voltage_max_V": 800,
+        "current_min_A": 0,
+        "current_max_A": 40,
+        "power_min_W": 0,
+        "power_max_W": 27000,
+        "electrical_angle_deg": 0
+      },
+      "air_padding_mm": 25,
+      "mesh_subdivisions": 28
+    }
+  },
+  {
+    "id": "planar",
+    "name": "Planar core \u00b7 foil turns",
+    "spec": {
+      "name": "Planar rectangular core",
+      "mode": "2d",
+      "family": "planar",
+      "part_number": "Custom EE",
+      "core": {
+        "limbs_mm": [
+          10,
+          20,
+          10
+        ],
+        "windows_mm": [
+          20,
+          20
+        ],
+        "window_height_mm": 14,
+        "top_yoke_mm": 5,
+        "bottom_yoke_mm": 5,
+        "depth_mm": 30,
+        "inner_diameter_mm": 35,
+        "outer_diameter_mm": 65,
+        "gaps": [
+          {
+            "limb": 1,
+            "count": 1,
+            "length_mm": 0.5
+          }
+        ]
+      },
+      "material": {
+        "name": "Custom ferrite",
+        "mu_r": 2200,
+        "law": "linear",
+        "bh": [],
+        "conductivity_MSm": 0,
+        "temperature_C": 25,
+        "density_kg_m3": 0
+      },
+      "packing": {
+        "representation": "blocks",
+        "orientation": "radial",
+        "bobbin_mm": 0.5,
+        "clearance_mm": 0.5,
+        "section_insulation_mm": 0.5,
+        "turn_insulation_mm": 0.1,
+        "circle_segments": 20
+      },
+      "sections": [
+        {
+          "circuit": "P",
+          "name": "Primary",
+          "limb": 1,
+          "turns": 4,
+          "current_A": 1,
+          "conductor": "foil",
+          "diameter_mm": 1.4,
+          "width_mm": 1,
+          "height_mm": 8,
+          "turns_per_layer": 1,
+          "build_mm": 0,
+          "height_override_mm": 0,
+          "strands": 100,
+          "strand_diameter_mm": 0.1
+        },
+        {
+          "circuit": "S",
+          "name": "Secondary",
+          "limb": 1,
+          "turns": 4,
+          "current_A": 0,
+          "conductor": "foil",
+          "diameter_mm": 1.4,
+          "width_mm": 1,
+          "height_mm": 8,
+          "turns_per_layer": 1,
+          "build_mm": 0,
+          "height_override_mm": 0,
+          "strands": 100,
+          "strand_diameter_mm": 0.1
+        }
+      ],
+      "nameplate": {
+        "frequency_min_Hz": 80000,
+        "frequency_max_Hz": 150000,
+        "voltage_min_V": 400,
+        "voltage_max_V": 800,
+        "current_min_A": 0,
+        "current_max_A": 40,
+        "power_min_W": 0,
+        "power_max_W": 27000,
+        "electrical_angle_deg": 0
+      },
+      "air_padding_mm": 25,
+      "mesh_subdivisions": 28
+    }
+  },
+  {
+    "id": "toroid",
+    "name": "Toroid \u00b7 annular 2D section",
+    "spec": {
+      "name": "Toroid \u00b7 individual turns",
+      "mode": "2d",
+      "family": "toroid",
+      "part_number": "Custom EE",
+      "core": {
+        "limbs_mm": [
+          10,
+          20,
+          10
+        ],
+        "windows_mm": [
+          20,
+          20
+        ],
+        "window_height_mm": 50,
+        "top_yoke_mm": 10,
+        "bottom_yoke_mm": 10,
+        "depth_mm": 30,
+        "inner_diameter_mm": 35,
+        "outer_diameter_mm": 65,
+        "gaps": []
+      },
+      "material": {
+        "name": "Custom ferrite",
+        "mu_r": 2200,
+        "law": "linear",
+        "bh": [],
+        "conductivity_MSm": 0,
+        "temperature_C": 25,
+        "density_kg_m3": 0
+      },
+      "packing": {
+        "representation": "turns",
+        "orientation": "radial",
+        "bobbin_mm": 0.5,
+        "clearance_mm": 0.5,
+        "section_insulation_mm": 0.5,
+        "turn_insulation_mm": 0.1,
+        "circle_segments": 20
+      },
+      "sections": [
+        {
+          "circuit": "P",
+          "name": "Primary",
+          "limb": 1,
+          "turns": 8,
+          "current_A": 1,
+          "conductor": "round",
+          "diameter_mm": 1,
+          "width_mm": 1.4,
+          "height_mm": 1.4,
+          "turns_per_layer": 8,
+          "build_mm": 0,
+          "height_override_mm": 0,
+          "strands": 100,
+          "strand_diameter_mm": 0.1
+        },
+        {
+          "circuit": "S",
+          "name": "Secondary",
+          "limb": 1,
+          "turns": 8,
+          "current_A": 0,
+          "conductor": "round",
+          "diameter_mm": 1,
+          "width_mm": 1.4,
+          "height_mm": 1.4,
+          "turns_per_layer": 8,
+          "build_mm": 0,
+          "height_override_mm": 0,
+          "strands": 100,
+          "strand_diameter_mm": 0.1
+        }
+      ],
+      "nameplate": {
+        "frequency_min_Hz": 80000,
+        "frequency_max_Hz": 150000,
+        "voltage_min_V": 400,
+        "voltage_max_V": 800,
+        "current_min_A": 0,
+        "current_max_A": 40,
+        "power_min_W": 0,
+        "power_max_W": 27000,
+        "electrical_angle_deg": 0
+      },
+      "air_padding_mm": 25,
+      "mesh_subdivisions": 28
+    }
+  },
+  {
+    "id": "user_saved_circuits",
+    "name": "Your saved Phase U/V/W \u00b7 circuits + windings + layer order",
+    "spec": {
+      "name": "Your saved PhaseU / PhaseV / PhaseW definitions",
+      "mode": "2d",
+      "family": "e_core",
+      "part_number": "E100_60_28_TDK",
+      "core": {
+        "limbs_mm": [
+          13.57,
+          27.5,
+          13.57
+        ],
+        "windows_mm": [
+          35,
+          35
+        ],
+        "window_height_mm": 46.85,
+        "top_yoke_mm": 12.55,
+        "bottom_yoke_mm": 12.55,
+        "depth_mm": 27.5,
+        "inner_diameter_mm": 35,
+        "outer_diameter_mm": 65,
+        "gaps": [
+          {
+            "limb": 1,
+            "count": 3,
+            "length_mm": 0.86
+          }
+        ]
+      },
+      "material": {
+        "name": "Custom ferrite",
+        "mu_r": 2200,
+        "law": "linear",
+        "bh": [],
+        "conductivity_MSm": 0,
+        "temperature_C": 25,
+        "density_kg_m3": 0
+      },
+      "packing": {
+        "representation": "blocks",
+        "orientation": "radial",
+        "bobbin_mm": 0.5,
+        "clearance_mm": 0.5,
+        "section_insulation_mm": 0.5,
+        "turn_insulation_mm": 0.1,
+        "circle_segments": 20
+      },
+      "nameplate": {
+        "frequency_min_Hz": 80000,
+        "frequency_max_Hz": 150000,
+        "voltage_min_V": 400,
+        "voltage_max_V": 800,
+        "current_min_A": 0,
+        "current_max_A": 40,
+        "power_min_W": 0,
+        "power_max_W": 27000,
+        "electrical_angle_deg": 0
+      },
+      "air_padding_mm": 25,
+      "mesh_subdivisions": 4,
+      "provenance": {
+        "source": "Uploaded LLC_Transformer.mat: named circuit containers, windings, packing and decoded interleaving stack",
+        "note": "Preserves 3 circuits, 6 winding names/turns and layer order. All field currents start at 0 A for explicit selection. Uses overall 35 mm windows; normalized 22.82 mm conflicts. Litz bundle diameters 4.68/4.40 mm come from the separate Leakeage_computation.m example because saved strand-only geometry does not specify an external bundle diameter. Clearance is explicitly 0.5 mm. Nameplate entries include original test values; review before use. Bobbin type/dimensions are not a full CAD reconstruction."
+      },
+      "workflow_version": 2,
+      "circuits": [
+        {
+          "id": "c1",
+          "name": "PhaseU",
+          "winding_count": 2,
+          "arrangement": "single",
+          "orientation": "radial",
+          "windings": [
+            {
+              "id": "w1",
+              "name": "Primary",
+              "turns": 4,
+              "current_A": 0,
+              "phase_deg": 0.0,
+              "limbs": [
+                0
+              ],
+              "conductor": "round",
+              "diameter_mm": 2.0,
+              "width_mm": 1.4,
+              "height_mm": 1.4,
+              "strands": 1,
+              "strand_diameter_mm": 0.1,
+              "turn_insulation_mm": 0.5,
+              "turns_per_layer": 4,
+              "n_layers": 1,
+              "turn_orientation": "vertical",
+              "build_mm": 0,
+              "height_override_mm": 0,
+              "conductivity_MSm": 58.0,
+              "material_reference": "12 AWG",
+              "tape_part_number": "Tape1",
+              "tape_material": "Insulation",
+              "tape_mm": 0.4,
+              "bobbin_part_number": "",
+              "bobbin_material": "Bobbin",
+              "bobbin_mm": 0.0,
+              "clearance_mm": 0.5,
+              "nameplate": {
+                "frequency_min_Hz": 80000.0,
+                "frequency_max_Hz": 400000.0,
+                "voltage_min_V": 300.0,
+                "voltage_max_V": 1200.0,
+                "current_min_A": 10.0,
+                "current_max_A": 60.0,
+                "power_min_W": 3000.0,
+                "power_max_W": 24000.0
+              }
+            },
+            {
+              "id": "w2",
+              "name": "Secondary",
+              "turns": 3,
+              "current_A": 0,
+              "phase_deg": 0.0,
+              "limbs": [
+                0
+              ],
+              "conductor": "foil",
+              "diameter_mm": 4.4,
+              "width_mm": 1.5,
+              "height_mm": 1.0,
+              "strands": 1,
+              "strand_diameter_mm": 0.1,
+              "turn_insulation_mm": 0.3,
+              "turns_per_layer": 3,
+              "n_layers": 1,
+              "turn_orientation": "vertical",
+              "build_mm": 0,
+              "height_override_mm": 0,
+              "conductivity_MSm": 0.0,
+              "material_reference": "1.6mm",
+              "tape_part_number": "Tape2",
+              "tape_material": "Insulation",
+              "tape_mm": 0.3,
+              "bobbin_part_number": "Bobbin1",
+              "bobbin_material": "Bobbin",
+              "bobbin_mm": 0.5,
+              "clearance_mm": 0.5,
+              "nameplate": {
+                "frequency_min_Hz": 80000.0,
+                "frequency_max_Hz": 400000.0,
+                "voltage_min_V": 300.0,
+                "voltage_max_V": 12000.0,
+                "current_min_A": 10.0,
+                "current_max_A": 60.0,
+                "power_min_W": 23330.0,
+                "power_max_W": 30000.0
+              }
+            }
+          ]
+        },
+        {
+          "id": "c2",
+          "name": "PhaseV",
+          "winding_count": 2,
+          "arrangement": "interleaved",
+          "orientation": "axial",
+          "windings": [
+            {
+              "id": "w1",
+              "name": "Primary",
+              "turns": 14,
+              "current_A": 0,
+              "phase_deg": 9.0,
+              "limbs": [
+                1
+              ],
+              "conductor": "litz",
+              "diameter_mm": 4.68,
+              "width_mm": 1.4,
+              "height_mm": 1.4,
+              "strands": 1050,
+              "strand_diameter_mm": 0.1,
+              "turn_insulation_mm": 0.1,
+              "turns_per_layer": 4,
+              "n_layers": 4,
+              "turn_orientation": "horizontal",
+              "build_mm": 0,
+              "height_override_mm": 0,
+              "conductivity_MSm": 0.0,
+              "material_reference": "1.25mm",
+              "tape_part_number": "Tape2",
+              "tape_material": "Insulation",
+              "tape_mm": 0.3,
+              "bobbin_part_number": "Bobbin2",
+              "bobbin_material": "Bobbin",
+              "bobbin_mm": 0.5,
+              "clearance_mm": 0.5,
+              "nameplate": {
+                "frequency_min_Hz": 1.0,
+                "frequency_max_Hz": 2.0,
+                "voltage_min_V": 3.0,
+                "voltage_max_V": 4.0,
+                "current_min_A": 5.0,
+                "current_max_A": 6.0,
+                "power_min_W": 7.0,
+                "power_max_W": 8.0
+              }
+            },
+            {
+              "id": "w2",
+              "name": "Secondary",
+              "turns": 16,
+              "current_A": 0,
+              "phase_deg": 9.0,
+              "limbs": [
+                1
+              ],
+              "conductor": "litz",
+              "diameter_mm": 4.4,
+              "width_mm": 1.4,
+              "height_mm": 1.4,
+              "strands": 1050,
+              "strand_diameter_mm": 0.1,
+              "turn_insulation_mm": 0.2,
+              "turns_per_layer": 4,
+              "n_layers": 4,
+              "turn_orientation": "horizontal",
+              "build_mm": 0,
+              "height_override_mm": 0,
+              "conductivity_MSm": 1.798,
+              "material_reference": "Titanium",
+              "tape_part_number": "Tape2",
+              "tape_material": "Insulation",
+              "tape_mm": 0.3,
+              "bobbin_part_number": "",
+              "bobbin_material": "Bobbin",
+              "bobbin_mm": 0.0,
+              "clearance_mm": 0.5,
+              "nameplate": {
+                "frequency_min_Hz": 1.0,
+                "frequency_max_Hz": 2.0,
+                "voltage_min_V": 3.0,
+                "voltage_max_V": 4.0,
+                "current_min_A": 5.0,
+                "current_max_A": 6.0,
+                "power_min_W": 7.0,
+                "power_max_W": 8.0
+              }
+            }
+          ]
+        },
+        {
+          "id": "c3",
+          "name": "PhaseW",
+          "winding_count": 2,
+          "arrangement": "interleaved",
+          "orientation": "radial",
+          "windings": [
+            {
+              "id": "w1",
+              "name": "Primary",
+              "turns": 8,
+              "current_A": 0,
+              "phase_deg": 98.0,
+              "limbs": [
+                2
+              ],
+              "conductor": "round",
+              "diameter_mm": 1.0,
+              "width_mm": 1.4,
+              "height_mm": 1.4,
+              "strands": 1,
+              "strand_diameter_mm": 0.1,
+              "turn_insulation_mm": 0.2,
+              "turns_per_layer": 4,
+              "n_layers": 2,
+              "turn_orientation": "vertical",
+              "build_mm": 0,
+              "height_override_mm": 0,
+              "conductivity_MSm": 0.0,
+              "material_reference": "12 SWG",
+              "tape_part_number": "Tape2",
+              "tape_material": "Insulation",
+              "tape_mm": 0.2,
+              "bobbin_part_number": "bobbin4",
+              "bobbin_material": "Bobbin",
+              "bobbin_mm": 1.0,
+              "clearance_mm": 0.5,
+              "nameplate": {
+                "frequency_min_Hz": 1.0,
+                "frequency_max_Hz": 2.0,
+                "voltage_min_V": 3.0,
+                "voltage_max_V": 4.0,
+                "current_min_A": 5.0,
+                "current_max_A": 6.0,
+                "power_min_W": 7.0,
+                "power_max_W": 89.0
+              }
+            },
+            {
+              "id": "w2",
+              "name": "Secondary",
+              "turns": 6,
+              "current_A": 0,
+              "phase_deg": 9.0,
+              "limbs": [
+                2
+              ],
+              "conductor": "round",
+              "diameter_mm": 2.0,
+              "width_mm": 1.4,
+              "height_mm": 1.4,
+              "strands": 1,
+              "strand_diameter_mm": 0.1,
+              "turn_insulation_mm": 0.2,
+              "turns_per_layer": 3,
+              "n_layers": 2,
+              "turn_orientation": "vertical",
+              "build_mm": 0,
+              "height_override_mm": 0,
+              "conductivity_MSm": 58.0,
+              "material_reference": "1.6mm",
+              "tape_part_number": "tape2",
+              "tape_material": "Insulation",
+              "tape_mm": 0.3,
+              "bobbin_part_number": "",
+              "bobbin_material": "Bobbin",
+              "bobbin_mm": 0.0,
+              "clearance_mm": 0.5,
+              "nameplate": {
+                "frequency_min_Hz": 1.0,
+                "frequency_max_Hz": 2.0,
+                "voltage_min_V": 3.0,
+                "voltage_max_V": 4.0,
+                "current_min_A": 5.0,
+                "current_max_A": 6.0,
+                "power_min_W": 7.0,
+                "power_max_W": 8.0
+              }
+            }
+          ]
+        }
+      ],
+      "layout": [
+        {
+          "id": "c1__w1__layer_1",
+          "circuit_id": "c1",
+          "winding_id": "w1",
+          "limb": 0,
+          "turns": 4
+        },
+        {
+          "id": "c1__w2__layer_1",
+          "circuit_id": "c1",
+          "winding_id": "w2",
+          "limb": 0,
+          "turns": 3
+        },
+        {
+          "id": "c2__w1__layer_1",
+          "circuit_id": "c2",
+          "winding_id": "w1",
+          "limb": 1,
+          "turns": 4
+        },
+        {
+          "id": "c2__w1__layer_2",
+          "circuit_id": "c2",
+          "winding_id": "w1",
+          "limb": 1,
+          "turns": 4
+        },
+        {
+          "id": "c2__w2__layer_1",
+          "circuit_id": "c2",
+          "winding_id": "w2",
+          "limb": 1,
+          "turns": 4
+        },
+        {
+          "id": "c2__w2__layer_2",
+          "circuit_id": "c2",
+          "winding_id": "w2",
+          "limb": 1,
+          "turns": 4
+        },
+        {
+          "id": "c2__w1__layer_3",
+          "circuit_id": "c2",
+          "winding_id": "w1",
+          "limb": 1,
+          "turns": 4
+        },
+        {
+          "id": "c2__w1__layer_4",
+          "circuit_id": "c2",
+          "winding_id": "w1",
+          "limb": 1,
+          "turns": 2
+        },
+        {
+          "id": "c2__w2__layer_3",
+          "circuit_id": "c2",
+          "winding_id": "w2",
+          "limb": 1,
+          "turns": 4
+        },
+        {
+          "id": "c2__w2__layer_4",
+          "circuit_id": "c2",
+          "winding_id": "w2",
+          "limb": 1,
+          "turns": 4
+        },
+        {
+          "id": "c3__w1__layer_1",
+          "circuit_id": "c3",
+          "winding_id": "w1",
+          "limb": 2,
+          "turns": 4
+        },
+        {
+          "id": "c3__w2__layer_1",
+          "circuit_id": "c3",
+          "winding_id": "w2",
+          "limb": 2,
+          "turns": 3
+        },
+        {
+          "id": "c3__w1__layer_2",
+          "circuit_id": "c3",
+          "winding_id": "w1",
+          "limb": 2,
+          "turns": 4
+        },
+        {
+          "id": "c3__w2__layer_2",
+          "circuit_id": "c3",
+          "winding_id": "w2",
+          "limb": 2,
+          "turns": 3
+        }
+      ],
+      "custom_sections": false,
+      "excitation_mode": "instantaneous",
+      "snapshot_angle_deg": 0,
+      "workflow_note": "Imported named circuit/winding definitions; review source geometry and litz bundle assumptions."
+    }
+  }
+]

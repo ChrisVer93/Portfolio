@@ -1,0 +1,62 @@
+{
+  "version": "0.2",
+  "name": "Rectangular sheet solenoid \u00b7 3D",
+  "mode": "3d",
+  "domain": {
+    "width": 0.12,
+    "height": 0.1,
+    "depth": 0.12,
+    "nx": 6,
+    "ny": 6,
+    "nz": 6
+  },
+  "materials": [
+    {
+      "id": "air",
+      "name": "Air / insulation",
+      "mu_r": 1,
+      "color": "#71829a"
+    },
+    {
+      "id": "copper",
+      "name": "Copper (magnetic model)",
+      "mu_r": 1,
+      "color": "#d9924d"
+    },
+    {
+      "id": "core",
+      "name": "Linear ferrite \u00b7 \u03bcr 2000",
+      "mu_r": 2000,
+      "color": "#637389"
+    }
+  ],
+  "regions": [
+    {
+      "id": "rod",
+      "name": "Ferrite rod",
+      "x0": 0.045,
+      "x1": 0.075,
+      "y0": 0.035,
+      "y1": 0.065,
+      "material": "core",
+      "z0": 0.03,
+      "z1": 0.09
+    }
+  ],
+  "windings": [
+    {
+      "id": "coil",
+      "name": "Solenoid",
+      "turns": 60,
+      "current": 2,
+      "window": {
+        "x0": 0.035,
+        "x1": 0.085,
+        "y0": 0.025,
+        "y1": 0.075,
+        "z0": 0.045,
+        "z1": 0.075
+      }
+    }
+  ]
+}

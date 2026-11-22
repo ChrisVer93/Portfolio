@@ -1,0 +1,174 @@
+{
+  "version": "0.2",
+  "name": "CLLC 27 kW | nominal_flux_peak | 3d",
+  "mode": "3d",
+  "materials": [
+    {
+      "id": "air",
+      "name": "Air / insulation",
+      "mu_r": 1,
+      "color": "#6d8097"
+    },
+    {
+      "id": "copper",
+      "name": "Stranded copper region | magnetostatic mu_r=1",
+      "mu_r": 1,
+      "color": "#d88f45"
+    },
+    {
+      "id": "core",
+      "name": "N87-inspired linear approximation | mu_r=2200",
+      "mu_r": 2200,
+      "color": "#5a718d"
+    }
+  ],
+  "domain": {
+    "width": 0.14,
+    "height": 0.1,
+    "depth": 0.136,
+    "nx": 12,
+    "ny": 12,
+    "nz": 12
+  },
+  "regions": [
+    {
+      "id": "bottom_yoke",
+      "name": "Bottom yoke",
+      "material": "core",
+      "x0": 0.03,
+      "x1": 0.11,
+      "y0": 0.03,
+      "y1": 0.07,
+      "z0": 0.03,
+      "z1": 0.04
+    },
+    {
+      "id": "top_yoke",
+      "name": "Top yoke",
+      "material": "core",
+      "x0": 0.03,
+      "x1": 0.11,
+      "y0": 0.03,
+      "y1": 0.07,
+      "z0": 0.096,
+      "z1": 0.106
+    },
+    {
+      "id": "left_return",
+      "name": "Left return leg",
+      "material": "core",
+      "x0": 0.03,
+      "x1": 0.04,
+      "y0": 0.03,
+      "y1": 0.07,
+      "z0": 0.04,
+      "z1": 0.096
+    },
+    {
+      "id": "right_return",
+      "name": "Right return leg",
+      "material": "core",
+      "x0": 0.1,
+      "x1": 0.11,
+      "y0": 0.03,
+      "y1": 0.07,
+      "z0": 0.04,
+      "z1": 0.096
+    },
+    {
+      "id": "center_lower",
+      "name": "Centre leg below gap",
+      "material": "core",
+      "x0": 0.06,
+      "x1": 0.08,
+      "y0": 0.03,
+      "y1": 0.07,
+      "z0": 0.04,
+      "z1": 0.06721
+    },
+    {
+      "id": "center_upper",
+      "name": "Centre leg above gap",
+      "material": "core",
+      "x0": 0.06,
+      "x1": 0.08,
+      "y0": 0.03,
+      "y1": 0.07,
+      "z0": 0.06879,
+      "z1": 0.096
+    },
+    {
+      "id": "gap",
+      "name": "Centre gap",
+      "material": "air",
+      "x0": 0.06,
+      "x1": 0.08,
+      "y0": 0.03,
+      "y1": 0.07,
+      "z0": 0.06721,
+      "z1": 0.06879
+    }
+  ],
+  "windings": [
+    {
+      "id": "primary_inner",
+      "name": "Primary inner | 12 turns",
+      "turns": 12,
+      "current": 4.88878545677357,
+      "window": {
+        "x0": 0.057249999999999995,
+        "x1": 0.08275,
+        "y0": 0.02725,
+        "y1": 0.07275000000000001,
+        "z0": 0.043,
+        "z1": 0.093
+      },
+      "display_build_m": 0.0035,
+      "display_color": "#d99459",
+      "display_note": "Winding bundle envelope; the magnetic source remains the original zero-thickness mean-radius current sheet."
+    },
+    {
+      "id": "secondary",
+      "name": "Secondary | 24 turns",
+      "turns": 24,
+      "current": 0.0,
+      "window": {
+        "x0": 0.049999999999999996,
+        "x1": 0.09,
+        "y0": 0.019999999999999997,
+        "y1": 0.08,
+        "z0": 0.043,
+        "z1": 0.093
+      },
+      "display_build_m": 0.007,
+      "display_color": "#b56e43",
+      "display_note": "Winding bundle envelope; the magnetic source remains the original zero-thickness mean-radius current sheet."
+    },
+    {
+      "id": "primary_outer",
+      "name": "Primary outer | 12 turns",
+      "turns": 12,
+      "current": 4.88878545677357,
+      "window": {
+        "x0": 0.042749999999999996,
+        "x1": 0.09725,
+        "y0": 0.012749999999999997,
+        "y1": 0.08725000000000001,
+        "z0": 0.043,
+        "z1": 0.093
+      },
+      "display_build_m": 0.0035,
+      "display_color": "#e4ad75",
+      "display_note": "Winding bundle envelope; the magnetic source remains the original zero-thickness mean-radius current sheet."
+    }
+  ],
+  "series_groups": {
+    "primary": [
+      "primary_inner",
+      "primary_outer"
+    ],
+    "secondary": [
+      "secondary"
+    ]
+  }
+}

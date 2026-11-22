@@ -1,0 +1,128 @@
+{
+  "version": "0.2",
+  "name": "Gapped E-core transformer \u00b7 2D",
+  "mode": "2d",
+  "domain": {
+    "width": 0.12,
+    "height": 0.1,
+    "depth": 0.03,
+    "nx": 26,
+    "ny": 24
+  },
+  "materials": [
+    {
+      "id": "air",
+      "name": "Air / insulation",
+      "mu_r": 1,
+      "color": "#71829a"
+    },
+    {
+      "id": "copper",
+      "name": "Copper (magnetic model)",
+      "mu_r": 1,
+      "color": "#d9924d"
+    },
+    {
+      "id": "core",
+      "name": "Linear ferrite \u00b7 \u03bcr 2000",
+      "mu_r": 2000,
+      "color": "#637389"
+    }
+  ],
+  "regions": [
+    {
+      "id": "frame",
+      "name": "Core frame",
+      "x0": 0.025,
+      "x1": 0.095,
+      "y0": 0.015,
+      "y1": 0.085,
+      "material": "core"
+    },
+    {
+      "id": "window_l",
+      "name": "Left window",
+      "x0": 0.035,
+      "x1": 0.05,
+      "y0": 0.025,
+      "y1": 0.075,
+      "material": "air"
+    },
+    {
+      "id": "window_r",
+      "name": "Right window",
+      "x0": 0.07,
+      "x1": 0.085,
+      "y0": 0.025,
+      "y1": 0.075,
+      "material": "air"
+    },
+    {
+      "id": "gap",
+      "name": "Centre-leg air gap",
+      "x0": 0.05,
+      "x1": 0.07,
+      "y0": 0.0495,
+      "y1": 0.0505,
+      "material": "air"
+    },
+    {
+      "id": "p_pos",
+      "name": "Primary +",
+      "x0": 0.039,
+      "x1": 0.047,
+      "y0": 0.028,
+      "y1": 0.046,
+      "material": "copper",
+      "winding": "primary",
+      "polarity": 1
+    },
+    {
+      "id": "p_neg",
+      "name": "Primary \u2212",
+      "x0": 0.073,
+      "x1": 0.081,
+      "y0": 0.028,
+      "y1": 0.046,
+      "material": "copper",
+      "winding": "primary",
+      "polarity": -1
+    },
+    {
+      "id": "s_pos",
+      "name": "Secondary +",
+      "x0": 0.039,
+      "x1": 0.047,
+      "y0": 0.055,
+      "y1": 0.072,
+      "material": "copper",
+      "winding": "secondary",
+      "polarity": 1
+    },
+    {
+      "id": "s_neg",
+      "name": "Secondary \u2212",
+      "x0": 0.073,
+      "x1": 0.081,
+      "y0": 0.055,
+      "y1": 0.072,
+      "material": "copper",
+      "winding": "secondary",
+      "polarity": -1
+    }
+  ],
+  "windings": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "turns": 40,
+      "current": 3
+    },
+    {
+      "id": "secondary",
+      "name": "Secondary",
+      "turns": 20,
+      "current": 0
+    }
+  ]
+}

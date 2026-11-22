@@ -1,0 +1,29 @@
+'use strict'; // #: Adapt the original local HTTP interface to a browser-only reference worker.
+(()=>{ // #: Keep browser job/result state separate from the original application variables.
+    const network=window.fetch.bind(window),pending=new Map();let worker,serial=0,job=null,result=null,resultJob=null,field=null,starting=false; // #: Retain only complete accepted fields/results and explicit worker requests.
+    function launch(){worker=new Worker('browser-worker.js');worker.onmessage=event=>{const {id,value,error}=event.data,task=pending.get(id);if(!task)return;pending.delete(id);error?task.reject(Error(error)):task.resolve(value);};worker.onerror=event=>{for(const task of pending.values())task.reject(Error(event.message||'Browser Python worker failed'));pending.clear();};} // #: Reap real replies/errors by identity without blocking the UI.
+    function call(operation,payload){if(!worker)launch();return new Promise((resolve,reject)=>{const id=++serial;pending.set(id,{resolve,reject});worker.postMessage({id,operation,payload});});} // #: Send structured data only to the trusted source adapter.
+    function stop(){if(worker)worker.terminate();worker=null;for(const task of pending.values())task.reject(Error('Analysis cancelled'));pending.clear();} // #: Actually terminate synchronous Python work while retaining the previous accepted field.
+    const response=(body,status=200,type='application/json')=>new Response(type==='application/json'?JSON.stringify(body):body,{status,headers:{'Content-Type':type}}); // #: Preserve the existing fetch/JSON/text interface used by unchanged original controls.
+    window.fetch=async(input,options={})=>{ // #: Route only this application’s explicit API paths; all other assets use genuine network fetch.
+        const raw=typeof input==='string'?input:input.url;if(!raw.startsWith('/api/'))return network(input,options); // #: Leave Pyodide/assets and unrelated external requests untouched.
+        const path=raw.split('?')[0]; // #: Match exact original route names independently of query strings.
+        try{const data=options.body?JSON.parse(options.body):{};if(options.body?.length>2000000)throw Error('Request exceeds 2 MB'); // #: Retain source request-size and malformed-JSON rejection.
+            if(path==='/api/status')return response(job||{status:'idle'}); // #: Keep status responsive even during a synchronous Python solve.
+            if(path==='/api/result')return response({job_id:resultJob,result}); // #: Return only the latest successfully completed job’s independent result.
+            if(path==='/api/cancel'){if(job?.status==='running'){const active=job;active.status='cancelled';active.error='Analysis cancelled';stop();}return response({ok:true});} // #: Cancel a real worker and keep prior accepted field/export data intact.
+            if(path==='/api/run'){ // #: Preflight transactionally before replacing an accepted job or field.
+                if(starting||job?.status==='running')throw Error('An analysis is already running');starting=true; // #: Preserve the shared single-job rule during asynchronous worker initialization.
+                try{await call('preflight',data);}finally{starting=false;} // #: Reject unsupported native actions or invalid electrical models without losing a prior accepted state.
+                const active={id:crypto.randomUUID(),status:'running',action:data.action||'solve',started:Date.now()/1000,log:['Running original reference Python in your browser']};job=active; // #: Create a job identity only after physical preflight succeeds.
+                const timer=setTimeout(()=>{if(active.status==='running'){active.status='error';active.error='Online preview reached its 240-second budget';stop();}},240000); // #: Bound actual browser work without publishing a partial solve as successful.
+                call('run',data).then(value=>{if(active!==job||active.status!=='running')return;result=value;resultJob=active.id;if(value.fields)field=value;active.status='done';active.log.push('Completed genuine reference solve');}).catch(error=>{if(active.status==='running'){active.status='error';active.error=error.message;}}).finally(()=>clearTimeout(timer)); // #: Accept only complete actual numerical output and preserve previous fields on failure/cancellation.
+                return response({job_id:active.id}); // #: Let original polling and cancellation controls remain responsive.
+            } // #: End accepted browser job creation.
+            if(path.startsWith('/api/export/'))return response(await call('export',{result:field,kind:path.split('/').at(-1)}),200,'text/plain'); // #: Use original physical export code on the exact retained field result.
+            return response(await call('rpc',{path,data})); // #: Reuse original builder, validation, B-H and MAS metadata semantics.
+        }catch(error){return response({error:error.message},400);} // #: Preserve actionable real adapter/worker errors for the existing interface.
+    }; // #: Install the browser API transport before original scripts boot.
+    document.addEventListener('DOMContentLoaded',()=>{const link=document.createElement('a');link.href='https://github.com/ChrisVer93/Portfolio/releases/tag/magnetics-preview';link.textContent='Windows desktop';link.title='Online runs original reference Python. Native OpenMagnetics adviser, Netgen and CAD require the desktop build. Export project JSON to transfer your design.';link.style.cssText='color:#9ad9ed;padding:6px 12px;white-space:nowrap';document.querySelector('nav.ribbon').prepend(link);const source=document.querySelector('.offline');if(source){source.textContent='Online reference';source.title=link.title;}}); // #: Make native capability differences and desktop/transfer actions visible without adding a row to the original bounded layout.
+
+})(); // #: Keep this adapter out of the normal desktop source HTML.
