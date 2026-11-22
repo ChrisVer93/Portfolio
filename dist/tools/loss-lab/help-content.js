@@ -1,7 +1,7 @@
-import {COMPONENT_ARTICLES,componentTopic} from './component-help.js?v=2.5.15';
-import {STUDY_ARTICLES,studyTopic} from './study-help.js?v=2.5.15';
-import {screenGuideHTML} from './screen-guides.js?v=2.5.15';
-import {CALCULATION_ARTICLES,renderEquation,renderReferenceFigure,renderReferenceTable} from './calculation-reference.js?v=2.5.15';
+import {COMPONENT_ARTICLES,componentTopic} from './component-help.js?v=2.5.17';
+import {STUDY_ARTICLES,studyTopic} from './study-help.js?v=2.5.17';
+import {screenGuideHTML} from './screen-guides.js?v=2.5.17';
+import {CALCULATION_ARTICLES,renderEquation,renderReferenceFigure,renderReferenceTable} from './calculation-reference.js?v=2.5.17';
 // One source for the help panel, contextual guidance and printable manual.
 const section=(heading,paragraphs=[],bullets=[])=>({heading,paragraphs,bullets});
 export const HELP_ARTICLES=[

@@ -271,8 +271,12 @@ Method A retains its numerical order: interpolate the stored forward family at t
 
 The explicit (0,0) boundary option could previously add a duplicate stored X=0 point when an inverse-oriented curve contained a nonzero current at zero voltage. The calculation copy now replaces zero-current and stored-X-zero samples with one origin. Original samples are retained. This applies only when the user explicitly chooses the origin policy; resistance/temperature curves remain excluded. Measured-origin extrapolations may still be negative and require review.
 
-Repeated characteristic query errors are grouped by cause and lookup direction, showing the affected input/dependency ranges and operating-point count instead of repeating one message for every retained query. All module URLs use release 2.5.15 to prevent mixed cached calculation modules.
+Repeated characteristic query errors are grouped by cause and lookup direction, showing the affected input/dependency ranges and operating-point count instead of repeating one message for every retained query. All module URLs for that release used 2.5.15 to prevent mixed cached calculation modules.
 
 Reproduction: using the provided NSF040120T2A1 forward reference family at 25 °C, Vgs=15 V, Id=2.3380979 A and linear extrapolation, measured-origin Method A yields Vds=-0.3735717151 V (a physical-value error). Explicit-zero-origin Method A previously raised Duplicate curve-axis values; it now yields Vds=0.1174352392 V. No original reference points are modified. A successful Method A family is no longer blocked merely by an individual reference's flat current segment.
 
 Validation: 232 automated tests pass, including the A/B order distinction, method-specific prechecks, combined-family plateaus and turns, zero-origin insertion with nonzero intercepts, raw-data preservation and grouped query diagnostics.
+
+## 2.5.17 · Numerical audit updates
+
+The [2.5.17 release notes](https://github.com/ChrisVer93/Portfolio/blob/main/CHANGELOG-loss-lab.md) explain adaptive spectral sampling, whole-period alignment, switching-event current timing, power-law interpolation, iGSE and recovery settings. The V18 manual remains the general workflow reference.

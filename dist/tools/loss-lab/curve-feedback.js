@@ -1,5 +1,5 @@
-import {checkCharacteristic} from './preflight.js?v=2.5.15';
-import {QUANTITIES} from './characteristics.js?v=2.5.15';
+import {checkCharacteristic} from './preflight.js?v=2.5.17';
+import {QUANTITIES} from './characteristics.js?v=2.5.17';
 const sorted=o=>Object.fromEntries(Object.entries(o||{}).sort(([a],[b])=>a.localeCompare(b)));
 const n=v=>Number.isFinite(v)?Number(v.toPrecision(8)).toString():'unavailable';
 const unit=k=>QUANTITIES[k]?.[1]||k;

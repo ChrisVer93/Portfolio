@@ -1,0 +1,10 @@
+{
+  "name": "Example: 11 kW CLLC primary bridge, 400 V, 100 kHz (replace with your own case)",
+  "project": "<paste the saved Loss Lab project JSON here: devices, curves, waveforms, settings>",
+  "expected": {
+    "totalLoss_W": 0,
+    "tolerancePercent": 5,
+    "source": "calorimetric measurement | input-output efficiency | manufacturer calculator | analytic",
+    "combination": 1
+  }
+}

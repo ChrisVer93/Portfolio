@@ -1,14 +1,15 @@
 {
   "currentVerification": {
-    "release": "2.5.15",
+    "release": "2.5.17",
     "date": "2026-11-22",
     "automatedTests": {
-      "total": 234,
-      "passed": 234,
+      "total": 264,
+      "passed": 264,
       "failed": 0,
       "command": "npm test"
     },
-    "sourceArchive": "https://github.com/ChrisVer93/Portfolio/archive/refs/heads/main.zip"
+    "sourceArchive": "https://github.com/ChrisVer93/Portfolio/archive/refs/heads/main.zip",
+    "independentNumericalReview": "Analytic regression tests in tests/loss-lab/audit-regressions.test.mjs cover ESR aliasing, whole-period windows, event timing, power-law interpolation, iGSE and recovery scaling. Physical accuracy against measurements or manufacturer tools is NOT established; see validation/README.md."
   },
   "historicalVerification": {
     "engineVersion": "2.5.5",
