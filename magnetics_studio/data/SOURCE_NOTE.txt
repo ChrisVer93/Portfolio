@@ -1,0 +1,1 @@
+Material catalogue was converted during development from the user-provided materialDB.mat and saved N97 data. No scipy, MATLAB or FEMM is needed at runtime. Curves and original properties are user-supplied and not independently verified. Temperature/frequency conditions are labels for explicitly chosen curves.

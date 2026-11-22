@@ -51,6 +51,18 @@ jobs:
               git push origin HEAD:main
             fi
           fi
+      - name: Build original Magnetics Studio browser preview
+        run: python magnetics_studio/tools/build_browser.py dist/tools/magnetics-studio
+      - name: Check genuine browser Python and reference fields
+        run: |
+          npm install --prefix /tmp/magnetics-qa pyodide@0.27.7 jsdom@26.1.0 @napi-rs/canvas@0.1.100
+          NODE_PATH=/tmp/magnetics-qa/node_modules node magnetics_studio/tests/browser-runtime.test.cjs dist/tools/magnetics-studio
+      - name: Verify original interface in native Chromium
+        run: |
+          npm install --prefix /tmp/magnetics-qa playwright@1.62.1
+          /tmp/magnetics-qa/node_modules/.bin/playwright install --with-deps chromium
+          python -m http.server 8765 --directory dist > /tmp/magnetics-http.log 2>&1 &
+          NODE_PATH=/tmp/magnetics-qa/node_modules node magnetics_studio/tests/browser-published.cjs http://127.0.0.1:8765/tools/magnetics-studio/
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload static website
@@ -60,3 +72,4 @@ jobs:
       - name: Deploy website
         id: deployment
         uses: actions/deploy-pages@v4
+

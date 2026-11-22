@@ -1,0 +1,83 @@
+{
+  "name": "Foil pair and isolated shield / 2D AC",
+  "mode": "2d",
+  "domain": {
+    "width": 0.02,
+    "height": 0.02,
+    "depth": 0.1,
+    "nx": 24,
+    "ny": 24
+  },
+  "materials": [
+    {
+      "id": "air",
+      "mu_r": 1
+    },
+    {
+      "id": "copper",
+      "name": "Copper magnetic mu=1",
+      "mu_r": 1,
+      "color": "#c68a51"
+    }
+  ],
+  "regions": [
+    {
+      "id": "forward",
+      "name": "Forward",
+      "material": "copper",
+      "x0": 0.007,
+      "x1": 0.0075,
+      "y0": 0.006,
+      "y1": 0.014,
+      "ac_conductor": "forward"
+    },
+    {
+      "id": "return",
+      "name": "Return",
+      "material": "copper",
+      "x0": 0.009,
+      "x1": 0.0095,
+      "y0": 0.006,
+      "y1": 0.014,
+      "ac_conductor": "return"
+    },
+    {
+      "id": "shield",
+      "name": "Shield",
+      "material": "copper",
+      "x0": 0.013,
+      "x1": 0.0135,
+      "y0": 0.006,
+      "y1": 0.014,
+      "ac_conductor": "shield"
+    }
+  ],
+  "windings": [],
+  "ac_conductors": [
+    {
+      "id": "forward",
+      "name": "Forward",
+      "conductivity_Spm": 58000000.0,
+      "current_A": 10,
+      "phase_deg": 0.0
+    },
+    {
+      "id": "return",
+      "name": "Return",
+      "conductivity_Spm": 58000000.0,
+      "current_A": -10,
+      "phase_deg": 0.0
+    },
+    {
+      "id": "shield",
+      "name": "Shield",
+      "conductivity_Spm": 58000000.0,
+      "current_A": 0,
+      "phase_deg": 0.0
+    }
+  ],
+  "ac_settings": {
+    "frequency_Hz": 100000.0,
+    "phase_deg": 0.0
+  }
+}

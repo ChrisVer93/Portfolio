@@ -1,0 +1,13 @@
+{
+  "format": "magnetics-studio.openmagnetics-core/1",
+  "shape": "E 42/21/15",
+  "material": "N97",
+  "bobbin": "Bobbin E42/15",
+  "wire": "Round 0.5 - Grade 1",
+  "gap_m": 0.001,
+  "turns": 24,
+  "temperature_C": 25,
+  "frequency_Hz": 100000,
+  "primary_current_rms_A": 0.001,
+  "reluctance_model": "CLASSIC"
+}

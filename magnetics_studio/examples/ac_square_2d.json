@@ -1,0 +1,49 @@
+{
+  "name": "Square solid conductor / finite Dirichlet reference",
+  "mode": "2d",
+  "domain": {
+    "width": 0.004,
+    "height": 0.004,
+    "depth": 0.1,
+    "nx": 8,
+    "ny": 8
+  },
+  "materials": [
+    {
+      "id": "air",
+      "mu_r": 1
+    },
+    {
+      "id": "copper",
+      "name": "Copper / linear mu=1",
+      "mu_r": 1,
+      "color": "#c68a51"
+    }
+  ],
+  "regions": [
+    {
+      "id": "solid",
+      "name": "Solid square",
+      "material": "copper",
+      "x0": 0.0,
+      "x1": 0.004,
+      "y0": 0.0,
+      "y1": 0.004,
+      "ac_conductor": "wire"
+    }
+  ],
+  "windings": [],
+  "ac_conductors": [
+    {
+      "id": "wire",
+      "name": "Square copper conductor",
+      "conductivity_Spm": 58000000.0,
+      "current_A": 1.0,
+      "phase_deg": 0.0
+    }
+  ],
+  "ac_settings": {
+    "frequency_Hz": 10000.0,
+    "phase_deg": 0.0
+  }
+}

@@ -1,0 +1,11 @@
+.designer-dialog{width:min(1120px,96vw);max-height:92vh;overflow:auto;padding:22px;background:#102033;color:#d9e5ef;border:1px solid #46607a;border-radius:10px} /* #: Bound and independently scroll the requirements/candidate workspace without changing original panels. */
+.designer-dialog h3{margin:20px 0 10px;color:#a8d8ff} /* #: Make requirement, waveform and result sections easy to identify. */
+.designer-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px} /* #: Keep parallel target bands and physical limits aligned in three columns. */
+.designer-dialog textarea{width:100%;min-height:220px;box-sizing:border-box;font:13px monospace;background:#081423;color:#dfebf7} /* #: Provide a bounded explicit SI waveform editor for multi-corner data. */
+.designer-dialog details{margin:12px 0;padding:10px;border:1px solid #3c536c;border-radius:6px} /* #: Keep native candidate definitions and every constraint inspectable without flooding the initial view. */
+.designer-dialog summary{cursor:pointer;font-weight:600} /* #: Make expandable waveform/candidate/check details visibly actionable. */
+.designer-dialog table{width:100%;border-collapse:collapse;font-size:13px} /* #: Preserve comparable physical metrics and per-check outcomes in the candidate panel. */
+.designer-dialog td,.designer-dialog th{padding:6px;text-align:left;border-bottom:1px solid #334b62;overflow-wrap:anywhere} /* #: Keep generated identifiers and values readable within bounded columns. */
+.designer-dialog .dialog-actions{position:sticky;bottom:0;display:flex;flex-wrap:wrap;gap:8px;background:#102033;padding:12px 0} /* #: Keep actual run, cancellation and input-save actions accessible during waveform/result scrolling. */
+.designer-stale{opacity:.65;border-left:3px solid #e4b56e;padding-left:10px} /* #: Visually distinguish prior-request candidates after an input edit. */
+@media(max-width:760px){.designer-grid{grid-template-columns:1fr}.designer-dialog{padding:12px}.designer-dialog table{font-size:11px}} /* #: Stack physical input controls on narrow screens without removing any declared requirement. */

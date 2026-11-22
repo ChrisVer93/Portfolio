@@ -1,0 +1,11 @@
+{
+  "bobbin_reference": "Studio custom bobbin: unresolved external geometry",
+  "isolation_sides": {
+    "c1__w1": "primary",
+    "c1__w2": "secondary",
+    "c2__w1": "tertiary",
+    "c2__w2": "quaternary",
+    "c3__w1": "quinary",
+    "c3__w2": "senary"
+  }
+}

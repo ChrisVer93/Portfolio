@@ -1,0 +1,360 @@
+{
+  "name": "User E100 60 28 \u00b7 imported dimensions",
+  "mode": "2d",
+  "materials": [
+    {
+      "id": "air",
+      "name": "Air",
+      "mu_r": 1,
+      "color": "#20334b"
+    },
+    {
+      "id": "core",
+      "name": "Custom ferrite",
+      "mu_r": 2200,
+      "color": "#678ca6",
+      "characteristics": {
+        "name": "Custom ferrite",
+        "mu_r": 2200,
+        "law": "linear",
+        "bh": [],
+        "conductivity_MSm": 0,
+        "temperature_C": 25,
+        "density_kg_m3": 0
+      }
+    },
+    {
+      "id": "copper",
+      "name": "Copper / current region",
+      "mu_r": 1,
+      "color": "#d69a63"
+    },
+    {
+      "id": "insulation",
+      "name": "Bobbin / insulation",
+      "mu_r": 1,
+      "color": "#70a4a2"
+    }
+  ],
+  "regions": [
+    {
+      "id": "bottom_yoke",
+      "name": "Bottom yoke",
+      "material": "core",
+      "x0": 0.025,
+      "x1": 0.14964,
+      "y0": 0.025,
+      "y1": 0.03755
+    },
+    {
+      "id": "top_yoke",
+      "name": "Top yoke",
+      "material": "core",
+      "x0": 0.025,
+      "x1": 0.14964,
+      "y0": 0.0844,
+      "y1": 0.09695
+    },
+    {
+      "id": "limb_0_0",
+      "name": "Limb 1 \u00b7 segment 1",
+      "material": "core",
+      "x0": 0.025,
+      "x1": 0.03857,
+      "y0": 0.03755,
+      "y1": 0.0844
+    },
+    {
+      "id": "limb_1_0",
+      "name": "Limb 2 \u00b7 segment 1",
+      "material": "core",
+      "x0": 0.07357,
+      "x1": 0.10107,
+      "y0": 0.03755,
+      "y1": 0.0488325
+    },
+    {
+      "id": "limb_1_1",
+      "name": "Limb 2 \u00b7 segment 2",
+      "material": "core",
+      "x0": 0.07357,
+      "x1": 0.10107,
+      "y0": 0.0496925,
+      "y1": 0.060545
+    },
+    {
+      "id": "limb_1_2",
+      "name": "Limb 2 \u00b7 segment 3",
+      "material": "core",
+      "x0": 0.07357,
+      "x1": 0.10107,
+      "y0": 0.061405,
+      "y1": 0.0722575
+    },
+    {
+      "id": "limb_1_3",
+      "name": "Limb 2 \u00b7 segment 4",
+      "material": "core",
+      "x0": 0.07357,
+      "x1": 0.10107,
+      "y0": 0.0731175,
+      "y1": 0.0844
+    },
+    {
+      "id": "limb_2_0",
+      "name": "Limb 3 \u00b7 segment 1",
+      "material": "core",
+      "x0": 0.13607,
+      "x1": 0.14964,
+      "y0": 0.03755,
+      "y1": 0.0844
+    },
+    {
+      "id": "section_1_p",
+      "name": "Primary \u00b7 winding block",
+      "material": "copper",
+      "x0": 0.06281,
+      "x1": 0.07257,
+      "y0": 0.043895,
+      "y1": 0.078055,
+      "winding": "circuit_1",
+      "polarity": 1,
+      "turns": 14,
+      "display_color": "#e9ad6b"
+    },
+    {
+      "id": "section_1_n",
+      "name": "Primary \u00b7 winding block",
+      "material": "copper",
+      "x0": 0.10207,
+      "x1": 0.11183,
+      "y0": 0.043895,
+      "y1": 0.078055,
+      "winding": "circuit_1",
+      "polarity": -1,
+      "turns": 14,
+      "display_color": "#e9ad6b"
+    },
+    {
+      "id": "bobbin_1_0",
+      "name": "Bobbin wall",
+      "material": "insulation",
+      "x0": 0.07257,
+      "x1": 0.07307,
+      "y0": 0.03805,
+      "y1": 0.0839,
+      "bobbin_limb": 1
+    },
+    {
+      "id": "bobbin_1_1",
+      "name": "Bobbin wall",
+      "material": "insulation",
+      "x0": 0.10157,
+      "x1": 0.10207,
+      "y0": 0.03805,
+      "y1": 0.0839,
+      "bobbin_limb": 1
+    },
+    {
+      "id": "section_2_p",
+      "name": "Secondary \u00b7 winding block",
+      "material": "copper",
+      "x0": 0.05311,
+      "x1": 0.06231,
+      "y0": 0.042575,
+      "y1": 0.079375,
+      "winding": "circuit_2",
+      "polarity": 1,
+      "turns": 16,
+      "display_color": "#d98072"
+    },
+    {
+      "id": "section_2_n",
+      "name": "Secondary \u00b7 winding block",
+      "material": "copper",
+      "x0": 0.11233,
+      "x1": 0.12153,
+      "y0": 0.042575,
+      "y1": 0.079375,
+      "winding": "circuit_2",
+      "polarity": -1,
+      "turns": 16,
+      "display_color": "#d98072"
+    }
+  ],
+  "windings": [
+    {
+      "id": "circuit_1",
+      "name": "P",
+      "turns": 14,
+      "current": 1
+    },
+    {
+      "id": "circuit_2",
+      "name": "S",
+      "turns": 16,
+      "current": 0
+    }
+  ],
+  "builder": {
+    "name": "User E100 60 28 \u00b7 imported dimensions",
+    "mode": "2d",
+    "family": "e_core",
+    "part_number": "E100_60_28_TDK",
+    "core": {
+      "limbs_mm": [
+        13.57,
+        27.5,
+        13.57
+      ],
+      "windows_mm": [
+        35,
+        35
+      ],
+      "window_height_mm": 46.85,
+      "top_yoke_mm": 12.55,
+      "bottom_yoke_mm": 12.55,
+      "depth_mm": 27.5,
+      "inner_diameter_mm": 35,
+      "outer_diameter_mm": 65,
+      "gaps": [
+        {
+          "limb": 1,
+          "count": 3,
+          "length_mm": 0.86
+        }
+      ]
+    },
+    "material": {
+      "name": "Custom ferrite",
+      "mu_r": 2200,
+      "law": "linear",
+      "bh": [],
+      "conductivity_MSm": 0,
+      "temperature_C": 25,
+      "density_kg_m3": 0
+    },
+    "packing": {
+      "representation": "blocks",
+      "orientation": "radial",
+      "bobbin_mm": 0.5,
+      "clearance_mm": 0.5,
+      "section_insulation_mm": 0.5,
+      "turn_insulation_mm": 0.1,
+      "circle_segments": 20
+    },
+    "sections": [
+      {
+        "circuit": "P",
+        "name": "Primary",
+        "limb": 1,
+        "turns": 14,
+        "current_A": 1,
+        "conductor": "litz",
+        "diameter_mm": 4.68,
+        "width_mm": 1.4,
+        "height_mm": 1.4,
+        "turns_per_layer": 7,
+        "build_mm": 0,
+        "height_override_mm": 0,
+        "strands": 1050,
+        "strand_diameter_mm": 0.1
+      },
+      {
+        "circuit": "S",
+        "name": "Secondary",
+        "limb": 1,
+        "turns": 16,
+        "current_A": 0,
+        "conductor": "litz",
+        "diameter_mm": 4.4,
+        "width_mm": 1.4,
+        "height_mm": 1.4,
+        "turns_per_layer": 8,
+        "build_mm": 0,
+        "height_override_mm": 0,
+        "strands": 945,
+        "strand_diameter_mm": 0.1
+      }
+    ],
+    "nameplate": {
+      "frequency_min_Hz": 80000,
+      "frequency_max_Hz": 150000,
+      "voltage_min_V": 400,
+      "voltage_max_V": 800,
+      "current_min_A": 0,
+      "current_max_A": 40,
+      "power_min_W": 0,
+      "power_max_W": 27000,
+      "electrical_angle_deg": 0
+    },
+    "air_padding_mm": 25,
+    "mesh_subdivisions": 28,
+    "provenance": {
+      "source": "Uploaded LLC_Transformer.mat: core.geometry.overall",
+      "note": "Saved normalized windows say 22.82 mm, overall says 35 mm. This preset explicitly uses overall (35 mm). Verify which revision you intend."
+    }
+  },
+  "domain": {
+    "width": 0.17464,
+    "height": 0.12195,
+    "depth": 0.0275,
+    "nx": 28,
+    "ny": 28
+  },
+  "builder_summary": {
+    "sections": [
+      {
+        "section": 1,
+        "circuit": "P",
+        "turns": 14,
+        "layers": 2,
+        "turns_per_layer": 7,
+        "last_layer_turns": 7,
+        "build_mm": 9.76,
+        "height_mm": 34.16,
+        "copper_area_per_turn_mm2": 8.246680715673207,
+        "copper_fill_fraction": 0.3462896699338723,
+        "mean_turn_length_mm_estimate": 157.04,
+        "dc_resistance_ohm_estimate": 0.004596541105866895,
+        "limb": 1
+      },
+      {
+        "section": 2,
+        "circuit": "S",
+        "turns": 16,
+        "layers": 2,
+        "turns_per_layer": 8,
+        "last_layer_turns": 8,
+        "build_mm": 9.200000000000001,
+        "height_mm": 36.800000000000004,
+        "copper_area_per_turn_mm2": 7.422012644105887,
+        "copper_fill_fraction": 0.3507567412148339,
+        "mean_turn_length_mm_estimate": 236.88,
+        "dc_resistance_ohm_estimate": 0.00880437827715717,
+        "limb": 1
+      }
+    ],
+    "circuits": [
+      {
+        "id": "circuit_1",
+        "name": "P",
+        "turns": 14,
+        "current": 1
+      },
+      {
+        "id": "circuit_2",
+        "name": "S",
+        "turns": 16,
+        "current": 0
+      }
+    ],
+    "core_type": "e_core",
+    "part_number": "E100_60_28_TDK",
+    "notes": [
+      "Frequency, temperature, conductivity and nameplate data are retained; the solve is magnetostatic with the selected permeability/B\u2013H curve. No AC or thermal material scaling."
+    ],
+    "analytic_leakage_H": null,
+    "analytic_leakage_note": "Balanced ampere-turn, one-dimensional window-energy estimate for the first circuit. Uniform common winding height; no fringing/end effects. Compare with FEM short-circuit inductance."
+  }
+}

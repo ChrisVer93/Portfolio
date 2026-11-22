@@ -1,0 +1,62 @@
+name: Magnetics Studio Windows preview
+on:
+  push:
+    branches: [main, magnetics-preview-r002]
+    paths: ['magnetics_studio/engine/**', 'magnetics_studio/web/**', 'magnetics_studio/tools/**', 'magnetics_studio/examples/**', 'magnetics_studio/data/**', 'magnetics_studio/studio.py', 'magnetics_studio/desktop_launcher.py', 'magnetics_studio/requirements-desktop.txt', 'magnetics_studio/tests/desktop_smoke.cjs', '.github/workflows/magnetics-preview.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: magnetics-windows-preview
+  cancel-in-progress: false
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: magnetics_studio/requirements-desktop.txt
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pinned desktop dependencies
+        run: python -m pip install -r magnetics_studio/requirements-desktop.txt
+      - name: Build actual Windows one-folder preview
+        run: python magnetics_studio/tools/build_desktop.py "${{ github.workspace }}/magnetics-build"
+      - name: Test exact frozen application without Python on child PATH
+        working-directory: magnetics-build
+        env:
+          OMP_NUM_THREADS: '1'
+          OPENBLAS_NUM_THREADS: '1'
+        run: node ../magnetics_studio/tests/desktop_smoke.cjs ./MagneticsStudio/MagneticsStudio.exe | Tee-Object -FilePath desktop-smoke.json
+      - name: Preserve exact source provenance and compress tested package
+        shell: pwsh
+        run: |
+          Copy-Item magnetics-build/desktop-smoke.json magnetics-build/MagneticsStudio/desktop-smoke.json
+          @{ source_commit = '${{ github.sha }}'; application = '0.9.32'; qualification = 'development preview; Windows runner API/native smoke, not clean-machine release qualification' } | ConvertTo-Json | Set-Content magnetics-build/MagneticsStudio/BUILD_PROVENANCE.json
+          Compress-Archive -Path magnetics-build/MagneticsStudio -DestinationPath magnetics-build/MagneticsStudio-Windows-x64.zip
+          Get-FileHash magnetics-build/MagneticsStudio-Windows-x64.zip -Algorithm SHA256 | Format-List | Out-File magnetics-build/SHA256.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: MagneticsStudio-Windows-x64
+          path: |
+            magnetics-build/MagneticsStudio-Windows-x64.zip
+            magnetics-build/desktop-smoke.json
+            magnetics-build/SHA256.txt
+            magnetics_studio/build/pyinstaller/MagneticsStudio/warn-MagneticsStudio.txt
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Publish tested desktop development preview
+        if: github.ref == 'refs/heads/main'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="magnetics-${GITHUB_SHA:0:12}"
+          gh release view "$tag" >/dev/null 2>&1 || gh release create "$tag" --target "$GITHUB_SHA" --prerelease --title "Magnetics Studio development preview (${GITHUB_SHA:0:7})" --notes "Magnetics Studio 0.9.32 preview. Source commit: $GITHUB_SHA. See bundled BUILD_PROVENANCE.json and desktop-smoke.json for exact Windows test scope. Full physical/commercial and clean-machine release qualification remains pending."
+          gh release upload "$tag" magnetics-build/MagneticsStudio-Windows-x64.zip magnetics-build/SHA256.txt --clobber
