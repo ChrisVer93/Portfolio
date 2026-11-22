@@ -166,7 +166,7 @@ def make_server(port=0):
                 if path=='/api/designer/example':  #: Supply a complete balanced two-winding design request independently of FEM examples.
                     return self.reply(json.loads((ROOT/'examples/transformer_design_request.json').read_text(encoding='utf-8')))  #: Preserve explicit SI waveform/target provenance for both the form and downloadable request.
                 if path=='/api/session':
-                    return self.reply({'token':state.token,'version':'0.9.32','examples':[p.stem for p in sorted((ROOT/'examples').glob('*.json')) if p.name!='transformer_design_request.json']})  #: Identify the new release and keep inverse-design requests out of the ordinary FEM example selector.
+                    return self.reply({'token':state.token,'version':'0.9.33','examples':[p.stem for p in sorted((ROOT/'examples').glob('*.json')) if p.name!='transformer_design_request.json']})  #: Identify the new release and keep inverse-design requests out of the ordinary FEM example selector.
                 if path=='/api/status':
                     with state.lock:
                         return self.reply(state.job or {'status':'idle'})
@@ -190,6 +190,7 @@ def make_server(port=0):
                 files = {'/':('index.html','text/html'),'/cad-view.js':('cad-view.js','application/javascript'),'/field-view.js':('field-view.js','application/javascript'),'/app.js':('app.js','application/javascript'),'/style.css':('style.css','text/css'),'/builder.js':('builder.js','application/javascript'),'/workflow-ui.js':('workflow-ui.js','application/javascript'),'/digitiser.js':('digitiser.js','application/javascript'),'/digitiser-example.png':('../data/digitiser-example.png','image/png')}
                 files['/adaptive-ui.js'] = ('adaptive-ui.js', 'application/javascript')
                 files['/digitiser.css'] = ('digitiser.css', 'text/css')  #: Serve the scoped digitiser layout through the same protected local asset router.
+                files['/port-reduction-ui.js'] = ('port-reduction-ui.js', 'application/javascript')  #: Serve explicit simultaneous-short controls through the original protected asset router.
                 files['/designer-ui.js'] = ('designer-ui.js', 'application/javascript')  #: Serve requirements-to-candidates controls through the protected local asset router.
                 files['/designer.css'] = ('designer.css', 'text/css')  #: Keep transformer-design dialog layout scoped to its own stylesheet.
                 files['/native-ui.js'] = ('native-ui.js', 'application/javascript')  #: Serve the additive external FEM/core-CAD controls through the protected asset router.
@@ -214,6 +215,9 @@ def make_server(port=0):
                     raise ValueError('Request must contain at most 2 MB of JSON')
                 data = json.loads(self.rfile.read(length))
                 path = urlparse(self.path).path
+                if path=='/api/port-reduction':  #: Postprocess an explicitly supplied electrical matrix without replacing accepted jobs or fields.
+                    from engine.port_reduction import reduce_ports  #: Share the actual standard-library energy/cancellation implementation.
+                    return self.reply(reduce_ports(data['circuits'],data['input_id'],data['shorted_ids']))  #: Retain token/origin/body guards and exact source-matrix provenance.
                 if path=='/api/turn-links-plan':  #: Inspect actual source-bound declared connectivity without starting or replacing a field/native job.
                     from engine.turn_links import link_plan  #: Reuse the exact worker preflight,source binding and ordered coverage implementation.
                     return self.reply(link_plan(data['project'],data['turn_ports'],data['turn_links']))  #: Existing token,origin and request-size protections apply;no native topology or solved terminal is fabricated.
@@ -275,7 +279,7 @@ def make_server(port=0):
 
 
 def main():
-    ap = argparse.ArgumentParser(description='Magnetics Studio 0.9.32 — MAS local native fit and limited magnetic FEM')  #: Identify the component-adviser release without claiming new FEM physics coverage.
+    ap = argparse.ArgumentParser(description='Magnetics Studio 0.9.33 — MAS local native fit and limited magnetic FEM')  #: Identify the component-adviser release without claiming new FEM physics coverage.
     ap.add_argument('--project',help='JSON project for a command-line solve')
     ap.add_argument('--output',default='results.html',help='CLI self-contained HTML report')
     ap.add_argument('--json',dest='json_output',help='Full result JSON file')
@@ -311,7 +315,7 @@ def main():
         return
     server = make_server(args.port)
     url = f'http://127.0.0.1:{server.server_port}/'
-    print('Magnetics Studio 0.9.32\nOpen:',url,'\nLocal machine only. Press Ctrl+C to stop.',flush=True)  #: Report the actual source version without changing local launch/shutdown behaviour.
+    print('Magnetics Studio 0.9.33\nOpen:',url,'\nLocal machine only. Press Ctrl+C to stop.',flush=True)  #: Report the actual source version without changing local launch/shutdown behaviour.
     if not args.no_open:
         webbrowser.open(url)
     try:

@@ -37,12 +37,15 @@ def run(request,progress=None):  #: Perform genuine numerical work inside the ca
 
 def rpc(path,data=None):  #: Share original metadata/validation/import adapters without a Python HTTP server.
     data=data or {}  #: Keep read-only metadata calls independent of a request body.
-    if path=='/api/session':return dict(token='browser-local',version='0.9.32',examples=[p.stem for p in sorted((ROOT/'examples').glob('*.json')) if p.name!='transformer_design_request.json'])  #: Preserve original menu contents and explicit browser build identity.
+    if path=='/api/session':return dict(token='browser-local',version='0.9.33',examples=[p.stem for p in sorted((ROOT/'examples').glob('*.json')) if p.name!='transformer_design_request.json'])  #: Preserve original menu contents and explicit browser build identity.
     if path=='/api/backends':return dict(design_transformer=False,ngsolve=False,openmagnetics=False,geometry_cad=False,packages={},geometry_cad_packages={},runtime='Pyodide reference preview')  #: Make unavailable compiled native dependencies explicit to existing controls.
     if path.startswith('/api/example/') or path=='/api/designer/example':  #: Return the exact original source examples through the virtual filesystem.
         name=path.rsplit('/',1)[-1] if path!='/api/designer/example' else 'transformer_design_request';allowed={p.stem:p for p in (ROOT/'examples').glob('*.json')}  #: Bind reads to known example names, preventing traversal.
         if name not in allowed:raise ValueError('Unknown example')  #: Reject arbitrary virtual filesystem reads.
         value=json.loads(allowed[name].read_text());return validate(value) if value.get('mode') in ['2d','3d'] else value  #: Canonicalise genuine FEM imports while retaining separate request schemas.
+    if path=='/api/port-reduction':  #: Offer the same genuine Python matrix reduction in WebAssembly without starting a field job.
+        from .port_reduction import reduce_ports  #: Preserve identical matrix/passivity/electrical identity checks online and on desktop.
+        return reduce_ports(data['circuits'],data['input_id'],data['shorted_ids'])  #: Return explicit linear lossless short conditions and exact matrix provenance.
     if path=='/api/validate':return {'project':validate(data['project'])}  #: Preserve actual original project validation.
     if path=='/api/validate-material':  #: Keep digitised material application tied to the original magnetic-law guards.
         from .materials import validate_material  #: Use the exact existing material implementation.
