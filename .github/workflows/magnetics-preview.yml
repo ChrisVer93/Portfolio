@@ -38,7 +38,8 @@ jobs:
         run: |
           Copy-Item magnetics-build/desktop-smoke.json magnetics-build/MagneticsStudio/desktop-smoke.json
           Copy-Item magnetics-build/desktop_short_circuit.json magnetics-build/MagneticsStudio/desktop_short_circuit.json
-          @{ source_commit = '${{ github.sha }}'; application = '0.9.33'; qualification = 'development preview; Windows runner API/native smoke, not clean-machine release qualification' } | ConvertTo-Json | Set-Content magnetics-build/MagneticsStudio/BUILD_PROVENANCE.json
+          Copy-Item magnetics-build/desktop_port_study.json magnetics-build/MagneticsStudio/desktop_port_study.json
+          @{ source_commit = '${{ github.sha }}'; application = '0.9.34'; qualification = 'development preview; Windows runner API/native smoke, not clean-machine release qualification' } | ConvertTo-Json | Set-Content magnetics-build/MagneticsStudio/BUILD_PROVENANCE.json
           Compress-Archive -Path magnetics-build/MagneticsStudio -DestinationPath magnetics-build/MagneticsStudio-Windows-x64.zip
           Get-FileHash magnetics-build/MagneticsStudio-Windows-x64.zip -Algorithm SHA256 | Format-List | Out-File magnetics-build/SHA256.txt
       - uses: actions/upload-artifact@v4
@@ -49,6 +50,7 @@ jobs:
             magnetics-build/MagneticsStudio-Windows-x64.zip
             magnetics-build/desktop-smoke.json
             magnetics-build/desktop_short_circuit.json
+            magnetics-build/desktop_port_study.json
             magnetics-build/SHA256.txt
             magnetics_studio/build/pyinstaller/MagneticsStudio/warn-MagneticsStudio.txt
           if-no-files-found: warn
@@ -60,5 +62,5 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           tag="magnetics-${GITHUB_SHA:0:12}"
-          gh release view "$tag" >/dev/null 2>&1 || gh release create "$tag" --target "$GITHUB_SHA" --prerelease --title "Magnetics Studio development preview (${GITHUB_SHA:0:7})" --notes "Magnetics Studio 0.9.33 preview. Source commit: $GITHUB_SHA. See bundled BUILD_PROVENANCE.json and desktop-smoke.json for exact Windows test scope. Full physical/commercial and clean-machine release qualification remains pending."
+          gh release view "$tag" >/dev/null 2>&1 || gh release create "$tag" --target "$GITHUB_SHA" --prerelease --title "Magnetics Studio development preview (${GITHUB_SHA:0:7})" --notes "Magnetics Studio 0.9.34 preview. Source commit: $GITHUB_SHA. See bundled BUILD_PROVENANCE.json and desktop-smoke.json for exact Windows test scope. Full physical/commercial and clean-machine release qualification remains pending."
           gh release upload "$tag" magnetics-build/MagneticsStudio-Windows-x64.zip magnetics-build/SHA256.txt --clobber

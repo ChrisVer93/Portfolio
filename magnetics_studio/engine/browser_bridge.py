@@ -10,7 +10,7 @@ from .ac import solve_ac,frequency_sweep  #: Preserve dedicated reference comple
 from .mesh import build_mesh  #: Preserve original mesh generation.
 from .export import field_csv,vtk,report_html  #: Reuse exact field export schemas and physical units.
 ROOT=Path(__file__).resolve().parents[1]  #: Resolve the actual virtual source tree, not remote files.
-ACTIONS={'mesh','solve','convergence','sweep','adaptive','ac','ac_sweep'}  #: Keep unavailable native code visibly outside browser capabilities.
+ACTIONS={'mesh','solve','convergence','sweep','adaptive','ac','ac_sweep','port_study'}  #: Keep unavailable native code visibly outside browser capabilities.
 ROUTES={'/api/builder/catalog':('builder','catalog',[]),'/api/builder/upgrade':('workflow','upgrade',['specification']),'/api/builder/build':('builder','build',['specification']),'/api/builder/mas-export':('mas_exchange','export_exchange',['specification','options']),'/api/builder/mas-restore':('mas_exchange','restore_exchange',['packet','mode']),'/api/builder/mas-core-export':('mas_core_geometry','export_core_geometry',['specification']),'/api/builder/mas-core-apply':('mas_core_geometry','apply_core_geometry',['packet','mode']),'/api/builder/mas-material-export':('mas_material','export_material',['specification']),'/api/builder/mas-material-apply':('mas_material','apply_material',['packet','mode']),'/api/bobbin-draft':('bobbin_cad','draft_bobbin',['project']),'/api/turn-ports-draft':('turn_ports','draft_ports',['project']),'/api/turn-links-draft':('turn_links','draft_links',['project','turn_ports']),'/api/turn-links-plan':('turn_links','link_plan',['project','turn_ports','turn_links'])}  #: Share original builder/MAS/source-draft functionality through an explicit callable whitelist.
 
 
@@ -19,6 +19,9 @@ def preflight(request):  #: Validate before the browser replaces its previous ac
     if action not in ACTIONS:raise ValueError('This native action requires the Windows desktop build; online preview runs reference solvers')  #: Never fabricate native adviser/CAD/FEM availability.
     project=validate(request['project'])  #: Validate a detached complete original FEM model.
     if action in {'solve','convergence','sweep','adaptive'}:require_static_sources(project)  #: Preserve static/AC source separation and independent winding identity.
+    if action=='port_study':  #: Preflight all actual fitted study cases before replacing an accepted browser job.
+        from .port_study import plan_study  #: Share physical translation and bounded-work validation with desktop execution.
+        plan_study(project,request.get('options'))  #: Reject unsupported physics, ports and fitted mesh budgets transactionally.
     d=project['domain'];cells=d['nx']*d['ny']*(d.get('nz',1)*6 if project['mode']=='3d' else 2)  #: Bound initial reference work using actual grid dimensions.
     if cells>24000:raise ValueError('Online preview initial mesh budget is 24000 cells; use the desktop build for larger studies')  #: Make the additional browser resource ceiling explicit rather than truncate geometry.
     return project  #: Retain original project semantics without editing the source design.
@@ -26,6 +29,9 @@ def preflight(request):  #: Validate before the browser replaces its previous ac
 
 def run(request,progress=None):  #: Perform genuine numerical work inside the cancellable browser worker.
     project=preflight(request);action=request.get('action','solve');matrix=bool(request.get('matrix',True))  #: Reuse authoritative physical preflight at execution time too.
+    if action=='port_study':  #: Execute genuine reference study matrices inside the terminable Python worker.
+        from .port_study import port_study  #: Reuse the exact shared linear field study.
+        return port_study(project,request.get('options'),progress)  #: Retain both physical axes and real numerical provenance in the browser result.
     if action=='mesh':return {'project':project,'mesh':mesh_public(build_mesh(project,progress)),'kind':'mesh'}  #: Return an actual original mesh, never a display-only placeholder.
     if action=='convergence':return convergence(project,progress)  #: Execute the original complete reference mesh study.
     if action=='sweep':return current_sweep(project,request.get('winding_id'),request.get('values'),progress)  #: Retain canonical electrical keys and actual bias-reference solves.
@@ -37,7 +43,7 @@ def run(request,progress=None):  #: Perform genuine numerical work inside the ca
 
 def rpc(path,data=None):  #: Share original metadata/validation/import adapters without a Python HTTP server.
     data=data or {}  #: Keep read-only metadata calls independent of a request body.
-    if path=='/api/session':return dict(token='browser-local',version='0.9.33',examples=[p.stem for p in sorted((ROOT/'examples').glob('*.json')) if p.name!='transformer_design_request.json'])  #: Preserve original menu contents and explicit browser build identity.
+    if path=='/api/session':return dict(token='browser-local',version='0.9.34',examples=[p.stem for p in sorted((ROOT/'examples').glob('*.json')) if p.name!='transformer_design_request.json'])  #: Preserve original menu contents and explicit browser build identity.
     if path=='/api/backends':return dict(design_transformer=False,ngsolve=False,openmagnetics=False,geometry_cad=False,packages={},geometry_cad_packages={},runtime='Pyodide reference preview')  #: Make unavailable compiled native dependencies explicit to existing controls.
     if path.startswith('/api/example/') or path=='/api/designer/example':  #: Return the exact original source examples through the virtual filesystem.
         name=path.rsplit('/',1)[-1] if path!='/api/designer/example' else 'transformer_design_request';allowed={p.stem:p for p in (ROOT/'examples').glob('*.json')}  #: Bind reads to known example names, preventing traversal.

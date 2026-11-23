@@ -41,8 +41,11 @@ class Workspace:
     def start(self, request):
         action = request.get('action','solve')  #: Identify separate component synthesis before requiring an unrelated FEM project.
         project = None if action=='design_transformer' else validate(request['project'])  #: Preserve all existing project validation while keeping requirements-driven design independent.
-        if action not in ['solve','mesh','convergence','sweep','adaptive','ac','ac_sweep','ngsolve','openmagnetics','geometry_cad','design_transformer']:  #: Accept explicit isolated transformer design while preserving existing field and CAD actions.
+        if action not in ['solve','mesh','convergence','sweep','adaptive','ac','ac_sweep','ngsolve','openmagnetics','geometry_cad','design_transformer','port_study']:  #: Accept explicit isolated transformer design while preserving existing field and CAD actions.
             raise ValueError('Unknown analysis action')
+        if action=='port_study':  #: Preflight all physical mesh/air cases without replacing the accepted workspace state.
+            from engine.port_study import plan_study  #: Keep compiled native libraries outside reference-study validation.
+            plan_study(project,request.get('options'))  #: Reject nonlinear/AC, unsupported geometry, invalid ports and excessive actual fitted work transactionally.
         if action=='design_transformer':  #: Validate catalogue design transactionally before replacing any accepted job or result.
             from engine.transformer_designer import validate_request as validate_design  #: Keep compiled libraries out of HTTP preflight.
             validate_design(request.get('design_request'))  #: Reject invalid targets, waveforms and constraints without changing the accepted workspace state.
@@ -85,6 +88,9 @@ class Workspace:
                     result = run_backend(action, request, log, self.cancel.is_set)  #: Preserve real worker errors and avoid loading two CAD kernels into the GUI server.
                 elif action=='mesh':  #: Preserve the original mesh-only branch after the new isolated backend dispatch.
                     result = {'project':project,'mesh':mesh_public(build_mesh(project,log,self.cancel.is_set)),'kind':'mesh'}
+                elif action=='port_study':  #: Run the explicitly selected reference multiport study as an ordinary cancellable job.
+                    from engine.port_study import port_study  #: Reuse the shared actual matrix/mesh/domain implementation.
+                    result=port_study(project,request.get('options'),log,self.cancel.is_set)  #: Retain prior accepted fields when this separate study completes or is cancelled.
                 elif action=='convergence':
                     result = convergence(project,log,self.cancel.is_set)
                 elif action=='sweep':
@@ -166,7 +172,7 @@ def make_server(port=0):
                 if path=='/api/designer/example':  #: Supply a complete balanced two-winding design request independently of FEM examples.
                     return self.reply(json.loads((ROOT/'examples/transformer_design_request.json').read_text(encoding='utf-8')))  #: Preserve explicit SI waveform/target provenance for both the form and downloadable request.
                 if path=='/api/session':
-                    return self.reply({'token':state.token,'version':'0.9.33','examples':[p.stem for p in sorted((ROOT/'examples').glob('*.json')) if p.name!='transformer_design_request.json']})  #: Identify the new release and keep inverse-design requests out of the ordinary FEM example selector.
+                    return self.reply({'token':state.token,'version':'0.9.34','examples':[p.stem for p in sorted((ROOT/'examples').glob('*.json')) if p.name!='transformer_design_request.json']})  #: Identify the new release and keep inverse-design requests out of the ordinary FEM example selector.
                 if path=='/api/status':
                     with state.lock:
                         return self.reply(state.job or {'status':'idle'})
@@ -279,7 +285,7 @@ def make_server(port=0):
 
 
 def main():
-    ap = argparse.ArgumentParser(description='Magnetics Studio 0.9.33 — MAS local native fit and limited magnetic FEM')  #: Identify the component-adviser release without claiming new FEM physics coverage.
+    ap = argparse.ArgumentParser(description='Magnetics Studio 0.9.34 — MAS local native fit and limited magnetic FEM')  #: Identify the component-adviser release without claiming new FEM physics coverage.
     ap.add_argument('--project',help='JSON project for a command-line solve')
     ap.add_argument('--output',default='results.html',help='CLI self-contained HTML report')
     ap.add_argument('--json',dest='json_output',help='Full result JSON file')
@@ -315,7 +321,7 @@ def main():
         return
     server = make_server(args.port)
     url = f'http://127.0.0.1:{server.server_port}/'
-    print('Magnetics Studio 0.9.33\nOpen:',url,'\nLocal machine only. Press Ctrl+C to stop.',flush=True)  #: Report the actual source version without changing local launch/shutdown behaviour.
+    print('Magnetics Studio 0.9.34\nOpen:',url,'\nLocal machine only. Press Ctrl+C to stop.',flush=True)  #: Report the actual source version without changing local launch/shutdown behaviour.
     if not args.no_open:
         webbrowser.open(url)
     try:

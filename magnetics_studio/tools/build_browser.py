@@ -20,7 +20,7 @@ def build(destination):  #: Generate a complete, source-bound browser preview wi
     digitiser=destination/'digitiser.js';digitiser.write_text(digitiser.read_text().replace('/digitiser-example.png','digitiser-example.png'),encoding='utf-8')  #: Make the original digitiser image URL relative to the published tool subdirectory.
     shutil.copyfile(ROOT/'data/digitiser-example.png',destination/'digitiser-example.png')  #: Keep the existing digitiser example available beside other static assets.
     (destination/'magnetics-core.json').write_text(json.dumps({'files':files},ensure_ascii=False),encoding='utf-8')  #: Ship trusted original Python and inputs without any saved field pretending to be a new solve.
-    manifest={'release':'0.9.33','runtime':'Pyodide 0.27.7 standard-library reference','native_backends_available':False,'source_sha256':{n:hashlib.sha256(text.encode()).hexdigest() for n,text in files.items()}}  #: Make exact engine/source identity and the native capability boundary inspectable.
+    manifest={'release':'0.9.34','runtime':'Pyodide 0.27.7 standard-library reference','native_backends_available':False,'source_sha256':{n:hashlib.sha256(text.encode()).hexdigest() for n,text in files.items()}}  #: Make exact engine/source identity and the native capability boundary inspectable.
     (destination/'version.json').write_text(json.dumps(manifest,indent=2)+'\n');return manifest  #: Preserve reproducible per-release browser provenance.
 
 
