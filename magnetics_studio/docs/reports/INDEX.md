@@ -57,3 +57,5 @@ Earlier reports retain their own delivered-version source listings and hashes; t
 - [Task Q002 — Verification evidence integrity](Task_Q002_Evidence_Integrity_Report.html): actual inherited-descriptor class reproduction, bounded parent-owned pipe/EOF, final/read-only audit and file synchronization. One intact source profile, real2D/3D/AC checks, complete code and every changed executable line. Historical cause and broader platforms remain open; no new FEA physics.
 
 - [Task S002 — Multiwinding open and simultaneous short measurements](Task_S002_Multiwinding_Shorts_Report.html): exact matrix/current/energy conditions, actual2D3D fields, analytical and rejection tests, protected HTTP, real browser/frozen CI, complete source/patches and every executable line explanation.
+
+- [Task S003 — Reference port mesh and air sensitivity](Task_S003_Port_Convergence_Report.html): exact physical translation and work limits, actual two-axis2D/3D matrix studies, repeated-fitted-mesh guard, real controls/CLI/frozen CI, full source/patches and all executable-line explanations.

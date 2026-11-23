@@ -1,7 +1,7 @@
 {
   "reference_release": "Maxwell 2026 R1",
   "scope": "stationary magnetics; motion deferred",
-  "implementation_release": "0.9.33",
+  "implementation_release": "0.9.34",
   "inventory_complete": false,
   "note": "Initial register; full release-specific combination audit is still pending. No feature is declared Maxwell-equivalent without reference evidence.",
   "features": [
@@ -92,8 +92,8 @@
     },
     {
       "id": "windows_desktop_executable",
-      "status": "deferred_until_final_feature_complete",
-      "evidence_or_next": "Explicit user instruction: no application executable, installer or frozen/test build during source-form development."
+      "status": "development_preview_available_final_qualification_pending",
+      "evidence_or_next": "Latest22November2026useroverride authorises development previews. R002/S002 native Windows CI packages exist; final clean permitted Windows10/11offline/noPythoninstalled launch/open/save/solve/cancel/export and full feature/physical qualification remain pending."
     },
     {
       "id": "external_fem_mesh_backend",
@@ -284,6 +284,11 @@
       "id": "linear_multiwinding_short_measurement",
       "status": "implemented_internally_verified_limited",
       "evidence_or_next": "S002: explicit simultaneous ideal shorts from a reciprocal positive-energy electrical matrix; analytical/actual2D3D field-energy/cancellation and source/HTTP/browser integration. Not a unique Lm/leakage T split, loaded/resistiveAC/transient solve, mesh/domain accuracy or independent Maxwell validation. See PORT_REDUCTION.md and separate S002 report."
+    },
+    {
+      "id": "reference_multiport_mesh_air_study",
+      "status": "implemented_internally_verified_limited",
+      "evidence_or_next": "S003: actual independent reference linear2D/3D matrix solves across explicit mesh/air factors, preserved source geometry/nominal spacing, identical fitted-mesh guard, original field retention and exact study export. Empirical sensitivity only; coarse3D last mesh change25.593%, no convergence/error certification. See PORT_STUDY.md and S003 report."
     }
   ],
   "requirements_revision": "2026-11-22 user authorises development executable and GitHub preview now; final clean-Windows release/physical qualification requirements remain",
