@@ -1,3 +1,7 @@
+# Technical reports
+
+- [Task S004 / v0.9.35 — fitted-feature interval refinement](Task_S004_Interval_Refinement_Report.html): exact optional mesh algorithm, unchanged physical model, actual2D/3D matrix/short-field tests, nested geometry and measures, whole-result ordinary equivalence, complete added/replacement source with every executable line explained, real source-bound/CI evidence and limits. Uniform refinement is not quality optimization or certified accuracy.
+
 # Development task reports
 
 | Task | Report | State |

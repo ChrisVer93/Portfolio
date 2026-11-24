@@ -1,7 +1,7 @@
 {
   "reference_release": "Maxwell 2026 R1",
   "scope": "stationary magnetics; motion deferred",
-  "implementation_release": "0.9.34",
+  "implementation_release": "0.9.35",
   "inventory_complete": false,
   "note": "Initial register; full release-specific combination audit is still pending. No feature is declared Maxwell-equivalent without reference evidence.",
   "features": [
@@ -289,6 +289,11 @@
       "id": "reference_multiport_mesh_air_study",
       "status": "implemented_internally_verified_limited",
       "evidence_or_next": "S003: actual independent reference linear2D/3D matrix solves across explicit mesh/air factors, preserved source geometry/nominal spacing, identical fitted-mesh guard, original field retention and exact study export. Empirical sensitivity only; coarse3D last mesh change25.593%, no convergence/error certification. See PORT_STUDY.md and S003 report."
+    },
+    {
+      "id": "reference_fitted_interval_refinement",
+      "status": "implemented_internally_verified",
+      "evidence_or_next": "S004: explicit dyadic1/2/4 subdivision of every fitted rectangular interval for linear reference2D/3D port studies. Fine simplex containment, per-tag measure, exact base-plane/default-result preservation, actual short-field energy/linkage, bounded allocation and mesh identity verified. Uniform refinement retains aspect ratios; it is not adaptive/error-bound/source/Maxwell qualification. Coarse3D last change46.946%; physical/design accuracy remains pending. See docs/INTERVAL_REFINEMENT.md and separate S004 exhaustive report."
     }
   ],
   "requirements_revision": "2026-11-22 user authorises development executable and GitHub preview now; final clean-Windows release/physical qualification requirements remain",

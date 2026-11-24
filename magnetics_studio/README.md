@@ -1,3 +1,15 @@
+# Magnetics Studio v0.9.35 — development preview
+
+The separate S004 report explains all220added/replacement executable/declaration lines across17files. All3402protected prior files, including83prior report HTML/evidence files, remain byte-identical; original PDE/material/source/sparse kernels are unchanged.
+
+Verified publication: Pages45465471831/job138699124831 and Windows45465471823/job138699125137 both SUCCESS on runtime commit93ba15717c15802bf80249b6aa948545d41d2ff3. Actual native Chromium interval-study/download and exact frozen interval-study/adviser/cancel/export checks passed. Windows DEVELOPMENT ZIP: https://github.com/ChrisVer93/Portfolio/releases/download/magnetics-93ba15717c15/MagneticsStudio-Windows-x64.zip (268049991bytes; SHA2561932a27d977e053b3db918717ebb164d92fa688882848e1c747908a273733a57). Final clean-Windows and physical/commercial qualification remain pending.
+
+Actual final qualification:43independently audited modules,256Python passed,20optional native FEM/CAD checks skipped,zero failed/error/unverified. Three new focused methods also passed separately in pure Python (counts overlap discovery); all105existingJavaScript checks and genuine WebAssembly interval-study/field-retention checks passed. Source CLI independently reproduced all4spatial project/mesh hashes and full measurement records. Both tested ordinary2D/3D fixture result bytes match v0.9.34 exactly after excluding both elapsed timings. Runtime GitHub commit93ba15717c15802bf80249b6aa948545d41d2ff3:14exact matched blobs,13existing guards,zero unrelated changes.
+
+S004 adds **Every fitted interval** mesh refinement to Inductance studies, including narrow physical core/winding/gap intervals. The ordinary mesh path is preserved and both tested2D/3D fixture fields remain exact; old API requests preserve target-mode behavior. Actual coarse3D results remain strongly mesh-sensitive and unsuitable for design qualification. See [usage and numerical limits](docs/INTERVAL_REFINEMENT.md) and the separate [full-code/per-line report](docs/reports/Task_S004_Interval_Refinement_Report.html). Online reference preview and source-specific Windows DEVELOPMENT builds continue through guarded GitHub CI. Final physical/commercial and clean-Windows10/11 qualification remain pending.
+
+Earlier release notes follow.
+
 # Current checkpoint — v0.9.34 / S003, 23 November2026
 
 Verified publication: Pages run45250963615/job137960156201 and Windows run45250963995/job137960156169 both passed on runtime commitb20c4a9c22b5ac45ad0548f6ae62182f29900f66. Actual native Chromium study/download and frozen study/adviser/cancel/export checks passed. Windows DEVELOPMENT ZIP: https://github.com/ChrisVer93/Portfolio/releases/download/magnetics-b20c4a9c22b5/MagneticsStudio-Windows-x64.zip (268049013bytes; sha256:fe30a44cc9b64116f1af57902eca7e37715a6c1862cf3645eeb84e1858a80773). Report explains all249added/replacement executable/declaration lines across16files;3194prior files remain byte-identical. Final clean-Windows and physical/commercial qualification remain pending.
