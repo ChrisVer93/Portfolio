@@ -36,8 +36,10 @@ def axis_grid(size, target, cuts):
     return result
 
 
-def build_mesh(project, progress=None, cancel=None):
+def build_mesh(project, progress=None, cancel=None, *, interval_factor=1):  #: Keep ordinary meshes unchanged and allow explicit bounded subdivision of every fitted base interval.
+    if type(interval_factor) is not int or interval_factor not in (1,2,4):raise ValueError('Interval factor must be1,2or4')  #: Require dyadic factors for genuine nested reference study levels; reject booleans and rounded values.
     if project['mode']=='2d' and any(r.get('polygon') for r in project.get('regions', [])):
+        if interval_factor!=1:raise ValueError('Interval refinement requires rectangular reference geometry')  #: Do not silently apply Cartesian refinement semantics to the separate polygon mesher.
         from .polygon_mesh import build_polygon_mesh
         return build_polygon_mesh(project,progress,cancel)
     dim = 3 if project['mode'] == '3d' else 2
@@ -49,11 +51,14 @@ def build_mesh(project, progress=None, cancel=None):
     for axis, size_key in zip('xyz'[:dim], ['width', 'height', 'depth']):
         cuts = [o[axis+end] for o in objects for end in ('0', '1')]
         grids.append(axis_grid(domain[size_key], domain['n'+axis], cuts))
-    count = math.prod(len(g) for g in grids)
-    cells = math.prod(len(g)-1 for g in grids)
+    count = math.prod((len(g)-1)*interval_factor+1 for g in grids)  #: Predict refined node allocation before constructing new coordinates or elements.
+    cells = math.prod((len(g)-1)*interval_factor for g in grids)  #: Account for every refined physical and exterior-air interval before the original memory guard.
     max_nodes, max_elements = (24000, 46000) if dim == 2 else (24000, 120000) if domain.get('budget')=='extended' else (10000, 44000)
     if count > max_nodes or cells*(2 if dim == 2 else 6) > max_elements:
         raise ValueError('Mesh exceeds the selected memory budget; lower subdivisions/simplify sections, or explicitly select the extended 3D budget in Builder → Dimensions')
+    if interval_factor!=1:  #: Retain the exact ordinary mesh path when refinement is not explicitly requested.
+        check_cancel(cancel)  #: Allow study cancellation before allocating the bounded finer Cartesian grids.
+        grids=[[a+(b-a)*i/interval_factor for a,b in zip(g,g[1:]) for i in range(interval_factor)]+[g[-1]] for g in grids]  #: Preserve every fitted plane exactly and halve or quarter all base intervals without changing geometry.
     if dim == 2:
         xs, ys = grids
         nodes = [(x, y) for y in ys for x in xs]

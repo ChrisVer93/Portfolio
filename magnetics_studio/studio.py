@@ -172,7 +172,7 @@ def make_server(port=0):
                 if path=='/api/designer/example':  #: Supply a complete balanced two-winding design request independently of FEM examples.
                     return self.reply(json.loads((ROOT/'examples/transformer_design_request.json').read_text(encoding='utf-8')))  #: Preserve explicit SI waveform/target provenance for both the form and downloadable request.
                 if path=='/api/session':
-                    return self.reply({'token':state.token,'version':'0.9.34','examples':[p.stem for p in sorted((ROOT/'examples').glob('*.json')) if p.name!='transformer_design_request.json']})  #: Identify the new release and keep inverse-design requests out of the ordinary FEM example selector.
+                    return self.reply({'token':state.token,'version':'0.9.35','examples':[p.stem for p in sorted((ROOT/'examples').glob('*.json')) if p.name!='transformer_design_request.json']})  #: Identify the new release and keep inverse-design requests out of the ordinary FEM example selector.
                 if path=='/api/status':
                     with state.lock:
                         return self.reply(state.job or {'status':'idle'})
@@ -285,7 +285,7 @@ def make_server(port=0):
 
 
 def main():
-    ap = argparse.ArgumentParser(description='Magnetics Studio 0.9.34 — MAS local native fit and limited magnetic FEM')  #: Identify the component-adviser release without claiming new FEM physics coverage.
+    ap = argparse.ArgumentParser(description='Magnetics Studio 0.9.35 — MAS local native fit and limited magnetic FEM')  #: Identify the component-adviser release without claiming new FEM physics coverage.
     ap.add_argument('--project',help='JSON project for a command-line solve')
     ap.add_argument('--output',default='results.html',help='CLI self-contained HTML report')
     ap.add_argument('--json',dest='json_output',help='Full result JSON file')
@@ -321,7 +321,7 @@ def main():
         return
     server = make_server(args.port)
     url = f'http://127.0.0.1:{server.server_port}/'
-    print('Magnetics Studio 0.9.34\nOpen:',url,'\nLocal machine only. Press Ctrl+C to stop.',flush=True)  #: Report the actual source version without changing local launch/shutdown behaviour.
+    print('Magnetics Studio 0.9.35\nOpen:',url,'\nLocal machine only. Press Ctrl+C to stop.',flush=True)  #: Report the actual source version without changing local launch/shutdown behaviour.
     if not args.no_open:
         webbrowser.open(url)
     try:

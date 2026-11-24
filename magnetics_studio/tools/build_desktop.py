@@ -30,7 +30,7 @@ def main():  #: Produce a complete one-folder Windows preview rather than cross-
     (notices/'DEPENDENCIES.json').write_text(json.dumps(inventory,indent=2)+'\n',encoding='utf-8')  #: Make actual runtime dependencies and notice coverage inspectable in the preview.
     command.extend(['--add-data',str(notices)+';THIRD_PARTY_NOTICES',str(ROOT/'desktop_launcher.py')]);subprocess.run(command,cwd=ROOT,check=True)  #: Build only after complete resources/metadata/notices are staged.
     target=args.output/'MagneticsStudio';shutil.copyfile(ROOT/'requirements-desktop.txt',target/'requirements-desktop.txt')  #: Retain the exact direct build pins next to the executable.
-    (target/'DEVELOPMENT_PREVIEW.txt').write_text('Magnetics Studio 0.9.34 development preview. Open MagneticsStudio.exe; keep the console open while using the browser. Native availability follows exact pinned backend diagnostics. Full commercial/physical/Windows release qualification remains pending.\n',encoding='utf-8')  #: Label preview scope without implying completed industrial parity or signed release status.
+    (target/'DEVELOPMENT_PREVIEW.txt').write_text('Magnetics Studio 0.9.35 development preview. Open MagneticsStudio.exe; keep the console open while using the browser. Native availability follows exact pinned backend diagnostics. Full commercial/physical/Windows release qualification remains pending.\n',encoding='utf-8')  #: Label preview scope without implying completed industrial parity or signed release status.
     print(json.dumps(dict(executable=str(target/'MagneticsStudio.exe'),dependencies=len(inventory))))  #: Report the concrete native Windows build output.
 
 
