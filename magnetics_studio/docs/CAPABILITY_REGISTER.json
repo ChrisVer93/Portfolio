@@ -294,6 +294,11 @@
       "id": "reference_fitted_interval_refinement",
       "status": "implemented_internally_verified",
       "evidence_or_next": "S004: explicit dyadic1/2/4 subdivision of every fitted rectangular interval for linear reference2D/3D port studies. Fine simplex containment, per-tag measure, exact base-plane/default-result preservation, actual short-field energy/linkage, bounded allocation and mesh identity verified. Uniform refinement retains aspect ratios; it is not adaptive/error-bound/source/Maxwell qualification. Coarse3D last change46.946%; physical/design accuracy remains pending. See docs/INTERVAL_REFINEMENT.md and separate S004 exhaustive report."
+    },
+    {
+      "id": "s005_independent_local_field_verification",
+      "status": "accuracy_unqualified",
+      "evidence_or_next": "Four real ideal-sheet reference3D solves; fine centre11.23% and offaxis33.09% free-space discrepancies; quadrature change<0.004758%. See S005 report. No runtime change."
     }
   ],
   "requirements_revision": "2026-11-22 user authorises development executable and GitHub preview now; final clean-Windows release/physical qualification requirements remain",

@@ -1,0 +1,358 @@
+{
+  "source_release": "0.9.35",
+  "probes_m": [
+    [
+      0.5,
+      0.5,
+      0.5
+    ],
+    [
+      0.53,
+      0.52,
+      0.54
+    ],
+    [
+      0.47,
+      0.48,
+      0.46
+    ]
+  ],
+  "free_space_B_T": [
+    [
+      8.388128399170546e-24,
+      -8.388128399170546e-24,
+      4.1888528513792946e-06
+    ],
+    [
+      1.857185737688466e-07,
+      1.2003397897320226e-07,
+      4.042112826724438e-06
+    ],
+    [
+      1.857185737688448e-07,
+      1.200339789732003e-07,
+      4.04211282672442e-06
+    ]
+  ],
+  "quadrature_relative_changes": [
+    4.4866873027274544e-05,
+    4.757415372144e-05,
+    4.757415371897006e-05
+  ],
+  "independent_center_Bz_T": 4.188790333086448e-06,
+  "rows": [
+    {
+      "air_factor": 1,
+      "interval_factor": 1,
+      "elements": 750,
+      "project": {
+        "version": "0.2",
+        "name": "Air-core sheet solenoid \u00b7 3D",
+        "mode": "3d",
+        "domain": {
+          "width": 1,
+          "height": 1,
+          "depth": 1,
+          "nx": 4,
+          "ny": 4,
+          "nz": 4
+        },
+        "materials": [
+          {
+            "id": "air",
+            "name": "Air / insulation",
+            "mu_r": 1,
+            "color": "#71829a"
+          },
+          {
+            "id": "copper",
+            "name": "Copper (magnetic model)",
+            "mu_r": 1,
+            "color": "#d9924d"
+          },
+          {
+            "id": "core",
+            "name": "Linear ferrite \u00b7 \u03bcr 2000",
+            "mu_r": 2000,
+            "color": "#637389"
+          }
+        ],
+        "regions": [],
+        "windings": [
+          {
+            "id": "coil",
+            "name": "coil",
+            "turns": 1,
+            "current": 1,
+            "window": {
+              "x0": 0.4,
+              "x1": 0.6,
+              "y0": 0.4,
+              "y1": 0.6,
+              "z0": 0.4,
+              "z1": 0.6
+            }
+          }
+        ]
+      },
+      "B_T": [
+        [
+          -8.185995954688336e-08,
+          -8.185995926656758e-08,
+          2.8442080433833356e-06
+        ],
+        [
+          -3.8339637066990673e-07,
+          -3.833963706096267e-07,
+          2.5426716320054014e-06
+        ],
+        [
+          -3.8339637065792434e-07,
+          -3.833963703880472e-07,
+          2.5426716327576797e-06
+        ]
+      ],
+      "relative_vector_disagreement": [
+        0.32219301240488646,
+        0.4152431057618028,
+        0.41524310557864125
+      ],
+      "energy_consistency": 4.185623271672424e-13
+    },
+    {
+      "air_factor": 1,
+      "interval_factor": 2,
+      "elements": 6000,
+      "project": {
+        "version": "0.2",
+        "name": "Air-core sheet solenoid \u00b7 3D",
+        "mode": "3d",
+        "domain": {
+          "width": 1,
+          "height": 1,
+          "depth": 1,
+          "nx": 4,
+          "ny": 4,
+          "nz": 4
+        },
+        "materials": [
+          {
+            "id": "air",
+            "name": "Air / insulation",
+            "mu_r": 1,
+            "color": "#71829a"
+          },
+          {
+            "id": "copper",
+            "name": "Copper (magnetic model)",
+            "mu_r": 1,
+            "color": "#d9924d"
+          },
+          {
+            "id": "core",
+            "name": "Linear ferrite \u00b7 \u03bcr 2000",
+            "mu_r": 2000,
+            "color": "#637389"
+          }
+        ],
+        "regions": [],
+        "windings": [
+          {
+            "id": "coil",
+            "name": "coil",
+            "turns": 1,
+            "current": 1,
+            "window": {
+              "x0": 0.4,
+              "x1": 0.6,
+              "y0": 0.4,
+              "y1": 0.6,
+              "z0": 0.4,
+              "z1": 0.6
+            }
+          }
+        ]
+      },
+      "B_T": [
+        [
+          2.086679128201829e-07,
+          2.0866791320083424e-07,
+          3.826303786789332e-06
+        ],
+        [
+          1.4109628714009363e-07,
+          1.4109628768763222e-07,
+          2.7117070874359338e-06
+        ],
+        [
+          1.4109628841636365e-07,
+          1.4109628715088274e-07,
+          2.7117070876129382e-06
+        ]
+      ],
+      "relative_vector_disagreement": [
+        0.1115981181088039,
+        0.32887075527328935,
+        0.328870755216927
+      ],
+      "energy_consistency": 6.03349724386487e-14
+    },
+    {
+      "air_factor": 2,
+      "interval_factor": 1,
+      "elements": 4374,
+      "project": {
+        "version": "0.2",
+        "name": "Air-core sheet solenoid \u00b7 3D",
+        "mode": "3d",
+        "domain": {
+          "width": 2,
+          "height": 2,
+          "depth": 2,
+          "nx": 8,
+          "ny": 8,
+          "nz": 8
+        },
+        "materials": [
+          {
+            "id": "air",
+            "name": "Air / insulation",
+            "mu_r": 1,
+            "color": "#71829a"
+          },
+          {
+            "id": "copper",
+            "name": "Copper (magnetic model)",
+            "mu_r": 1,
+            "color": "#d9924d"
+          },
+          {
+            "id": "core",
+            "name": "Linear ferrite \u00b7 \u03bcr 2000",
+            "mu_r": 2000,
+            "color": "#637389"
+          }
+        ],
+        "regions": [],
+        "windings": [
+          {
+            "id": "coil",
+            "name": "coil",
+            "turns": 1,
+            "current": 1,
+            "window": {
+              "x0": 0.9,
+              "x1": 1.1,
+              "y0": 0.9,
+              "y1": 1.1,
+              "z0": 0.9,
+              "z1": 1.1
+            }
+          }
+        ]
+      },
+      "B_T": [
+        [
+          -8.438366634017814e-08,
+          -8.438366629027556e-08,
+          2.807608784977632e-06
+        ],
+        [
+          -3.856329823983652e-07,
+          -3.856329822031723e-07,
+          2.506359468820476e-06
+        ],
+        [
+          -3.856329822166852e-07,
+          -3.856329822823849e-07,
+          2.506359469170406e-06
+        ]
+      ],
+      "relative_vector_disagreement": [
+        0.3309712087984349,
+        0.42361032118650266,
+        0.42361032109990293
+      ],
+      "energy_consistency": 1.1784841491862152e-13
+    },
+    {
+      "air_factor": 2,
+      "interval_factor": 2,
+      "elements": 34992,
+      "project": {
+        "version": "0.2",
+        "name": "Air-core sheet solenoid \u00b7 3D",
+        "mode": "3d",
+        "domain": {
+          "width": 2,
+          "height": 2,
+          "depth": 2,
+          "nx": 8,
+          "ny": 8,
+          "nz": 8
+        },
+        "materials": [
+          {
+            "id": "air",
+            "name": "Air / insulation",
+            "mu_r": 1,
+            "color": "#71829a"
+          },
+          {
+            "id": "copper",
+            "name": "Copper (magnetic model)",
+            "mu_r": 1,
+            "color": "#d9924d"
+          },
+          {
+            "id": "core",
+            "name": "Linear ferrite \u00b7 \u03bcr 2000",
+            "mu_r": 2000,
+            "color": "#637389"
+          }
+        ],
+        "regions": [],
+        "windings": [
+          {
+            "id": "coil",
+            "name": "coil",
+            "turns": 1,
+            "current": 1,
+            "window": {
+              "x0": 0.9,
+              "x1": 1.1,
+              "y0": 0.9,
+              "y1": 1.1,
+              "z0": 0.9,
+              "z1": 1.1
+            }
+          }
+        ]
+      },
+      "B_T": [
+        [
+          2.0923060300859979e-07,
+          2.0923060311983342e-07,
+          3.823360967906308e-06
+        ],
+        [
+          1.393892807896485e-07,
+          1.393892807940396e-07,
+          2.70336114727837e-06
+        ],
+        [
+          1.3938928055298947e-07,
+          1.3938928088245392e-07,
+          2.703361147481349e-06
+        ]
+      ],
+      "relative_vector_disagreement": [
+        0.11226329111808143,
+        0.3309389646679572,
+        0.33093896462018574
+      ],
+      "energy_consistency": 5.126225218579265e-14
+    }
+  ],
+  "limits": "Free-space reference versus closed tangential-A=0 FEM boundary; disagreement combines mesh/boundary/source discretization. Incident-cell averaging is explicit. Air only, ideal sheets; no finite copper/core, AC, hardware or Maxwell validation."
+}

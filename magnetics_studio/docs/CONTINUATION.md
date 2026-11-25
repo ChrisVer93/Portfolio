@@ -1,3 +1,9 @@
+# S005 verification checkpoint — 25 November2026; runtime remains v0.9.35
+
+Independent free-space Biot–Savart sheet-current local-field verification now records four actual reference3D solves (750/6000/4374/34992tetrahedra). Fine-mesh centre discrepancies11.16–11.23%, off-axis32.89–33.09%; maximum independent quadrature refinement change0.004758%, with a separately evaluated centre expression check passed. No design/accuracy qualification is inferred. Direct34992-cell QA exceeds GUI port-study24k ceiling; no production budget changed. No runtime/build/test/physics files changed; previous256passed20skipped profile remains historical, not rerun today. See verification/verify_sheet_field_s005.py, sample_results/local_field_s005/ and docs/reports/Task_S005_Local_Field_Verification_Report.html for every added executable line, exact models, actual vectors/logs, equations/units/boundaries and limitations.
+
+NEXT: isolate persistent local-field discretization/source representation errors via further mesh/order and independently sampled field studies; retain prior working runtime and all existing physical/Windows qualification limits. Earlier entries follow.
+
 # Current checkpoint — v0.9.35 / S004, 24 November2026
 
 The separate S004 report explains all220added/replacement executable/declaration lines across17files. All3402protected prior files, including83prior report HTML/evidence files, remain byte-identical; original PDE/material/source/sparse kernels are unchanged.

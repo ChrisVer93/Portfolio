@@ -1,0 +1,448 @@
+<!doctype html><meta charset="utf-8"><title>Task S005 local-field verification</title><style>body{font:16px system-ui;margin:2em;line-height:1.5}pre{white-space:pre-wrap}table{border-collapse:collapse}td{border:1px solid #999;padding:.4em}</style><h1>Task S005 — independent local-field verification</h1><p>25 November2026 · verification evidence supplement to runtime v0.9.35. No application equations, mesh, material, source, sparse solver, frontend or executable changed.</p><h2>Physical model, SI units and boundary assumptions</h2><p>Air-only rectangular closed sheet: x/y from0.4to0.6m, z from0.4to0.6m, N=1turn, I=1A. No core or finite solved copper. Linear reference edge-element equations curl(nu curl A)=J, B=curl A; outer tangential A=0. Domains1m and2m cubed, with rigidly translated identical source/probes. The independent free-space reference integrates B=mu0/(4pi) integral(I dl cross r/|r|³), averaged uniformly over sheet height. B[T], dl/r[m], I[A], mu0[H/m]. This compares different exterior boundaries: discrepancy combines discretization and boundary effects and is not a certified isolated FEM-error bound.</p><h2>Algorithm and actual checks</h2><p>Four directed sides include the complete return. Independent midpoint quadrature uses64and128subdivisions both along each side and along sheet height; centre is separately checked against the rectangular-loop axial expression integrated with2000midpoints. Both checks require less than0.1% relative difference and passed. Observed maximum quadrature change is0.004758%; this is empirical stability, not a rigorous bound. Four real FEM solves use base target4at air1 and8at air2, with every fitted interval factor1or2. Their cell counts are750,6000,4374,34992. The last case exceeds the GUI port-study24000cell ceiling: it is a direct numerical verification using the original standard3D mesh budget, not evidence that the GUI accepts it. Fields are averaged over all incident containing tetrahedra using barycentric coordinates. Three fixed source-relative probes include centre and an inversion-symmetric off-axis pair.</p><h2>Findings and limits</h2><p>Fine-mesh centre disagreement is11.16%/11.23% at air1/air2; off-axis vector disagreement32.89%/33.09%. Coarse errors are32–42%. Extending air does not remove the fine-mesh local error. These observations do not prove the error's cause or a converged answer. No accuracy pass, finite-copper/core, Maxwell, hardware, native nonlinear/AC or clean-Windows release qualification is claimed. Existing small algebraic energy residuals are internal consistency only. Next: isolate local approximation/source representation using further mesh/order studies and independent probes before changing production formulations.</p><h2>Reproduction and source identity</h2><p>Verified source archive SHA256214ce0e3fa339ba7585a10c6ba1dd9c4271b22f3dc60188caad2fb48dec263e0, canonical version48. From an extracted source root: mkdir s005; OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python verification/verify_sheet_field_s005.py . . Output is s005/results.json. Original256-test profile is historical; it is not described as rerun here. Only the four actual new field solves, quadrature refinements and centre check are new evidence. All original runtime files and historical report/evidence bytes are preserved. QA script/report/data are development-only; no new runtime dependency.</p><h2>Complete actual results</h2><pre>{
+  &quot;source_release&quot;: &quot;0.9.35&quot;,
+  &quot;probes_m&quot;: [
+    [
+      0.5,
+      0.5,
+      0.5
+    ],
+    [
+      0.53,
+      0.52,
+      0.54
+    ],
+    [
+      0.47,
+      0.48,
+      0.46
+    ]
+  ],
+  &quot;free_space_B_T&quot;: [
+    [
+      8.388128399170546e-24,
+      -8.388128399170546e-24,
+      4.1888528513792946e-06
+    ],
+    [
+      1.857185737688466e-07,
+      1.2003397897320226e-07,
+      4.042112826724438e-06
+    ],
+    [
+      1.857185737688448e-07,
+      1.200339789732003e-07,
+      4.04211282672442e-06
+    ]
+  ],
+  &quot;quadrature_relative_changes&quot;: [
+    4.4866873027274544e-05,
+    4.757415372144e-05,
+    4.757415371897006e-05
+  ],
+  &quot;independent_center_Bz_T&quot;: 4.188790333086448e-06,
+  &quot;rows&quot;: [
+    {
+      &quot;air_factor&quot;: 1,
+      &quot;interval_factor&quot;: 1,
+      &quot;elements&quot;: 750,
+      &quot;project&quot;: {
+        &quot;version&quot;: &quot;0.2&quot;,
+        &quot;name&quot;: &quot;Air-core sheet solenoid \u00b7 3D&quot;,
+        &quot;mode&quot;: &quot;3d&quot;,
+        &quot;domain&quot;: {
+          &quot;width&quot;: 1,
+          &quot;height&quot;: 1,
+          &quot;depth&quot;: 1,
+          &quot;nx&quot;: 4,
+          &quot;ny&quot;: 4,
+          &quot;nz&quot;: 4
+        },
+        &quot;materials&quot;: [
+          {
+            &quot;id&quot;: &quot;air&quot;,
+            &quot;name&quot;: &quot;Air / insulation&quot;,
+            &quot;mu_r&quot;: 1,
+            &quot;color&quot;: &quot;#71829a&quot;
+          },
+          {
+            &quot;id&quot;: &quot;copper&quot;,
+            &quot;name&quot;: &quot;Copper (magnetic model)&quot;,
+            &quot;mu_r&quot;: 1,
+            &quot;color&quot;: &quot;#d9924d&quot;
+          },
+          {
+            &quot;id&quot;: &quot;core&quot;,
+            &quot;name&quot;: &quot;Linear ferrite \u00b7 \u03bcr 2000&quot;,
+            &quot;mu_r&quot;: 2000,
+            &quot;color&quot;: &quot;#637389&quot;
+          }
+        ],
+        &quot;regions&quot;: [],
+        &quot;windings&quot;: [
+          {
+            &quot;id&quot;: &quot;coil&quot;,
+            &quot;name&quot;: &quot;coil&quot;,
+            &quot;turns&quot;: 1,
+            &quot;current&quot;: 1,
+            &quot;window&quot;: {
+              &quot;x0&quot;: 0.4,
+              &quot;x1&quot;: 0.6,
+              &quot;y0&quot;: 0.4,
+              &quot;y1&quot;: 0.6,
+              &quot;z0&quot;: 0.4,
+              &quot;z1&quot;: 0.6
+            }
+          }
+        ]
+      },
+      &quot;B_T&quot;: [
+        [
+          -8.185995954688336e-08,
+          -8.185995926656758e-08,
+          2.8442080433833356e-06
+        ],
+        [
+          -3.8339637066990673e-07,
+          -3.833963706096267e-07,
+          2.5426716320054014e-06
+        ],
+        [
+          -3.8339637065792434e-07,
+          -3.833963703880472e-07,
+          2.5426716327576797e-06
+        ]
+      ],
+      &quot;relative_vector_disagreement&quot;: [
+        0.32219301240488646,
+        0.4152431057618028,
+        0.41524310557864125
+      ],
+      &quot;energy_consistency&quot;: 4.185623271672424e-13
+    },
+    {
+      &quot;air_factor&quot;: 1,
+      &quot;interval_factor&quot;: 2,
+      &quot;elements&quot;: 6000,
+      &quot;project&quot;: {
+        &quot;version&quot;: &quot;0.2&quot;,
+        &quot;name&quot;: &quot;Air-core sheet solenoid \u00b7 3D&quot;,
+        &quot;mode&quot;: &quot;3d&quot;,
+        &quot;domain&quot;: {
+          &quot;width&quot;: 1,
+          &quot;height&quot;: 1,
+          &quot;depth&quot;: 1,
+          &quot;nx&quot;: 4,
+          &quot;ny&quot;: 4,
+          &quot;nz&quot;: 4
+        },
+        &quot;materials&quot;: [
+          {
+            &quot;id&quot;: &quot;air&quot;,
+            &quot;name&quot;: &quot;Air / insulation&quot;,
+            &quot;mu_r&quot;: 1,
+            &quot;color&quot;: &quot;#71829a&quot;
+          },
+          {
+            &quot;id&quot;: &quot;copper&quot;,
+            &quot;name&quot;: &quot;Copper (magnetic model)&quot;,
+            &quot;mu_r&quot;: 1,
+            &quot;color&quot;: &quot;#d9924d&quot;
+          },
+          {
+            &quot;id&quot;: &quot;core&quot;,
+            &quot;name&quot;: &quot;Linear ferrite \u00b7 \u03bcr 2000&quot;,
+            &quot;mu_r&quot;: 2000,
+            &quot;color&quot;: &quot;#637389&quot;
+          }
+        ],
+        &quot;regions&quot;: [],
+        &quot;windings&quot;: [
+          {
+            &quot;id&quot;: &quot;coil&quot;,
+            &quot;name&quot;: &quot;coil&quot;,
+            &quot;turns&quot;: 1,
+            &quot;current&quot;: 1,
+            &quot;window&quot;: {
+              &quot;x0&quot;: 0.4,
+              &quot;x1&quot;: 0.6,
+              &quot;y0&quot;: 0.4,
+              &quot;y1&quot;: 0.6,
+              &quot;z0&quot;: 0.4,
+              &quot;z1&quot;: 0.6
+            }
+          }
+        ]
+      },
+      &quot;B_T&quot;: [
+        [
+          2.086679128201829e-07,
+          2.0866791320083424e-07,
+          3.826303786789332e-06
+        ],
+        [
+          1.4109628714009363e-07,
+          1.4109628768763222e-07,
+          2.7117070874359338e-06
+        ],
+        [
+          1.4109628841636365e-07,
+          1.4109628715088274e-07,
+          2.7117070876129382e-06
+        ]
+      ],
+      &quot;relative_vector_disagreement&quot;: [
+        0.1115981181088039,
+        0.32887075527328935,
+        0.328870755216927
+      ],
+      &quot;energy_consistency&quot;: 6.03349724386487e-14
+    },
+    {
+      &quot;air_factor&quot;: 2,
+      &quot;interval_factor&quot;: 1,
+      &quot;elements&quot;: 4374,
+      &quot;project&quot;: {
+        &quot;version&quot;: &quot;0.2&quot;,
+        &quot;name&quot;: &quot;Air-core sheet solenoid \u00b7 3D&quot;,
+        &quot;mode&quot;: &quot;3d&quot;,
+        &quot;domain&quot;: {
+          &quot;width&quot;: 2,
+          &quot;height&quot;: 2,
+          &quot;depth&quot;: 2,
+          &quot;nx&quot;: 8,
+          &quot;ny&quot;: 8,
+          &quot;nz&quot;: 8
+        },
+        &quot;materials&quot;: [
+          {
+            &quot;id&quot;: &quot;air&quot;,
+            &quot;name&quot;: &quot;Air / insulation&quot;,
+            &quot;mu_r&quot;: 1,
+            &quot;color&quot;: &quot;#71829a&quot;
+          },
+          {
+            &quot;id&quot;: &quot;copper&quot;,
+            &quot;name&quot;: &quot;Copper (magnetic model)&quot;,
+            &quot;mu_r&quot;: 1,
+            &quot;color&quot;: &quot;#d9924d&quot;
+          },
+          {
+            &quot;id&quot;: &quot;core&quot;,
+            &quot;name&quot;: &quot;Linear ferrite \u00b7 \u03bcr 2000&quot;,
+            &quot;mu_r&quot;: 2000,
+            &quot;color&quot;: &quot;#637389&quot;
+          }
+        ],
+        &quot;regions&quot;: [],
+        &quot;windings&quot;: [
+          {
+            &quot;id&quot;: &quot;coil&quot;,
+            &quot;name&quot;: &quot;coil&quot;,
+            &quot;turns&quot;: 1,
+            &quot;current&quot;: 1,
+            &quot;window&quot;: {
+              &quot;x0&quot;: 0.9,
+              &quot;x1&quot;: 1.1,
+              &quot;y0&quot;: 0.9,
+              &quot;y1&quot;: 1.1,
+              &quot;z0&quot;: 0.9,
+              &quot;z1&quot;: 1.1
+            }
+          }
+        ]
+      },
+      &quot;B_T&quot;: [
+        [
+          -8.438366634017814e-08,
+          -8.438366629027556e-08,
+          2.807608784977632e-06
+        ],
+        [
+          -3.856329823983652e-07,
+          -3.856329822031723e-07,
+          2.506359468820476e-06
+        ],
+        [
+          -3.856329822166852e-07,
+          -3.856329822823849e-07,
+          2.506359469170406e-06
+        ]
+      ],
+      &quot;relative_vector_disagreement&quot;: [
+        0.3309712087984349,
+        0.42361032118650266,
+        0.42361032109990293
+      ],
+      &quot;energy_consistency&quot;: 1.1784841491862152e-13
+    },
+    {
+      &quot;air_factor&quot;: 2,
+      &quot;interval_factor&quot;: 2,
+      &quot;elements&quot;: 34992,
+      &quot;project&quot;: {
+        &quot;version&quot;: &quot;0.2&quot;,
+        &quot;name&quot;: &quot;Air-core sheet solenoid \u00b7 3D&quot;,
+        &quot;mode&quot;: &quot;3d&quot;,
+        &quot;domain&quot;: {
+          &quot;width&quot;: 2,
+          &quot;height&quot;: 2,
+          &quot;depth&quot;: 2,
+          &quot;nx&quot;: 8,
+          &quot;ny&quot;: 8,
+          &quot;nz&quot;: 8
+        },
+        &quot;materials&quot;: [
+          {
+            &quot;id&quot;: &quot;air&quot;,
+            &quot;name&quot;: &quot;Air / insulation&quot;,
+            &quot;mu_r&quot;: 1,
+            &quot;color&quot;: &quot;#71829a&quot;
+          },
+          {
+            &quot;id&quot;: &quot;copper&quot;,
+            &quot;name&quot;: &quot;Copper (magnetic model)&quot;,
+            &quot;mu_r&quot;: 1,
+            &quot;color&quot;: &quot;#d9924d&quot;
+          },
+          {
+            &quot;id&quot;: &quot;core&quot;,
+            &quot;name&quot;: &quot;Linear ferrite \u00b7 \u03bcr 2000&quot;,
+            &quot;mu_r&quot;: 2000,
+            &quot;color&quot;: &quot;#637389&quot;
+          }
+        ],
+        &quot;regions&quot;: [],
+        &quot;windings&quot;: [
+          {
+            &quot;id&quot;: &quot;coil&quot;,
+            &quot;name&quot;: &quot;coil&quot;,
+            &quot;turns&quot;: 1,
+            &quot;current&quot;: 1,
+            &quot;window&quot;: {
+              &quot;x0&quot;: 0.9,
+              &quot;x1&quot;: 1.1,
+              &quot;y0&quot;: 0.9,
+              &quot;y1&quot;: 1.1,
+              &quot;z0&quot;: 0.9,
+              &quot;z1&quot;: 1.1
+            }
+          }
+        ]
+      },
+      &quot;B_T&quot;: [
+        [
+          2.0923060300859979e-07,
+          2.0923060311983342e-07,
+          3.823360967906308e-06
+        ],
+        [
+          1.393892807896485e-07,
+          1.393892807940396e-07,
+          2.70336114727837e-06
+        ],
+        [
+          1.3938928055298947e-07,
+          1.3938928088245392e-07,
+          2.703361147481349e-06
+        ]
+      ],
+      &quot;relative_vector_disagreement&quot;: [
+        0.11226329111808143,
+        0.3309389646679572,
+        0.33093896462018574
+      ],
+      &quot;energy_consistency&quot;: 5.126225218579265e-14
+    }
+  ],
+  &quot;limits&quot;: &quot;Free-space reference versus closed tangential-A=0 FEM boundary; disagreement combines mesh/boundary/source discretization. Incident-cell averaging is explicit. Air only, ideal sheets; no finite copper/core, AC, hardware or Maxwell validation.&quot;
+}</pre><h2>Every added executable line explained</h2><p>verification/verify_sheet_field_s005.py SHA256 f07cda20683e9642df2cc8d36ca965333c9bc8595cdf2bbc15725e009c80c6fd</p><table><tr><td>2</td><td><code>import copy,hashlib,json,math,sys  </code></td><td> Preserve cases, exact provenance and SI vector arithmetic.</td></tr><tr><td>3</td><td><code>from pathlib import Path  </code></td><td> Resolve the explicitly supplied tested application checkout.</td></tr><tr><td>4</td><td><code>ROOT=Path(sys.argv[1]).resolve();sys.path.insert(0,str(ROOT))  </code></td><td> Import the exact preceding reference implementation.</td></tr><tr><td>5</td><td><code>from engine.project import validate  </code></td><td> Reuse physical model validation without changing its source conventions.</td></tr><tr><td>6</td><td><code>from engine.mesh import build_mesh,tetra_geometry,dot,sub  </code></td><td> Inspect actual tetrahedral containment for field sampling.</td></tr><tr><td>7</td><td><code>from engine.analysis import _solve_on_mesh  </code></td><td> Run actual original edge-element fields on the declared fitted refinement.</td></tr><tr><td>8</td><td><code>MU0=4*math.pi*1e-7  </code></td><td> Use vacuum permeability in henries per metre for this air-only numerical comparison.</td></tr><tr><td>10</td><td><code>def reference(point,n):  </code></td><td> Independently integrate Biot–Savart over four straight sides and uniform axial sheet height.</td></tr><tr><td>11</td><td><code>    value=[0.,0.,0.];corners=[(.4,.4),(.6,.4),(.6,.6),(.4,.6)]  </code></td><td> Orient a unit-turn positive-z closed rectangular loop counterclockwise.</td></tr><tr><td>12</td><td><code>    for iz in range(n):  </code></td><td> Midpoint-integrate the uniform turn distribution over its0.2m axial support.</td></tr><tr><td>13</td><td><code>        z=.4+.2*(iz+.5)/n  </code></td><td> Place source integration points strictly inside the sheet height.</td></tr><tr><td>14</td><td><code>        for a,b in zip(corners,corners[1:]+corners[:1]):  </code></td><td> Include the complete explicit return path, not just an active coil side.</td></tr><tr><td>15</td><td><code>            dl=((b[0]-a[0])/n,(b[1]-a[1])/n,0.)  </code></td><td> Integrate each directed straight conductor using independent midpoint segments.</td></tr><tr><td>16</td><td><code>            for j in range(n):  </code></td><td> Resolve the line integral separately from the axial sheet integral.</td></tr><tr><td>17</td><td><code>                r=(point[0]-a[0]-(j+.5)*dl[0],point[1]-a[1]-(j+.5)*dl[1],point[2]-z);d=sum(x*x for x in r)**1.5  </code></td><td> Compute the source-to-observation vector and cubic distance in SI units.</td></tr><tr><td>18</td><td><code>                cross=(dl[1]*r[2],-dl[0]*r[2],dl[0]*r[1]-dl[1]*r[0])  </code></td><td> Evaluate the directed dl cross r contribution independently of all FEM source bases.</td></tr><tr><td>19</td><td><code>                for k in range(3):value[k]+=MU0/(4*math.pi*n)*cross[k]/d  </code></td><td> Weight unit current and the uniform unit-turn axial distribution.</td></tr><tr><td>20</td><td><code>    return value  </code></td><td> Return actual free-space Bx,By,Bz in tesla.</td></tr><tr><td>22</td><td><code>def sample(result,point):  </code></td><td> Average incident elementwise fields at a fixed physical observation point.</td></tr><tr><td>23</td><td><code>    values=[];mesh=result[&#x27;mesh&#x27;]  </code></td><td> Retain actual solved tetrahedra, never interpolate saved reference data.</td></tr><tr><td>24</td><td><code>    for e,v in zip(mesh[&#x27;elements&#x27;],result[&#x27;fields&#x27;][&#x27;B&#x27;]):  </code></td><td> Locate all genuine incident cells to avoid an arbitrary one-sided trace at grid planes.</td></tr><tr><td>25</td><td><code>        vertices=[mesh[&#x27;nodes&#x27;][i] for i in e];_,g=tetra_geometry(vertices);delta=sub(point,vertices[0]);weights=[1+dot(g[0],delta)]+[dot(x,delta) for x in g[1:]]  </code></td><td> Use independent barycentric containment on actual vertices.</td></tr><tr><td>26</td><td><code>        if min(weights)&gt;=-1e-10 and max(weights)&lt;=1+1e-10:values.append(v)  </code></td><td> Admit only cells whose closure contains the declared physical probe.</td></tr><tr><td>27</td><td><code>    assert values,&#x27;Probe outside solved mesh&#x27;  </code></td><td> Refuse missing-field samples instead of filling them with zero.</td></tr><tr><td>28</td><td><code>    return [sum(v[k] for v in values)/len(values) for k in range(3)]  </code></td><td> Define a reproducible incident-element mean, not a certified continuous point value.</td></tr><tr><td>30</td><td><code>p=json.loads((ROOT/&#x27;examples/air_coil_3d.json&#x27;).read_text());p[&#x27;domain&#x27;].update(width=1.,height=1.,depth=1.,nx=4,ny=4,nz=4);p[&#x27;regions&#x27;]=[];p[&#x27;windings&#x27;]=[dict(id=&#x27;coil&#x27;,name=&#x27;coil&#x27;,turns=1,current=1,window=dict(x0=.4,x1=.6,y0=.4,y1=.6,z0=.4,z1=.6))]  </code></td><td> Use an explicit air-only unit rectangular sheet, with the entire closed return and no finite copper/core claim.</td></tr><tr><td>31</td><td><code>probes=[(.5,.5,.5),(.53,.52,.54),(.47,.48,.46)];refs=[reference(x,128) for x in probes];coarse=[reference(x,64) for x in probes]  </code></td><td> Compare full off-axis vectors and a symmetric point pair with separately refined quadrature.</td></tr><tr><td>32</td><td><code>quad=[math.sqrt(sum((a-b)**2 for a,b in zip(x,y)))/math.sqrt(sum(a*a for a in x)) for x,y in zip(refs,coarse)];assert max(quad)&lt;.001  </code></td><td> Require quadrature stability below0.1percent without treating it as a certified integration bound.</td></tr><tr><td>33</td><td><code>a=b=.1;dz=.2/2000;analytic=sum(MU0/.2*a*b/(math.pi*math.sqrt(a*a+b*b+z*z))*(1/(a*a+z*z)+1/(b*b+z*z))*dz for z in [-.1+(i+.5)*dz for i in range(2000)]);assert abs(refs[0][2]/analytic-1)&lt;.001  </code></td><td> Independently check the centre reference against the known rectangular-loop axial expression integrated over height.</td></tr><tr><td>34</td><td><code>rows=[]  </code></td><td> Retain all real field comparisons, including any large discrepancies.</td></tr><tr><td>35</td><td><code>for air in [1,2]:  </code></td><td> Separate fixed-geometry exterior-domain changes from refinement.</td></tr><tr><td>36</td><td><code>    q=copy.deepcopy(p);shift=(air-1)/2  </code></td><td> Rigidly translate the same coil and probes into the enlarged closed box.</td></tr><tr><td>37</td><td><code>    for axis,size in zip(&#x27;xyz&#x27;,[&#x27;width&#x27;,&#x27;height&#x27;,&#x27;depth&#x27;]):  </code></td><td> Expand exterior air only, keeping nominal physical base spacing constant.</td></tr><tr><td>38</td><td><code>        q[&#x27;domain&#x27;][size]=air;q[&#x27;domain&#x27;][&#x27;n&#x27;+axis]=4*air  </code></td><td> Retain physical base target spacing as the domain grows.</td></tr><tr><td>39</td><td><code>        for end in [&#x27;0&#x27;,&#x27;1&#x27;]:q[&#x27;windings&#x27;][0][&#x27;window&#x27;][axis+end]+=shift  </code></td><td> Preserve every physical winding dimension and unit source.</td></tr><tr><td>40</td><td><code>    for h in [1,2]:  </code></td><td> Refine every fitted interval using the actual preceding S004 implementation.</td></tr><tr><td>41</td><td><code>        validated=validate(q);mesh=build_mesh(validated,interval_factor=h);result=_solve_on_mesh(validated,mesh,False);samples=[sample(result,tuple(v+shift for v in point)) for point in probes]  </code></td><td> Execute genuine spatial edge-element fields and sample the same source-relative probes.</td></tr><tr><td>42</td><td><code>        errors=[math.sqrt(sum((a-b)**2 for a,b in zip(v,r)))/math.sqrt(sum(a*a for a in r)) for v,r in zip(samples,refs)]  </code></td><td> Report full-vector disagreement normalized by the independent free-space vector norm.</td></tr><tr><td>43</td><td><code>        rows.append(dict(air_factor=air,interval_factor=h,elements=len(mesh[&#x27;elements&#x27;]),project=validated,B_T=samples,relative_vector_disagreement=errors,energy_consistency=result[&#x27;stats&#x27;][&#x27;energy_consistency&#x27;]))  </code></td><td> Preserve exact physical models, actual vectors and internal energy checks without a manufactured pass label.</td></tr><tr><td>44</td><td><code>output=dict(source_release=&#x27;0.9.35&#x27;,probes_m=probes,free_space_B_T=refs,quadrature_relative_changes=quad,independent_center_Bz_T=analytic,rows=rows,limits=&#x27;Free-space reference versus closed tangential-A=0 FEM boundary; disagreement combines mesh/boundary/source discretization. Incident-cell averaging is explicit. Air only, ideal sheets; no finite copper/core, AC, hardware or Maxwell validation.&#x27;)  </code></td><td> Preserve assumptions and unresolved numerical errors with every result.</td></tr><tr><td>45</td><td><code>Path(&#x27;s005/results.json&#x27;).write_text(json.dumps(output,indent=2)+&#x27;\n&#x27;);print(json.dumps({k:v for k,v in output.items() if k!=&#x27;rows&#x27;},indent=2));print([(r[&#x27;air_factor&#x27;],r[&#x27;interval_factor&#x27;],r[&#x27;elements&#x27;],r[&#x27;relative_vector_disagreement&#x27;]) for r in rows])  </code></td><td> Save genuine complete results and display concise actual disagreements.</td></tr></table><h2>Complete exact source</h2><pre>&quot;&quot;&quot;S005 independent air-sheet local-field verification; no runtime modification.&quot;&quot;&quot;
+import copy,hashlib,json,math,sys  #: Preserve cases, exact provenance and SI vector arithmetic.
+from pathlib import Path  #: Resolve the explicitly supplied tested application checkout.
+ROOT=Path(sys.argv[1]).resolve();sys.path.insert(0,str(ROOT))  #: Import the exact preceding reference implementation.
+from engine.project import validate  #: Reuse physical model validation without changing its source conventions.
+from engine.mesh import build_mesh,tetra_geometry,dot,sub  #: Inspect actual tetrahedral containment for field sampling.
+from engine.analysis import _solve_on_mesh  #: Run actual original edge-element fields on the declared fitted refinement.
+MU0=4*math.pi*1e-7  #: Use vacuum permeability in henries per metre for this air-only numerical comparison.
+
+def reference(point,n):  #: Independently integrate Biot–Savart over four straight sides and uniform axial sheet height.
+    value=[0.,0.,0.];corners=[(.4,.4),(.6,.4),(.6,.6),(.4,.6)]  #: Orient a unit-turn positive-z closed rectangular loop counterclockwise.
+    for iz in range(n):  #: Midpoint-integrate the uniform turn distribution over its0.2m axial support.
+        z=.4+.2*(iz+.5)/n  #: Place source integration points strictly inside the sheet height.
+        for a,b in zip(corners,corners[1:]+corners[:1]):  #: Include the complete explicit return path, not just an active coil side.
+            dl=((b[0]-a[0])/n,(b[1]-a[1])/n,0.)  #: Integrate each directed straight conductor using independent midpoint segments.
+            for j in range(n):  #: Resolve the line integral separately from the axial sheet integral.
+                r=(point[0]-a[0]-(j+.5)*dl[0],point[1]-a[1]-(j+.5)*dl[1],point[2]-z);d=sum(x*x for x in r)**1.5  #: Compute the source-to-observation vector and cubic distance in SI units.
+                cross=(dl[1]*r[2],-dl[0]*r[2],dl[0]*r[1]-dl[1]*r[0])  #: Evaluate the directed dl cross r contribution independently of all FEM source bases.
+                for k in range(3):value[k]+=MU0/(4*math.pi*n)*cross[k]/d  #: Weight unit current and the uniform unit-turn axial distribution.
+    return value  #: Return actual free-space Bx,By,Bz in tesla.
+
+def sample(result,point):  #: Average incident elementwise fields at a fixed physical observation point.
+    values=[];mesh=result[&#x27;mesh&#x27;]  #: Retain actual solved tetrahedra, never interpolate saved reference data.
+    for e,v in zip(mesh[&#x27;elements&#x27;],result[&#x27;fields&#x27;][&#x27;B&#x27;]):  #: Locate all genuine incident cells to avoid an arbitrary one-sided trace at grid planes.
+        vertices=[mesh[&#x27;nodes&#x27;][i] for i in e];_,g=tetra_geometry(vertices);delta=sub(point,vertices[0]);weights=[1+dot(g[0],delta)]+[dot(x,delta) for x in g[1:]]  #: Use independent barycentric containment on actual vertices.
+        if min(weights)&gt;=-1e-10 and max(weights)&lt;=1+1e-10:values.append(v)  #: Admit only cells whose closure contains the declared physical probe.
+    assert values,&#x27;Probe outside solved mesh&#x27;  #: Refuse missing-field samples instead of filling them with zero.
+    return [sum(v[k] for v in values)/len(values) for k in range(3)]  #: Define a reproducible incident-element mean, not a certified continuous point value.
+
+p=json.loads((ROOT/&#x27;examples/air_coil_3d.json&#x27;).read_text());p[&#x27;domain&#x27;].update(width=1.,height=1.,depth=1.,nx=4,ny=4,nz=4);p[&#x27;regions&#x27;]=[];p[&#x27;windings&#x27;]=[dict(id=&#x27;coil&#x27;,name=&#x27;coil&#x27;,turns=1,current=1,window=dict(x0=.4,x1=.6,y0=.4,y1=.6,z0=.4,z1=.6))]  #: Use an explicit air-only unit rectangular sheet, with the entire closed return and no finite copper/core claim.
+probes=[(.5,.5,.5),(.53,.52,.54),(.47,.48,.46)];refs=[reference(x,128) for x in probes];coarse=[reference(x,64) for x in probes]  #: Compare full off-axis vectors and a symmetric point pair with separately refined quadrature.
+quad=[math.sqrt(sum((a-b)**2 for a,b in zip(x,y)))/math.sqrt(sum(a*a for a in x)) for x,y in zip(refs,coarse)];assert max(quad)&lt;.001  #: Require quadrature stability below0.1percent without treating it as a certified integration bound.
+a=b=.1;dz=.2/2000;analytic=sum(MU0/.2*a*b/(math.pi*math.sqrt(a*a+b*b+z*z))*(1/(a*a+z*z)+1/(b*b+z*z))*dz for z in [-.1+(i+.5)*dz for i in range(2000)]);assert abs(refs[0][2]/analytic-1)&lt;.001  #: Independently check the centre reference against the known rectangular-loop axial expression integrated over height.
+rows=[]  #: Retain all real field comparisons, including any large discrepancies.
+for air in [1,2]:  #: Separate fixed-geometry exterior-domain changes from refinement.
+    q=copy.deepcopy(p);shift=(air-1)/2  #: Rigidly translate the same coil and probes into the enlarged closed box.
+    for axis,size in zip(&#x27;xyz&#x27;,[&#x27;width&#x27;,&#x27;height&#x27;,&#x27;depth&#x27;]):  #: Expand exterior air only, keeping nominal physical base spacing constant.
+        q[&#x27;domain&#x27;][size]=air;q[&#x27;domain&#x27;][&#x27;n&#x27;+axis]=4*air  #: Retain physical base target spacing as the domain grows.
+        for end in [&#x27;0&#x27;,&#x27;1&#x27;]:q[&#x27;windings&#x27;][0][&#x27;window&#x27;][axis+end]+=shift  #: Preserve every physical winding dimension and unit source.
+    for h in [1,2]:  #: Refine every fitted interval using the actual preceding S004 implementation.
+        validated=validate(q);mesh=build_mesh(validated,interval_factor=h);result=_solve_on_mesh(validated,mesh,False);samples=[sample(result,tuple(v+shift for v in point)) for point in probes]  #: Execute genuine spatial edge-element fields and sample the same source-relative probes.
+        errors=[math.sqrt(sum((a-b)**2 for a,b in zip(v,r)))/math.sqrt(sum(a*a for a in r)) for v,r in zip(samples,refs)]  #: Report full-vector disagreement normalized by the independent free-space vector norm.
+        rows.append(dict(air_factor=air,interval_factor=h,elements=len(mesh[&#x27;elements&#x27;]),project=validated,B_T=samples,relative_vector_disagreement=errors,energy_consistency=result[&#x27;stats&#x27;][&#x27;energy_consistency&#x27;]))  #: Preserve exact physical models, actual vectors and internal energy checks without a manufactured pass label.
+output=dict(source_release=&#x27;0.9.35&#x27;,probes_m=probes,free_space_B_T=refs,quadrature_relative_changes=quad,independent_center_Bz_T=analytic,rows=rows,limits=&#x27;Free-space reference versus closed tangential-A=0 FEM boundary; disagreement combines mesh/boundary/source discretization. Incident-cell averaging is explicit. Air only, ideal sheets; no finite copper/core, AC, hardware or Maxwell validation.&#x27;)  #: Preserve assumptions and unresolved numerical errors with every result.
+Path(&#x27;s005/results.json&#x27;).write_text(json.dumps(output,indent=2)+&#x27;\n&#x27;);print(json.dumps({k:v for k,v in output.items() if k!=&#x27;rows&#x27;},indent=2));print([(r[&#x27;air_factor&#x27;],r[&#x27;interval_factor&#x27;],r[&#x27;elements&#x27;],r[&#x27;relative_vector_disagreement&#x27;]) for r in rows])  #: Save genuine complete results and display concise actual disagreements.
+</pre><h2>Actual execution log</h2><pre>{
+  &quot;source_release&quot;: &quot;0.9.35&quot;,
+  &quot;probes_m&quot;: [
+    [
+      0.5,
+      0.5,
+      0.5
+    ],
+    [
+      0.53,
+      0.52,
+      0.54
+    ],
+    [
+      0.47,
+      0.48,
+      0.46
+    ]
+  ],
+  &quot;free_space_B_T&quot;: [
+    [
+      8.388128399170546e-24,
+      -8.388128399170546e-24,
+      4.1888528513792946e-06
+    ],
+    [
+      1.857185737688466e-07,
+      1.2003397897320226e-07,
+      4.042112826724438e-06
+    ],
+    [
+      1.857185737688448e-07,
+      1.200339789732003e-07,
+      4.04211282672442e-06
+    ]
+  ],
+  &quot;quadrature_relative_changes&quot;: [
+    4.4866873027274544e-05,
+    4.757415372144e-05,
+    4.757415371897006e-05
+  ],
+  &quot;independent_center_Bz_T&quot;: 4.188790333086448e-06,
+  &quot;limits&quot;: &quot;Free-space reference versus closed tangential-A=0 FEM boundary; disagreement combines mesh/boundary/source discretization. Incident-cell averaging is explicit. Air only, ideal sheets; no finite copper/core, AC, hardware or Maxwell validation.&quot;
+}
+[(1, 1, 750, [0.32219301240488646, 0.4152431057618028, 0.41524310557864125]), (1, 2, 6000, [0.1115981181088039, 0.32887075527328935, 0.328870755216927]), (2, 1, 4374, [0.3309712087984349, 0.42361032118650266, 0.42361032109990293]), (2, 2, 34992, [0.11226329111808143, 0.3309389646679572, 0.33093896462018574])]
+</pre>
