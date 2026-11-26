@@ -1,0 +1,8 @@
+{
+  "explained_executable_lines": 109,
+  "files": [
+    "verification/verify_cell_projection_s006.py",
+    "verification/s006_preliminary.py"
+  ],
+  "report_sha256": "9f1efe24d471fa50ac57df13c1799c8b80d142e0895740fef11ae149b22906d4"
+}

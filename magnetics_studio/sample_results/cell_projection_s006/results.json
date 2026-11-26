@@ -1,0 +1,645 @@
+{
+  "segment_crosscheck_relative": [
+    1.3086280130432487e-05,
+    1.3788144251901659e-05,
+    1.378814424915959e-05
+  ],
+  "rows": [
+    {
+      "interval_factor": 1,
+      "elements": 750,
+      "nodes": 216,
+      "seconds": 4.343215364000002,
+      "mesh_sha256": "b4e17dbcbd4c99475583bb0586abf4f2694a6ea82126cc4301cc037bb396ad5d",
+      "project": {
+        "version": "0.2",
+        "name": "Air-core sheet solenoid \u00b7 3D",
+        "mode": "3d",
+        "domain": {
+          "width": 1,
+          "height": 1,
+          "depth": 1,
+          "nx": 4,
+          "ny": 4,
+          "nz": 4,
+          "budget": "extended"
+        },
+        "materials": [
+          {
+            "id": "air",
+            "name": "Air / insulation",
+            "mu_r": 1,
+            "color": "#71829a"
+          },
+          {
+            "id": "copper",
+            "name": "Copper (magnetic model)",
+            "mu_r": 1,
+            "color": "#d9924d"
+          },
+          {
+            "id": "core",
+            "name": "Linear ferrite \u00b7 \u03bcr 2000",
+            "mu_r": 2000,
+            "color": "#637389"
+          }
+        ],
+        "regions": [],
+        "windings": [
+          {
+            "id": "coil",
+            "name": "coil",
+            "turns": 1,
+            "current": 1,
+            "window": {
+              "x0": 0.4,
+              "x1": 0.6,
+              "y0": 0.4,
+              "y1": 0.6,
+              "z0": 0.4,
+              "z1": 0.6
+            }
+          }
+        ]
+      },
+      "observations": [
+        {
+          "point_m": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "incident_cells": 6,
+          "fem_B_T": [
+            -8.185995954688336e-08,
+            -8.185995926656758e-08,
+            2.8442080433833356e-06
+          ],
+          "point_reference_B_T": [
+            0.0,
+            0.0,
+            4.188798035594791e-06
+          ],
+          "cell_reference_B_T": [
+            -1.386485736169768e-09,
+            -1.386485736169768e-09,
+            4.188427978029054e-06
+          ],
+          "point_relative_disagreement": 0.32218419066701987,
+          "cell_relative_disagreement": 0.3220563440695241,
+          "sampling_relative_difference": 0.0004763661785011526,
+          "cell_quadrature_relative_change": 0.0010009396006986308,
+          "point_error_T": [
+            -8.185995954688336e-08,
+            -8.185995926656758e-08,
+            -1.3445899922114553e-06
+          ],
+          "cell_error_T": [
+            -8.04734738107136e-08,
+            -8.047347353039782e-08,
+            -1.3442199346457185e-06
+          ],
+          "sampling_error_T": [
+            -1.386485736169768e-09,
+            -1.386485736169768e-09,
+            -3.7005756573684346e-10
+          ]
+        },
+        {
+          "point_m": [
+            0.53,
+            0.52,
+            0.54
+          ],
+          "incident_cells": 1,
+          "fem_B_T": [
+            -3.8339637066990673e-07,
+            -3.833963706096267e-07,
+            2.5426716320054014e-06
+          ],
+          "point_reference_B_T": [
+            1.8571693409854132e-07,
+            1.2003261908197666e-07,
+            4.042057051585103e-06
+          ],
+          "cell_reference_B_T": [
+            1.744195852605081e-07,
+            -3.6020348959125543e-07,
+            4.020514071989358e-06
+          ],
+          "point_relative_disagreement": 0.41523630243038434,
+          "cell_relative_disagreement": 0.3902528757846721,
+          "sampling_relative_difference": 0.11878452772247967,
+          "cell_quadrature_relative_change": 0.005241964675724264,
+          "point_error_T": [
+            -5.69113304768448e-07,
+            -5.034289896916034e-07,
+            -1.4993854195797019e-06
+          ],
+          "cell_error_T": [
+            -5.578159559304148e-07,
+            -2.319288101837125e-08,
+            -1.4778424399839566e-06
+          ],
+          "sampling_error_T": [
+            -1.1297348838033213e-08,
+            -4.802361086732321e-07,
+            -2.1542979595745244e-08
+          ]
+        },
+        {
+          "point_m": [
+            0.47,
+            0.48,
+            0.46
+          ],
+          "incident_cells": 1,
+          "fem_B_T": [
+            -3.8339637065792434e-07,
+            -3.833963703880472e-07,
+            2.5426716327576797e-06
+          ],
+          "point_reference_B_T": [
+            1.8571693409854134e-07,
+            1.2003261908197648e-07,
+            4.0420570515850964e-06
+          ],
+          "cell_reference_B_T": [
+            1.8165121108609178e-07,
+            -3.6020783425708657e-07,
+            4.010541543324857e-06
+          ],
+          "point_relative_disagreement": 0.4152363022472226,
+          "cell_relative_disagreement": 0.3885874087867783,
+          "sampling_relative_difference": 0.1188929273440497,
+          "cell_quadrature_relative_change": 0.0030984890680173494,
+          "point_error_T": [
+            -5.691133047564657e-07,
+            -5.034289894700237e-07,
+            -1.4993854188274168e-06
+          ],
+          "cell_error_T": [
+            -5.650475817440162e-07,
+            -2.3188536130960632e-08,
+            -1.4678699105671774e-06
+          ],
+          "sampling_error_T": [
+            -4.065723012449564e-09,
+            -4.80240453339063e-07,
+            -3.15155082602394e-08
+          ]
+        }
+      ],
+      "stats": {
+        "mode": "3d",
+        "nodes": 216,
+        "elements": 750,
+        "dofs": 601,
+        "peak_B_T": 3.5252051094203464e-06,
+        "energy_J": 5.688416086764287e-08,
+        "seconds": 0.25088262499997427,
+        "solver": {
+          "iterations": 178,
+          "residual": 8.530771357178941e-10,
+          "backend": "PCG / installed SciPy matvec",
+          "seconds": 0.04260918599999286,
+          "nonlinear_iterations": 0,
+          "gauge_residual": 8.48623282198292e-10
+        },
+        "energy_consistency": 4.185623271672424e-13,
+        "reciprocity": null,
+        "nonlinear": false,
+        "mesh_quality": {
+          "smallest_axis_interval_m": 0.19999999999999996,
+          "largest_cell_axis_aspect_ratio": 1.0000000000000007
+        }
+      }
+    },
+    {
+      "interval_factor": 2,
+      "elements": 6000,
+      "nodes": 1331,
+      "seconds": 14.606005368000012,
+      "mesh_sha256": "24da238b0c6b0fff3b92a1fc2904c9e4ef2e627ff6fda97b6c93475d62c1a4a3",
+      "project": {
+        "version": "0.2",
+        "name": "Air-core sheet solenoid \u00b7 3D",
+        "mode": "3d",
+        "domain": {
+          "width": 1,
+          "height": 1,
+          "depth": 1,
+          "nx": 4,
+          "ny": 4,
+          "nz": 4,
+          "budget": "extended"
+        },
+        "materials": [
+          {
+            "id": "air",
+            "name": "Air / insulation",
+            "mu_r": 1,
+            "color": "#71829a"
+          },
+          {
+            "id": "copper",
+            "name": "Copper (magnetic model)",
+            "mu_r": 1,
+            "color": "#d9924d"
+          },
+          {
+            "id": "core",
+            "name": "Linear ferrite \u00b7 \u03bcr 2000",
+            "mu_r": 2000,
+            "color": "#637389"
+          }
+        ],
+        "regions": [],
+        "windings": [
+          {
+            "id": "coil",
+            "name": "coil",
+            "turns": 1,
+            "current": 1,
+            "window": {
+              "x0": 0.4,
+              "x1": 0.6,
+              "y0": 0.4,
+              "y1": 0.6,
+              "z0": 0.4,
+              "z1": 0.6
+            }
+          }
+        ]
+      },
+      "observations": [
+        {
+          "point_m": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "incident_cells": 24,
+          "fem_B_T": [
+            2.086679128201829e-07,
+            2.0866791320083424e-07,
+            3.826303786789332e-06
+          ],
+          "point_reference_B_T": [
+            0.0,
+            0.0,
+            4.188798035594791e-06
+          ],
+          "cell_reference_B_T": [
+            1.9797196375490342e-07,
+            1.9797196375490342e-07,
+            4.188492933613946e-06
+          ],
+          "point_relative_disagreement": 0.11158942963716209,
+          "cell_relative_disagreement": 0.08654150245205523,
+          "sampling_relative_difference": 0.06683893565048668,
+          "cell_quadrature_relative_change": 0.0004060394430266711,
+          "point_error_T": [
+            2.086679128201829e-07,
+            2.0866791320083424e-07,
+            -3.624942488054587e-07
+          ],
+          "cell_error_T": [
+            1.0695949065279485e-08,
+            1.0695949445930824e-08,
+            -3.621891468246136e-07
+          ],
+          "sampling_error_T": [
+            1.9797196375490342e-07,
+            1.9797196375490342e-07,
+            -3.051019808450922e-10
+          ]
+        },
+        {
+          "point_m": [
+            0.53,
+            0.52,
+            0.54
+          ],
+          "incident_cells": 1,
+          "fem_B_T": [
+            1.4109628714009363e-07,
+            1.4109628768763222e-07,
+            2.7117070874359338e-06
+          ],
+          "point_reference_B_T": [
+            1.8571693409854132e-07,
+            1.2003261908197666e-07,
+            4.042057051585103e-06
+          ],
+          "cell_reference_B_T": [
+            7.154367257524254e-07,
+            2.626055170391141e-07,
+            3.496935048890226e-06
+          ],
+          "point_relative_disagreement": 0.328861512215616,
+          "cell_relative_disagreement": 0.2421914252337702,
+          "sampling_relative_difference": 0.19104303474381007,
+          "cell_quadrature_relative_change": 0.003940658832745831,
+          "point_error_T": [
+            -4.462064695844769e-08,
+            2.1063668605655552e-08,
+            -1.3303499641491695e-06
+          ],
+          "cell_error_T": [
+            -5.743404386123318e-07,
+            -1.215092293514819e-07,
+            -7.852279614542924e-07
+          ],
+          "sampling_error_T": [
+            5.297197916538841e-07,
+            1.4257289795713745e-07,
+            -5.451220026948771e-07
+          ]
+        },
+        {
+          "point_m": [
+            0.47,
+            0.48,
+            0.46
+          ],
+          "incident_cells": 1,
+          "fem_B_T": [
+            1.4109628841636365e-07,
+            1.4109628715088274e-07,
+            2.7117070876129382e-06
+          ],
+          "point_reference_B_T": [
+            1.8571693409854134e-07,
+            1.2003261908197648e-07,
+            4.0420570515850964e-06
+          ],
+          "cell_reference_B_T": [
+            7.240248470443869e-07,
+            2.6399836217684144e-07,
+            3.4940837328310045e-06
+          ],
+          "point_relative_disagreement": 0.3288615121592544,
+          "cell_relative_disagreement": 0.242922209579009,
+          "sampling_relative_difference": 0.19305885300522962,
+          "cell_quadrature_relative_change": 0.0016376508392756115,
+          "point_error_T": [
+            -4.46206456821777e-08,
+            2.106366806890626e-08,
+            -1.3303499639721582e-06
+          ],
+          "cell_error_T": [
+            -5.829285586280233e-07,
+            -1.229020750259587e-07,
+            -7.823766452180663e-07
+          ],
+          "sampling_error_T": [
+            5.383079129458455e-07,
+            1.4396574309486496e-07,
+            -5.479733187540919e-07
+          ]
+        }
+      ],
+      "stats": {
+        "mode": "3d",
+        "nodes": 1331,
+        "elements": 6000,
+        "dofs": 5401,
+        "peak_B_T": 4.5060129884804776e-06,
+        "energy_J": 7.238776215106099e-08,
+        "seconds": 1.2988971319999791,
+        "solver": {
+          "iterations": 449,
+          "residual": 9.675763246868056e-10,
+          "backend": "PCG / installed SciPy matvec",
+          "seconds": 0.9686957780000398,
+          "nonlinear_iterations": 0,
+          "gauge_residual": 1.7966289581383417e-09
+        },
+        "energy_consistency": 6.03349724386487e-14,
+        "reciprocity": null,
+        "nonlinear": false,
+        "mesh_quality": {
+          "smallest_axis_interval_m": 0.09999999999999998,
+          "largest_cell_axis_aspect_ratio": 1.000000000000001
+        }
+      }
+    },
+    {
+      "interval_factor": 4,
+      "elements": 48000,
+      "nodes": 9261,
+      "seconds": 42.86499350700001,
+      "mesh_sha256": "4a0813e4c99c3d594565b8db73a19b7ca6cdd253fee441dbbd0da695c6f1ac93",
+      "project": {
+        "version": "0.2",
+        "name": "Air-core sheet solenoid \u00b7 3D",
+        "mode": "3d",
+        "domain": {
+          "width": 1,
+          "height": 1,
+          "depth": 1,
+          "nx": 4,
+          "ny": 4,
+          "nz": 4,
+          "budget": "extended"
+        },
+        "materials": [
+          {
+            "id": "air",
+            "name": "Air / insulation",
+            "mu_r": 1,
+            "color": "#71829a"
+          },
+          {
+            "id": "copper",
+            "name": "Copper (magnetic model)",
+            "mu_r": 1,
+            "color": "#d9924d"
+          },
+          {
+            "id": "core",
+            "name": "Linear ferrite \u00b7 \u03bcr 2000",
+            "mu_r": 2000,
+            "color": "#637389"
+          }
+        ],
+        "regions": [],
+        "windings": [
+          {
+            "id": "coil",
+            "name": "coil",
+            "turns": 1,
+            "current": 1,
+            "window": {
+              "x0": 0.4,
+              "x1": 0.6,
+              "y0": 0.4,
+              "y1": 0.6,
+              "z0": 0.4,
+              "z1": 0.6
+            }
+          }
+        ]
+      },
+      "observations": [
+        {
+          "point_m": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "incident_cells": 24,
+          "fem_B_T": [
+            5.098407507783991e-08,
+            5.098407479136867e-08,
+            4.075301276832759e-06
+          ],
+          "point_reference_B_T": [
+            0.0,
+            0.0,
+            4.188798035594791e-06
+          ],
+          "cell_reference_B_T": [
+            4.75746784917307e-08,
+            4.75746784917307e-08,
+            4.1887981417627425e-06
+          ],
+          "point_relative_disagreement": 0.032100587962132755,
+          "cell_relative_disagreement": 0.02711976910390908,
+          "sampling_relative_difference": 0.016062067203265227,
+          "cell_quadrature_relative_change": 5.5846367170773054e-05,
+          "point_error_T": [
+            5.098407507783991e-08,
+            5.098407479136867e-08,
+            -1.1349675876203165e-07
+          ],
+          "cell_error_T": [
+            3.4093965861092072e-09,
+            3.409396299637966e-09,
+            -1.1349686492998321e-07
+          ],
+          "sampling_error_T": [
+            4.75746784917307e-08,
+            4.75746784917307e-08,
+            1.0616795155960358e-13
+          ]
+        },
+        {
+          "point_m": [
+            0.53,
+            0.52,
+            0.54
+          ],
+          "incident_cells": 1,
+          "fem_B_T": [
+            4.100243078446429e-08,
+            4.1002430582163234e-08,
+            3.82812696124811e-06
+          ],
+          "point_reference_B_T": [
+            1.8571693409854132e-07,
+            1.2003261908197666e-07,
+            4.042057051585103e-06
+          ],
+          "cell_reference_B_T": [
+            1.5518141971087966e-07,
+            7.443028881586272e-08,
+            4.0348172068548365e-06
+          ],
+          "point_relative_disagreement": 0.06672269946500725,
+          "cell_relative_disagreement": 0.058912818221600695,
+          "sampling_relative_difference": 0.013674824146013042,
+          "cell_quadrature_relative_change": 0.0004392317227731174,
+          "point_error_T": [
+            -1.4471450331407702e-07,
+            -7.903018849981342e-08,
+            -2.139300903369932e-07
+          ],
+          "cell_error_T": [
+            -1.1417898892641537e-07,
+            -3.342785823369948e-08,
+            -2.0669024560672647e-07
+          ],
+          "sampling_error_T": [
+            -3.053551438766166e-08,
+            -4.560233026611395e-08,
+            -7.239844730266723e-09
+          ]
+        },
+        {
+          "point_m": [
+            0.47,
+            0.48,
+            0.46
+          ],
+          "incident_cells": 1,
+          "fem_B_T": [
+            4.1002430920510955e-08,
+            4.100243023204405e-08,
+            3.82812696162468e-06
+          ],
+          "point_reference_B_T": [
+            1.8571693409854134e-07,
+            1.2003261908197648e-07,
+            4.0420570515850964e-06
+          ],
+          "cell_reference_B_T": [
+            1.5602631654159118e-07,
+            7.487148670126478e-08,
+            4.0346130119163e-06
+          ],
+          "point_relative_disagreement": 0.06672269939862778,
+          "cell_relative_disagreement": 0.05898475156426144,
+          "sampling_relative_difference": 0.013477201028758382,
+          "cell_quadrature_relative_change": 0.00029133935577151993,
+          "point_error_T": [
+            -1.447145031780304e-07,
+            -7.903018884993243e-08,
+            -2.1393008996041674e-07
+          ],
+          "cell_error_T": [
+            -1.1502388562108023e-07,
+            -3.386905646922073e-08,
+            -2.0648605029162038e-07
+          ],
+          "sampling_error_T": [
+            -2.9690617556950167e-08,
+            -4.5161132380711696e-08,
+            -7.444039668796363e-09
+          ]
+        }
+      ],
+      "stats": {
+        "mode": "3d",
+        "nodes": 9261,
+        "elements": 48000,
+        "dofs": 45601,
+        "peak_B_T": 4.991354404152575e-06,
+        "energy_J": 7.929588328711035e-08,
+        "seconds": 30.672467284999982,
+        "solver": {
+          "iterations": 1181,
+          "residual": 9.965551015073462e-10,
+          "backend": "PCG / installed SciPy matvec",
+          "seconds": 27.842374307,
+          "nonlinear_iterations": 0,
+          "gauge_residual": 2.5587461358025942e-09
+        },
+        "energy_consistency": 1.8359564428106627e-15,
+        "reciprocity": null,
+        "nonlinear": false,
+        "mesh_quality": {
+          "smallest_axis_interval_m": 0.04999999999999993,
+          "largest_cell_axis_aspect_ratio": 1.0000000000000022
+        }
+      }
+    }
+  ],
+  "volume_cubature_levels": [
+    8,
+    16
+  ],
+  "axial_quadrature_points": 256,
+  "limits": "Free-space versus closed-box fields; cell residual includes boundary, FE/source representation and quadrature. No certified bound, finite copper, core, AC, Maxwell/hardware or new runtime qualification."
+}

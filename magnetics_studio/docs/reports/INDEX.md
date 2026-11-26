@@ -1,3 +1,7 @@
+# S006
+
+[Cell and point field verification](Task_S006_Cell_Field_Verification_Report.html): independent reference decomposition, actual nested-mesh improvement, unresolved accuracy, exhaustive source and real logs.
+
 # S005
 
 [Local-field verification](Task_S005_Local_Field_Verification_Report.html): actual unresolved centre/off-axis error, full code/per-line explanations and reproducible evidence.

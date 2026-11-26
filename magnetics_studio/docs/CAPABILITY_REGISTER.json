@@ -299,6 +299,11 @@
       "id": "s005_independent_local_field_verification",
       "status": "accuracy_unqualified",
       "evidence_or_next": "Four real ideal-sheet reference3D solves; fine centre11.23% and offaxis33.09% free-space discrepancies; quadrature change<0.004758%. See S005 report. No runtime change."
+    },
+    {
+      "id": "s006_point_cell_field_decomposition",
+      "status": "accuracy_unqualified",
+      "evidence_or_next": "Actual48000tet refinement reduces centre/offaxis point discrepancies to3.210%/6.672%; cell residual2.712%/5.89%, sampling norm1.606%/1.35%, empirical cubaturechange<=0.043924%. No runtime change; expanded-domain/native higher-order comparison pending."
     }
   ],
   "requirements_revision": "2026-11-22 user authorises development executable and GitHub preview now; final clean-Windows release/physical qualification requirements remain",

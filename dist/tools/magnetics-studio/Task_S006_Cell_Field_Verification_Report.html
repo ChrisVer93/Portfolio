@@ -1,0 +1,1535 @@
+<!doctype html><meta charset="utf-8"><title>Task S006 — cell and point field verification</title><style>body{font:16px system-ui;line-height:1.5;margin:2em}pre{white-space:pre-wrap}table{border-collapse:collapse}td,th{border:1px solid #999;padding:.4em;vertical-align:top}</style><h1>Task S006 — point sampling, cell averages and nested refinement</h1><p>26 November2026. Verification-only supplement to runtime0.9.35. No production physics, source, mesh, solver, interface, build or test code changed. Accuracy remains unqualified.</p><h2>Objective and physical model</h2><p>Investigate S005's large3D local-field discrepancies without replacing physics to force agreement. Same1m closed air box and unit rectangular winding sheet: x,y,z support0.4–0.6m, N=1turn,I=1A, no core and no finite copper. Tz=NI/height inside the winding support; J=curl T is an ideal closed surface current with its full return. Original lowest-order Nedelec tetrahedra solve curl(nu curl A)=J, B=curl A, nu=1/mu0, tangential A=0 at the outer boundary. Original boundary-collapsed spanning-tree gauge is unchanged; original gauge residual and energy consistency are recorded. A[Wb/m],B[T],J[A/m²],nu[m/H],W[J]. The independent reference remains free space, so total disagreement combines boundary, discretization, source/field representation and numerical reference error.</p><h2>Independent reference equations and algorithm</h2><p>For each directed finite straight side, set u=start−point,v=end−point,a=|u|,b=|v|. Biot–Savart gives Bside=mu0 I/(4pi) (u cross v)(a+b)/[ab(ab+u dot v)]. Sum all four counterclockwise sides and uniformly integrate axial sheet height with256midpoints. Exact-side scalar evaluation is cross-checked against S005's separately discretized side/height integration and the optimized bounded NumPy batches are checked against the scalar routine to1e−12relative. Inversion symmetry is checked to1e−10. Singular observations raise errors; no denominator clipping is used. NumPy is a QA accelerator already present in the development environment, not a new production dependency.</p><p>Actual B is constant within each original lowest-order tetrahedron. Locate all incident cells using barycentric containment and take their unweighted mean, as S005 did. Separately compute the free-space volume mean in each of those same tetrahedra, then use identical incident-cell averaging. The Duffy transform has barycentric coordinates(1−u,u(1−v),uv(1−w),uvw), Jacobian u²v. Interior tensor midpoint cubature8³/16³ is normalized by accumulated Jacobian weight; axial quadrature is256. Vector decomposition is exact: BFEM−Bpoint=(BFEM−Bcell)+(Bcell−Bpoint), with closure checked below1e−18T. Percentages are norms normalized by |Bpoint|; scalar error percentages must not be added. Cell-quadrature changes are empirical sensitivity, not rigorous bounds. Axial quadrature near cell/source interfaces is not separately certified.</p><h2>Actual numerical cases and results</h2><p>Three final freshly solved meshes at a fixed1m boundary use interval factors1,2,4:750,6000,48000tetrahedra. Factor4 explicitly uses the existing extended direct-QA mesh budget. This exceeds the GUI port-study24000-cell ceiling; no application capacity limit was changed. Probe0=(.5,.5,.5),probe1=(.53,.52,.54),probe2=(.47,.48,.46)m. All exact projects, mesh digests, cell counts, vectors, solver statistics and numerical comparisons are retained. Row seconds includes probe cubature as well as solving; stats.seconds retains the original solver timing. No performance qualification is inferred.</p><table><tr><th>Factor</th><th>Tetrahedra</th><th>Probe</th><th>Point disagreement%</th><th>Cell residual%</th><th>Sampling difference%</th><th>Cell cubature change%</th></tr><tr><td>1</td><td>750</td><td>0</td><td>32.218419</td><td>32.205634</td><td>0.047637</td><td>0.100094</td></tr><tr><td>1</td><td>750</td><td>1</td><td>41.52363</td><td>39.025288</td><td>11.878453</td><td>0.524196</td></tr><tr><td>1</td><td>750</td><td>2</td><td>41.52363</td><td>38.858741</td><td>11.889293</td><td>0.309849</td></tr><tr><td>2</td><td>6000</td><td>0</td><td>11.158943</td><td>8.65415</td><td>6.683894</td><td>0.040604</td></tr><tr><td>2</td><td>6000</td><td>1</td><td>32.886151</td><td>24.219143</td><td>19.104303</td><td>0.394066</td></tr><tr><td>2</td><td>6000</td><td>2</td><td>32.886151</td><td>24.292221</td><td>19.305885</td><td>0.163765</td></tr><tr><td>4</td><td>48000</td><td>0</td><td>3.210059</td><td>2.711977</td><td>1.606207</td><td>0.005585</td></tr><tr><td>4</td><td>48000</td><td>1</td><td>6.67227</td><td>5.891282</td><td>1.367482</td><td>0.043923</td></tr><tr><td>4</td><td>48000</td><td>2</td><td>6.67227</td><td>5.898475</td><td>1.34772</td><td>0.029134</td></tr></table><p>The final factor4 centre disagreement is3.210%, and off-axis6.672%; factor2 gave11.159%/32.886%. At factor4 the corresponding cell residuals are2.712%/5.891–5.898%, while point-versus-cell sampling differences are1.606%/1.348–1.367%. Finer mesh therefore substantially reduces point disagreement, and sampling is not the sole explanation of the remaining error. These vectors do not uniquely identify a source or assembly defect. The largest fine-mesh8³→16³cell-cubature change is0.043924%, still an empirical integration check. No certified convergence, design-qualified answer, commercial/hardware correlation or Maxwell benchmark is claimed. Fine factor4 was not repeated at a larger exterior domain in this increment.</p><h2>Execution, regression scope and preliminary investigation</h2><p>Three preliminary field solves used coarse2³/4³volume cubature. Its changes reached5.12%, so those cell-average numbers were not used for the final attribution. Their exact code/results/log remain explicitly preliminary. The three final real solves use8³/16³cubature and cross-checked batch acceleration. These are six actual executions, not six independent physical cases. The preceding256passed/20optional-skipped regression profile remains historical: it was independently audited against unchanged runtime/test bytes, not rerun or counted as new tests. All historical report/evidence files remain exact. No new executable was built; existing Windows preview and native qualifications are unchanged.</p><h2>Reproduction</h2><p>From the source root: mkdir s006; OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python verification/verify_cell_projection_s006.py . . NumPy and the original numerical dependencies are required for this development QA. Results are s006/results.json. The preliminary script is preserved for reproducibility only; it writes that same relative output, so run it in a separate working directory if needed. Canonical baseline49 archive SHA25673d5e341d5fa13215375248aca1154dc7541fa7d6a1c88a9faeedf1db17d21b2. Neither script is an application runtime dependency.</p><h2>Next steps</h2><p>Use matched higher-order/native field and adequately resolved source/observation studies, with an expanded-domain repeat, before choosing a production correction. Continue actual finite winding/return/core coupling, native nonlinear/AC and full CLLC after the relevant accuracy gates. No stationary commercial parity or final clean Windows10/11 offline/no-Python-installed qualification is asserted.</p><h2>Complete actual final results</h2><pre>{
+  &quot;segment_crosscheck_relative&quot;: [
+    1.3086280130432487e-05,
+    1.3788144251901659e-05,
+    1.378814424915959e-05
+  ],
+  &quot;rows&quot;: [
+    {
+      &quot;interval_factor&quot;: 1,
+      &quot;elements&quot;: 750,
+      &quot;nodes&quot;: 216,
+      &quot;seconds&quot;: 4.343215364000002,
+      &quot;mesh_sha256&quot;: &quot;b4e17dbcbd4c99475583bb0586abf4f2694a6ea82126cc4301cc037bb396ad5d&quot;,
+      &quot;project&quot;: {
+        &quot;version&quot;: &quot;0.2&quot;,
+        &quot;name&quot;: &quot;Air-core sheet solenoid \u00b7 3D&quot;,
+        &quot;mode&quot;: &quot;3d&quot;,
+        &quot;domain&quot;: {
+          &quot;width&quot;: 1,
+          &quot;height&quot;: 1,
+          &quot;depth&quot;: 1,
+          &quot;nx&quot;: 4,
+          &quot;ny&quot;: 4,
+          &quot;nz&quot;: 4,
+          &quot;budget&quot;: &quot;extended&quot;
+        },
+        &quot;materials&quot;: [
+          {
+            &quot;id&quot;: &quot;air&quot;,
+            &quot;name&quot;: &quot;Air / insulation&quot;,
+            &quot;mu_r&quot;: 1,
+            &quot;color&quot;: &quot;#71829a&quot;
+          },
+          {
+            &quot;id&quot;: &quot;copper&quot;,
+            &quot;name&quot;: &quot;Copper (magnetic model)&quot;,
+            &quot;mu_r&quot;: 1,
+            &quot;color&quot;: &quot;#d9924d&quot;
+          },
+          {
+            &quot;id&quot;: &quot;core&quot;,
+            &quot;name&quot;: &quot;Linear ferrite \u00b7 \u03bcr 2000&quot;,
+            &quot;mu_r&quot;: 2000,
+            &quot;color&quot;: &quot;#637389&quot;
+          }
+        ],
+        &quot;regions&quot;: [],
+        &quot;windings&quot;: [
+          {
+            &quot;id&quot;: &quot;coil&quot;,
+            &quot;name&quot;: &quot;coil&quot;,
+            &quot;turns&quot;: 1,
+            &quot;current&quot;: 1,
+            &quot;window&quot;: {
+              &quot;x0&quot;: 0.4,
+              &quot;x1&quot;: 0.6,
+              &quot;y0&quot;: 0.4,
+              &quot;y1&quot;: 0.6,
+              &quot;z0&quot;: 0.4,
+              &quot;z1&quot;: 0.6
+            }
+          }
+        ]
+      },
+      &quot;observations&quot;: [
+        {
+          &quot;point_m&quot;: [
+            0.5,
+            0.5,
+            0.5
+          ],
+          &quot;incident_cells&quot;: 6,
+          &quot;fem_B_T&quot;: [
+            -8.185995954688336e-08,
+            -8.185995926656758e-08,
+            2.8442080433833356e-06
+          ],
+          &quot;point_reference_B_T&quot;: [
+            0.0,
+            0.0,
+            4.188798035594791e-06
+          ],
+          &quot;cell_reference_B_T&quot;: [
+            -1.386485736169768e-09,
+            -1.386485736169768e-09,
+            4.188427978029054e-06
+          ],
+          &quot;point_relative_disagreement&quot;: 0.32218419066701987,
+          &quot;cell_relative_disagreement&quot;: 0.3220563440695241,
+          &quot;sampling_relative_difference&quot;: 0.0004763661785011526,
+          &quot;cell_quadrature_relative_change&quot;: 0.0010009396006986308,
+          &quot;point_error_T&quot;: [
+            -8.185995954688336e-08,
+            -8.185995926656758e-08,
+            -1.3445899922114553e-06
+          ],
+          &quot;cell_error_T&quot;: [
+            -8.04734738107136e-08,
+            -8.047347353039782e-08,
+            -1.3442199346457185e-06
+          ],
+          &quot;sampling_error_T&quot;: [
+            -1.386485736169768e-09,
+            -1.386485736169768e-09,
+            -3.7005756573684346e-10
+          ]
+        },
+        {
+          &quot;point_m&quot;: [
+            0.53,
+            0.52,
+            0.54
+          ],
+          &quot;incident_cells&quot;: 1,
+          &quot;fem_B_T&quot;: [
+            -3.8339637066990673e-07,
+            -3.833963706096267e-07,
+            2.5426716320054014e-06
+          ],
+          &quot;point_reference_B_T&quot;: [
+            1.8571693409854132e-07,
+            1.2003261908197666e-07,
+            4.042057051585103e-06
+          ],
+          &quot;cell_reference_B_T&quot;: [
+            1.744195852605081e-07,
+            -3.6020348959125543e-07,
+            4.020514071989358e-06
+          ],
+          &quot;point_relative_disagreement&quot;: 0.41523630243038434,
+          &quot;cell_relative_disagreement&quot;: 0.3902528757846721,
+          &quot;sampling_relative_difference&quot;: 0.11878452772247967,
+          &quot;cell_quadrature_relative_change&quot;: 0.005241964675724264,
+          &quot;point_error_T&quot;: [
+            -5.69113304768448e-07,
+            -5.034289896916034e-07,
+            -1.4993854195797019e-06
+          ],
+          &quot;cell_error_T&quot;: [
+            -5.578159559304148e-07,
+            -2.319288101837125e-08,
+            -1.4778424399839566e-06
+          ],
+          &quot;sampling_error_T&quot;: [
+            -1.1297348838033213e-08,
+            -4.802361086732321e-07,
+            -2.1542979595745244e-08
+          ]
+        },
+        {
+          &quot;point_m&quot;: [
+            0.47,
+            0.48,
+            0.46
+          ],
+          &quot;incident_cells&quot;: 1,
+          &quot;fem_B_T&quot;: [
+            -3.8339637065792434e-07,
+            -3.833963703880472e-07,
+            2.5426716327576797e-06
+          ],
+          &quot;point_reference_B_T&quot;: [
+            1.8571693409854134e-07,
+            1.2003261908197648e-07,
+            4.0420570515850964e-06
+          ],
+          &quot;cell_reference_B_T&quot;: [
+            1.8165121108609178e-07,
+            -3.6020783425708657e-07,
+            4.010541543324857e-06
+          ],
+          &quot;point_relative_disagreement&quot;: 0.4152363022472226,
+          &quot;cell_relative_disagreement&quot;: 0.3885874087867783,
+          &quot;sampling_relative_difference&quot;: 0.1188929273440497,
+          &quot;cell_quadrature_relative_change&quot;: 0.0030984890680173494,
+          &quot;point_error_T&quot;: [
+            -5.691133047564657e-07,
+            -5.034289894700237e-07,
+            -1.4993854188274168e-06
+          ],
+          &quot;cell_error_T&quot;: [
+            -5.650475817440162e-07,
+            -2.3188536130960632e-08,
+            -1.4678699105671774e-06
+          ],
+          &quot;sampling_error_T&quot;: [
+            -4.065723012449564e-09,
+            -4.80240453339063e-07,
+            -3.15155082602394e-08
+          ]
+        }
+      ],
+      &quot;stats&quot;: {
+        &quot;mode&quot;: &quot;3d&quot;,
+        &quot;nodes&quot;: 216,
+        &quot;elements&quot;: 750,
+        &quot;dofs&quot;: 601,
+        &quot;peak_B_T&quot;: 3.5252051094203464e-06,
+        &quot;energy_J&quot;: 5.688416086764287e-08,
+        &quot;seconds&quot;: 0.25088262499997427,
+        &quot;solver&quot;: {
+          &quot;iterations&quot;: 178,
+          &quot;residual&quot;: 8.530771357178941e-10,
+          &quot;backend&quot;: &quot;PCG / installed SciPy matvec&quot;,
+          &quot;seconds&quot;: 0.04260918599999286,
+          &quot;nonlinear_iterations&quot;: 0,
+          &quot;gauge_residual&quot;: 8.48623282198292e-10
+        },
+        &quot;energy_consistency&quot;: 4.185623271672424e-13,
+        &quot;reciprocity&quot;: null,
+        &quot;nonlinear&quot;: false,
+        &quot;mesh_quality&quot;: {
+          &quot;smallest_axis_interval_m&quot;: 0.19999999999999996,
+          &quot;largest_cell_axis_aspect_ratio&quot;: 1.0000000000000007
+        }
+      }
+    },
+    {
+      &quot;interval_factor&quot;: 2,
+      &quot;elements&quot;: 6000,
+      &quot;nodes&quot;: 1331,
+      &quot;seconds&quot;: 14.606005368000012,
+      &quot;mesh_sha256&quot;: &quot;24da238b0c6b0fff3b92a1fc2904c9e4ef2e627ff6fda97b6c93475d62c1a4a3&quot;,
+      &quot;project&quot;: {
+        &quot;version&quot;: &quot;0.2&quot;,
+        &quot;name&quot;: &quot;Air-core sheet solenoid \u00b7 3D&quot;,
+        &quot;mode&quot;: &quot;3d&quot;,
+        &quot;domain&quot;: {
+          &quot;width&quot;: 1,
+          &quot;height&quot;: 1,
+          &quot;depth&quot;: 1,
+          &quot;nx&quot;: 4,
+          &quot;ny&quot;: 4,
+          &quot;nz&quot;: 4,
+          &quot;budget&quot;: &quot;extended&quot;
+        },
+        &quot;materials&quot;: [
+          {
+            &quot;id&quot;: &quot;air&quot;,
+            &quot;name&quot;: &quot;Air / insulation&quot;,
+            &quot;mu_r&quot;: 1,
+            &quot;color&quot;: &quot;#71829a&quot;
+          },
+          {
+            &quot;id&quot;: &quot;copper&quot;,
+            &quot;name&quot;: &quot;Copper (magnetic model)&quot;,
+            &quot;mu_r&quot;: 1,
+            &quot;color&quot;: &quot;#d9924d&quot;
+          },
+          {
+            &quot;id&quot;: &quot;core&quot;,
+            &quot;name&quot;: &quot;Linear ferrite \u00b7 \u03bcr 2000&quot;,
+            &quot;mu_r&quot;: 2000,
+            &quot;color&quot;: &quot;#637389&quot;
+          }
+        ],
+        &quot;regions&quot;: [],
+        &quot;windings&quot;: [
+          {
+            &quot;id&quot;: &quot;coil&quot;,
+            &quot;name&quot;: &quot;coil&quot;,
+            &quot;turns&quot;: 1,
+            &quot;current&quot;: 1,
+            &quot;window&quot;: {
+              &quot;x0&quot;: 0.4,
+              &quot;x1&quot;: 0.6,
+              &quot;y0&quot;: 0.4,
+              &quot;y1&quot;: 0.6,
+              &quot;z0&quot;: 0.4,
+              &quot;z1&quot;: 0.6
+            }
+          }
+        ]
+      },
+      &quot;observations&quot;: [
+        {
+          &quot;point_m&quot;: [
+            0.5,
+            0.5,
+            0.5
+          ],
+          &quot;incident_cells&quot;: 24,
+          &quot;fem_B_T&quot;: [
+            2.086679128201829e-07,
+            2.0866791320083424e-07,
+            3.826303786789332e-06
+          ],
+          &quot;point_reference_B_T&quot;: [
+            0.0,
+            0.0,
+            4.188798035594791e-06
+          ],
+          &quot;cell_reference_B_T&quot;: [
+            1.9797196375490342e-07,
+            1.9797196375490342e-07,
+            4.188492933613946e-06
+          ],
+          &quot;point_relative_disagreement&quot;: 0.11158942963716209,
+          &quot;cell_relative_disagreement&quot;: 0.08654150245205523,
+          &quot;sampling_relative_difference&quot;: 0.06683893565048668,
+          &quot;cell_quadrature_relative_change&quot;: 0.0004060394430266711,
+          &quot;point_error_T&quot;: [
+            2.086679128201829e-07,
+            2.0866791320083424e-07,
+            -3.624942488054587e-07
+          ],
+          &quot;cell_error_T&quot;: [
+            1.0695949065279485e-08,
+            1.0695949445930824e-08,
+            -3.621891468246136e-07
+          ],
+          &quot;sampling_error_T&quot;: [
+            1.9797196375490342e-07,
+            1.9797196375490342e-07,
+            -3.051019808450922e-10
+          ]
+        },
+        {
+          &quot;point_m&quot;: [
+            0.53,
+            0.52,
+            0.54
+          ],
+          &quot;incident_cells&quot;: 1,
+          &quot;fem_B_T&quot;: [
+            1.4109628714009363e-07,
+            1.4109628768763222e-07,
+            2.7117070874359338e-06
+          ],
+          &quot;point_reference_B_T&quot;: [
+            1.8571693409854132e-07,
+            1.2003261908197666e-07,
+            4.042057051585103e-06
+          ],
+          &quot;cell_reference_B_T&quot;: [
+            7.154367257524254e-07,
+            2.626055170391141e-07,
+            3.496935048890226e-06
+          ],
+          &quot;point_relative_disagreement&quot;: 0.328861512215616,
+          &quot;cell_relative_disagreement&quot;: 0.2421914252337702,
+          &quot;sampling_relative_difference&quot;: 0.19104303474381007,
+          &quot;cell_quadrature_relative_change&quot;: 0.003940658832745831,
+          &quot;point_error_T&quot;: [
+            -4.462064695844769e-08,
+            2.1063668605655552e-08,
+            -1.3303499641491695e-06
+          ],
+          &quot;cell_error_T&quot;: [
+            -5.743404386123318e-07,
+            -1.215092293514819e-07,
+            -7.852279614542924e-07
+          ],
+          &quot;sampling_error_T&quot;: [
+            5.297197916538841e-07,
+            1.4257289795713745e-07,
+            -5.451220026948771e-07
+          ]
+        },
+        {
+          &quot;point_m&quot;: [
+            0.47,
+            0.48,
+            0.46
+          ],
+          &quot;incident_cells&quot;: 1,
+          &quot;fem_B_T&quot;: [
+            1.4109628841636365e-07,
+            1.4109628715088274e-07,
+            2.7117070876129382e-06
+          ],
+          &quot;point_reference_B_T&quot;: [
+            1.8571693409854134e-07,
+            1.2003261908197648e-07,
+            4.0420570515850964e-06
+          ],
+          &quot;cell_reference_B_T&quot;: [
+            7.240248470443869e-07,
+            2.6399836217684144e-07,
+            3.4940837328310045e-06
+          ],
+          &quot;point_relative_disagreement&quot;: 0.3288615121592544,
+          &quot;cell_relative_disagreement&quot;: 0.242922209579009,
+          &quot;sampling_relative_difference&quot;: 0.19305885300522962,
+          &quot;cell_quadrature_relative_change&quot;: 0.0016376508392756115,
+          &quot;point_error_T&quot;: [
+            -4.46206456821777e-08,
+            2.106366806890626e-08,
+            -1.3303499639721582e-06
+          ],
+          &quot;cell_error_T&quot;: [
+            -5.829285586280233e-07,
+            -1.229020750259587e-07,
+            -7.823766452180663e-07
+          ],
+          &quot;sampling_error_T&quot;: [
+            5.383079129458455e-07,
+            1.4396574309486496e-07,
+            -5.479733187540919e-07
+          ]
+        }
+      ],
+      &quot;stats&quot;: {
+        &quot;mode&quot;: &quot;3d&quot;,
+        &quot;nodes&quot;: 1331,
+        &quot;elements&quot;: 6000,
+        &quot;dofs&quot;: 5401,
+        &quot;peak_B_T&quot;: 4.5060129884804776e-06,
+        &quot;energy_J&quot;: 7.238776215106099e-08,
+        &quot;seconds&quot;: 1.2988971319999791,
+        &quot;solver&quot;: {
+          &quot;iterations&quot;: 449,
+          &quot;residual&quot;: 9.675763246868056e-10,
+          &quot;backend&quot;: &quot;PCG / installed SciPy matvec&quot;,
+          &quot;seconds&quot;: 0.9686957780000398,
+          &quot;nonlinear_iterations&quot;: 0,
+          &quot;gauge_residual&quot;: 1.7966289581383417e-09
+        },
+        &quot;energy_consistency&quot;: 6.03349724386487e-14,
+        &quot;reciprocity&quot;: null,
+        &quot;nonlinear&quot;: false,
+        &quot;mesh_quality&quot;: {
+          &quot;smallest_axis_interval_m&quot;: 0.09999999999999998,
+          &quot;largest_cell_axis_aspect_ratio&quot;: 1.000000000000001
+        }
+      }
+    },
+    {
+      &quot;interval_factor&quot;: 4,
+      &quot;elements&quot;: 48000,
+      &quot;nodes&quot;: 9261,
+      &quot;seconds&quot;: 42.86499350700001,
+      &quot;mesh_sha256&quot;: &quot;4a0813e4c99c3d594565b8db73a19b7ca6cdd253fee441dbbd0da695c6f1ac93&quot;,
+      &quot;project&quot;: {
+        &quot;version&quot;: &quot;0.2&quot;,
+        &quot;name&quot;: &quot;Air-core sheet solenoid \u00b7 3D&quot;,
+        &quot;mode&quot;: &quot;3d&quot;,
+        &quot;domain&quot;: {
+          &quot;width&quot;: 1,
+          &quot;height&quot;: 1,
+          &quot;depth&quot;: 1,
+          &quot;nx&quot;: 4,
+          &quot;ny&quot;: 4,
+          &quot;nz&quot;: 4,
+          &quot;budget&quot;: &quot;extended&quot;
+        },
+        &quot;materials&quot;: [
+          {
+            &quot;id&quot;: &quot;air&quot;,
+            &quot;name&quot;: &quot;Air / insulation&quot;,
+            &quot;mu_r&quot;: 1,
+            &quot;color&quot;: &quot;#71829a&quot;
+          },
+          {
+            &quot;id&quot;: &quot;copper&quot;,
+            &quot;name&quot;: &quot;Copper (magnetic model)&quot;,
+            &quot;mu_r&quot;: 1,
+            &quot;color&quot;: &quot;#d9924d&quot;
+          },
+          {
+            &quot;id&quot;: &quot;core&quot;,
+            &quot;name&quot;: &quot;Linear ferrite \u00b7 \u03bcr 2000&quot;,
+            &quot;mu_r&quot;: 2000,
+            &quot;color&quot;: &quot;#637389&quot;
+          }
+        ],
+        &quot;regions&quot;: [],
+        &quot;windings&quot;: [
+          {
+            &quot;id&quot;: &quot;coil&quot;,
+            &quot;name&quot;: &quot;coil&quot;,
+            &quot;turns&quot;: 1,
+            &quot;current&quot;: 1,
+            &quot;window&quot;: {
+              &quot;x0&quot;: 0.4,
+              &quot;x1&quot;: 0.6,
+              &quot;y0&quot;: 0.4,
+              &quot;y1&quot;: 0.6,
+              &quot;z0&quot;: 0.4,
+              &quot;z1&quot;: 0.6
+            }
+          }
+        ]
+      },
+      &quot;observations&quot;: [
+        {
+          &quot;point_m&quot;: [
+            0.5,
+            0.5,
+            0.5
+          ],
+          &quot;incident_cells&quot;: 24,
+          &quot;fem_B_T&quot;: [
+            5.098407507783991e-08,
+            5.098407479136867e-08,
+            4.075301276832759e-06
+          ],
+          &quot;point_reference_B_T&quot;: [
+            0.0,
+            0.0,
+            4.188798035594791e-06
+          ],
+          &quot;cell_reference_B_T&quot;: [
+            4.75746784917307e-08,
+            4.75746784917307e-08,
+            4.1887981417627425e-06
+          ],
+          &quot;point_relative_disagreement&quot;: 0.032100587962132755,
+          &quot;cell_relative_disagreement&quot;: 0.02711976910390908,
+          &quot;sampling_relative_difference&quot;: 0.016062067203265227,
+          &quot;cell_quadrature_relative_change&quot;: 5.5846367170773054e-05,
+          &quot;point_error_T&quot;: [
+            5.098407507783991e-08,
+            5.098407479136867e-08,
+            -1.1349675876203165e-07
+          ],
+          &quot;cell_error_T&quot;: [
+            3.4093965861092072e-09,
+            3.409396299637966e-09,
+            -1.1349686492998321e-07
+          ],
+          &quot;sampling_error_T&quot;: [
+            4.75746784917307e-08,
+            4.75746784917307e-08,
+            1.0616795155960358e-13
+          ]
+        },
+        {
+          &quot;point_m&quot;: [
+            0.53,
+            0.52,
+            0.54
+          ],
+          &quot;incident_cells&quot;: 1,
+          &quot;fem_B_T&quot;: [
+            4.100243078446429e-08,
+            4.1002430582163234e-08,
+            3.82812696124811e-06
+          ],
+          &quot;point_reference_B_T&quot;: [
+            1.8571693409854132e-07,
+            1.2003261908197666e-07,
+            4.042057051585103e-06
+          ],
+          &quot;cell_reference_B_T&quot;: [
+            1.5518141971087966e-07,
+            7.443028881586272e-08,
+            4.0348172068548365e-06
+          ],
+          &quot;point_relative_disagreement&quot;: 0.06672269946500725,
+          &quot;cell_relative_disagreement&quot;: 0.058912818221600695,
+          &quot;sampling_relative_difference&quot;: 0.013674824146013042,
+          &quot;cell_quadrature_relative_change&quot;: 0.0004392317227731174,
+          &quot;point_error_T&quot;: [
+            -1.4471450331407702e-07,
+            -7.903018849981342e-08,
+            -2.139300903369932e-07
+          ],
+          &quot;cell_error_T&quot;: [
+            -1.1417898892641537e-07,
+            -3.342785823369948e-08,
+            -2.0669024560672647e-07
+          ],
+          &quot;sampling_error_T&quot;: [
+            -3.053551438766166e-08,
+            -4.560233026611395e-08,
+            -7.239844730266723e-09
+          ]
+        },
+        {
+          &quot;point_m&quot;: [
+            0.47,
+            0.48,
+            0.46
+          ],
+          &quot;incident_cells&quot;: 1,
+          &quot;fem_B_T&quot;: [
+            4.1002430920510955e-08,
+            4.100243023204405e-08,
+            3.82812696162468e-06
+          ],
+          &quot;point_reference_B_T&quot;: [
+            1.8571693409854134e-07,
+            1.2003261908197648e-07,
+            4.0420570515850964e-06
+          ],
+          &quot;cell_reference_B_T&quot;: [
+            1.5602631654159118e-07,
+            7.487148670126478e-08,
+            4.0346130119163e-06
+          ],
+          &quot;point_relative_disagreement&quot;: 0.06672269939862778,
+          &quot;cell_relative_disagreement&quot;: 0.05898475156426144,
+          &quot;sampling_relative_difference&quot;: 0.013477201028758382,
+          &quot;cell_quadrature_relative_change&quot;: 0.00029133935577151993,
+          &quot;point_error_T&quot;: [
+            -1.447145031780304e-07,
+            -7.903018884993243e-08,
+            -2.1393008996041674e-07
+          ],
+          &quot;cell_error_T&quot;: [
+            -1.1502388562108023e-07,
+            -3.386905646922073e-08,
+            -2.0648605029162038e-07
+          ],
+          &quot;sampling_error_T&quot;: [
+            -2.9690617556950167e-08,
+            -4.5161132380711696e-08,
+            -7.444039668796363e-09
+          ]
+        }
+      ],
+      &quot;stats&quot;: {
+        &quot;mode&quot;: &quot;3d&quot;,
+        &quot;nodes&quot;: 9261,
+        &quot;elements&quot;: 48000,
+        &quot;dofs&quot;: 45601,
+        &quot;peak_B_T&quot;: 4.991354404152575e-06,
+        &quot;energy_J&quot;: 7.929588328711035e-08,
+        &quot;seconds&quot;: 30.672467284999982,
+        &quot;solver&quot;: {
+          &quot;iterations&quot;: 1181,
+          &quot;residual&quot;: 9.965551015073462e-10,
+          &quot;backend&quot;: &quot;PCG / installed SciPy matvec&quot;,
+          &quot;seconds&quot;: 27.842374307,
+          &quot;nonlinear_iterations&quot;: 0,
+          &quot;gauge_residual&quot;: 2.5587461358025942e-09
+        },
+        &quot;energy_consistency&quot;: 1.8359564428106627e-15,
+        &quot;reciprocity&quot;: null,
+        &quot;nonlinear&quot;: false,
+        &quot;mesh_quality&quot;: {
+          &quot;smallest_axis_interval_m&quot;: 0.04999999999999993,
+          &quot;largest_cell_axis_aspect_ratio&quot;: 1.0000000000000022
+        }
+      }
+    }
+  ],
+  &quot;volume_cubature_levels&quot;: [
+    8,
+    16
+  ],
+  &quot;axial_quadrature_points&quot;: 256,
+  &quot;limits&quot;: &quot;Free-space versus closed-box fields; cell residual includes boundary, FE/source representation and quadrature. No certified bound, finite copper, core, AC, Maxwell/hardware or new runtime qualification.&quot;
+}</pre><h2>All 109 added executable lines individually explained</h2><h3>verification/verify_cell_projection_s006.py</h3><p>SHA256 9e2e0a79a2556bc0c1a5c3599e633a97b841568a82b9d4dad1fb65e7445561f3</p><table><tr><td>2</td><td><code>import hashlib,json,math,sys,time  </code></td><td> Record exact inputs, vector magnitudes and actual solve timing without changing runtime code.</td></tr><tr><td>3</td><td><code>import numpy as np  </code></td><td> Use the already-installed numerical package only to accelerate development-reference quadrature.</td></tr><tr><td>4</td><td><code>from pathlib import Path  </code></td><td> Resolve the explicitly selected preceding source checkout.</td></tr><tr><td>5</td><td><code>ROOT=Path(sys.argv[1]).resolve();sys.path.insert(0,str(ROOT))  </code></td><td> Bind all FEM calls to the source whose digest is reported.</td></tr><tr><td>6</td><td><code>from engine.project import validate  </code></td><td> Preserve original physical schema and current conventions.</td></tr><tr><td>7</td><td><code>from engine.mesh import build_mesh,tetra_geometry,dot,sub,cross  </code></td><td> Inspect actual tetrahedral geometry and containing cells.</td></tr><tr><td>8</td><td><code>from engine.analysis import _solve_on_mesh  </code></td><td> Execute unchanged reference spatial assembly and field extraction.</td></tr><tr><td>9</td><td><code>MU0=4*math.pi*1e-7  </code></td><td> Use air permeability in henries per metre for both independent references.</td></tr><tr><td>11</td><td><code>def reference(point,n=128):  </code></td><td> Integrate sheet height numerically while evaluating each finite directed side analytically.</td></tr><tr><td>12</td><td><code>    result=[0.,0.,0.];corners=[(.4,.4),(.6,.4),(.6,.6),(.4,.6)]  </code></td><td> Keep the same positive-z unit-turn closed rectangular source and full return path as S005.</td></tr><tr><td>13</td><td><code>    for iz in range(n):  </code></td><td> Independently midpoint-integrate the uniform turn distribution along its0.2m axial height.</td></tr><tr><td>14</td><td><code>        z=.4+.2*(iz+.5)/n  </code></td><td> Use physical source positions in the original unshifted coordinate frame.</td></tr><tr><td>15</td><td><code>        for start,end in zip(corners,corners[1:]+corners[:1]):  </code></td><td> Include all four directed straight current sides.</td></tr><tr><td>16</td><td><code>            u=(start[0]-point[0],start[1]-point[1],z-point[2]);v=(end[0]-point[0],end[1]-point[1],z-point[2]);a=math.sqrt(dot(u,u));b=math.sqrt(dot(v,v));c=cross(u,v);den=a*b*(a*b+dot(u,v))  </code></td><td> Form the exact finite-segment Biot–Savart endpoint geometry.</td></tr><tr><td>17</td><td><code>            if den&lt;=0:raise ValueError(&#x27;Observation on a singular source line&#x27;)  </code></td><td> Reject undefined singular evaluations rather than clamp an infinite field.</td></tr><tr><td>18</td><td><code>            for k in range(3):result[k]+=MU0/(4*math.pi*n)*c[k]*(a+b)/den  </code></td><td> Sum exact side integrals with unit current and uniform unit total turns.</td></tr><tr><td>19</td><td><code>    return result  </code></td><td> Return the full free-space vector B in tesla.</td></tr><tr><td>21</td><td><code>def norm(v):  </code></td><td> Keep vector comparisons independent of signed component cancellation.</td></tr><tr><td>22</td><td><code>    return math.sqrt(dot(v,v))  </code></td><td> Evaluate Euclidean tesla magnitude.</td></tr><tr><td>24</td><td><code>def reference_batch(points,n=256):  </code></td><td> Independently vectorize the exact finite-side expression and axial midpoint rule for bounded point batches.</td></tr><tr><td>25</td><td><code>    out=[];corners=[(.4,.4),(.6,.4),(.6,.6),(.4,.6)];zs=.4+.2*(np.arange(n)+.5)/n  </code></td><td> Preserve original source geometry, orientation and unit total turns.</td></tr><tr><td>26</td><td><code>    for start_index in range(0,len(points),128):  </code></td><td> Bound temporary allocation independently of the full cubature size.</td></tr><tr><td>27</td><td><code>        p=np.asarray(points[start_index:start_index+128],dtype=float)[:,None,:];result=np.zeros((len(p),n,3))  </code></td><td> Allocate only a bounded observation-by-height vector array.</td></tr><tr><td>28</td><td><code>        for start,end in zip(corners,corners[1:]+corners[:1]):  </code></td><td> Include every active and return side with exact directed endpoint geometry.</td></tr><tr><td>29</td><td><code>            a=np.zeros((len(p),n,3));b=np.zeros_like(a);a[:,:,0]=start[0];a[:,:,1]=start[1];b[:,:,0]=end[0];b[:,:,1]=end[1];a[:,:,2]=zs;b[:,:,2]=zs;a-=p;b-=p  </code></td><td> Construct source-endpoint minus observation vectors for all bounded quadrature pairs.</td></tr><tr><td>30</td><td><code>            ra=np.linalg.norm(a,axis=2);rb=np.linalg.norm(b,axis=2);den=ra*rb*(ra*rb+np.sum(a*b,axis=2))  </code></td><td> Evaluate the exact finite-wire distance denominator without modifying singular physics.</td></tr><tr><td>31</td><td><code>            if np.any(den&lt;=0):raise ValueError(&#x27;Singular batch observation&#x27;)  </code></td><td> Refuse an undefined reference rather than invent a finite clamped field.</td></tr><tr><td>32</td><td><code>            result+=np.cross(a,b)*((ra+rb)/den)[:,:,None]  </code></td><td> Accumulate the full signed finite-segment vector contribution.</td></tr><tr><td>33</td><td><code>        out.extend((MU0/(4*math.pi*n)*np.sum(result,axis=1)).tolist())  </code></td><td> Integrate unit current uniformly over the source height and retain all three tesla components.</td></tr><tr><td>34</td><td><code>    return out  </code></td><td> Return bounded-batch evaluations in exactly the supplied point order.</td></tr><tr><td>36</td><td><code>def cell_reference(vertices,level):  </code></td><td> Approximate a tetrahedron-volume mean with nested deterministic midpoint cubature.</td></tr><tr><td>37</td><td><code>    points=[];weights=[]  </code></td><td> Retain physical quadrature positions and exact Duffy-transform weights separately.</td></tr><tr><td>38</td><td><code>    for i in range(level):  </code></td><td> Resolve the first unit-cube coordinate of the tetrahedral transform.</td></tr><tr><td>39</td><td><code>        u=(i+.5)/level  </code></td><td> Use interior quadrature positions, avoiding element-boundary coincidences.</td></tr><tr><td>40</td><td><code>        for j in range(level):  </code></td><td> Resolve the second transformed coordinate independently.</td></tr><tr><td>41</td><td><code>            v=(j+.5)/level  </code></td><td> Use midpoint evaluation throughout the unit cube.</td></tr><tr><td>42</td><td><code>            for k in range(level):  </code></td><td> Resolve the third transformed coordinate.</td></tr><tr><td>43</td><td><code>                w=(k+.5)/level;l=[1-u,u*(1-v),u*v*(1-w),u*v*w];points.append([sum(l[t]*vertices[t][d] for t in range(4)) for d in range(3)]);weights.append(u*u*v)  </code></td><td> Map to physical coordinates with barycentric weights and Jacobian u²v.</td></tr><tr><td>44</td><td><code>    values=np.asarray(reference_batch(points));return (np.sum(values*np.asarray(weights)[:,None],axis=0)/sum(weights)).tolist()  </code></td><td> Normalize the independent signed vector integral explicitly to a volume mean.</td></tr><tr><td>46</td><td><code>old=json.loads((ROOT/&#x27;sample_results/local_field_s005/results.json&#x27;).read_text());probes=old[&#x27;probes_m&#x27;];point_reference=[reference(p,256) for p in probes]  </code></td><td> Retain the preceding exact physical probes and refine the independent axial quadrature.</td></tr><tr><td>47</td><td><code>batch=reference_batch(probes);assert max(norm(sub(a,b))/norm(a) for a,b in zip(batch,point_reference))&lt;1e-12  </code></td><td> Check optimized batch evaluation against the independent scalar implementation at every physical probe.</td></tr><tr><td>48</td><td><code>segment_checks=[norm(sub(a,b))/norm(a) for a,b in zip(point_reference,old[&#x27;free_space_B_T&#x27;])];assert max(segment_checks)&lt;.001  </code></td><td> Cross-check exact-side integration against S005&#x27;s separately discretized side/height quadrature.</td></tr><tr><td>49</td><td><code>assert norm(sub(point_reference[1],point_reference[2]))/norm(point_reference[1])&lt;1e-10  </code></td><td> Enforce physical inversion symmetry independently of any FEM result.</td></tr><tr><td>50</td><td><code>base=old[&#x27;rows&#x27;][0][&#x27;project&#x27;];rows=[]  </code></td><td> Reuse the complete preceding air-only physical model, without adding magnetic material or changing currents.</td></tr><tr><td>51</td><td><code>for h in [1,2,4]:  </code></td><td> Compare genuinely nested meshes at the same1m closed exterior boundary.</td></tr><tr><td>52</td><td><code>    p=validate(base);p[&#x27;domain&#x27;][&#x27;budget&#x27;]=&#x27;extended&#x27;;mesh=build_mesh(p,interval_factor=h);started=time.perf_counter();solved=_solve_on_mesh(p,mesh,False);observations=[]  </code></td><td> Explicitly select the existing larger direct-QA memory budget; GUI study ceilings remain unchanged.</td></tr><tr><td>53</td><td><code>    for point,truth in zip(probes,point_reference):  </code></td><td> Compare point and cell-average observables at identical source-relative locations.</td></tr><tr><td>54</td><td><code>        ids=[];vertices=[]  </code></td><td> Identify every incident tetrahedron using actual mesh connectivity.</td></tr><tr><td>55</td><td><code>        for index,e in enumerate(mesh[&#x27;elements&#x27;]):  </code></td><td> Search actual solved cells, never use coordinates from another mesh.</td></tr><tr><td>56</td><td><code>            v=[mesh[&#x27;nodes&#x27;][n] for n in e];_,g=tetra_geometry(v);delta=sub(point,v[0]);lam=[1+dot(g[0],delta)]+[dot(x,delta) for x in g[1:]]  </code></td><td> Locate the physical point with independent barycentric containment.</td></tr><tr><td>57</td><td><code>            if min(lam)&gt;=-1e-10 and max(lam)&lt;=1+1e-10:ids.append(index);vertices.append(v)  </code></td><td> Preserve all incident traces under the same explicit averaging convention as S005.</td></tr><tr><td>58</td><td><code>        assert ids  </code></td><td> Refuse an unresolved or exterior probe.</td></tr><tr><td>59</td><td><code>        fem=[sum(solved[&#x27;fields&#x27;][&#x27;B&#x27;][i][d] for i in ids)/len(ids) for d in range(3)];averages=[]  </code></td><td> Define the actual piecewise-constant FEM observable before comparing it with a smooth reference.</td></tr><tr><td>60</td><td><code>        for level in [8,16]:  </code></td><td> Measure empirical tetrahedral-volume quadrature sensitivity separately.</td></tr><tr><td>61</td><td><code>            vals=[cell_reference(v,level) for v in vertices];averages.append([sum(x[d] for x in vals)/len(vals) for d in range(3)])  </code></td><td> Average exact reference cell means using the same incident-cell weights as the FEM sample.</td></tr><tr><td>62</td><td><code>        point_error=sub(fem,truth);cell_error=sub(fem,averages[1]);sampling_error=sub(averages[1],truth)  </code></td><td> Decompose the complete signed vector error without adding unrelated scalar percentages.</td></tr><tr><td>63</td><td><code>        assert norm(sub(point_error,[a+b for a,b in zip(cell_error,sampling_error)]))&lt;1e-18  </code></td><td> Verify the exported vector decomposition closes to floating-point tolerance.</td></tr><tr><td>64</td><td><code>        observations.append(dict(point_m=point,incident_cells=len(ids),fem_B_T=fem,point_reference_B_T=truth,cell_reference_B_T=averages[1],point_relative_disagreement=norm(point_error)/norm(truth),cell_relative_disagreement=norm(cell_error)/norm(truth),sampling_relative_difference=norm(sampling_error)/norm(truth),cell_quadrature_relative_change=norm(sub(*averages))/norm(truth),point_error_T=point_error,cell_error_T=cell_error,sampling_error_T=sampling_error))  </code></td><td> Retain all actual vectors and independently distinguish sampling, cell and cubature discrepancies.</td></tr><tr><td>65</td><td><code>    rows.append(dict(interval_factor=h,elements=len(mesh[&#x27;elements&#x27;]),nodes=len(mesh[&#x27;nodes&#x27;]),seconds=time.perf_counter()-started,mesh_sha256=hashlib.sha256(json.dumps({k:mesh[k] for k in [&#x27;nodes&#x27;,&#x27;elements&#x27;,&#x27;tags&#x27;]},sort_keys=True).encode()).hexdigest(),project=p,observations=observations,stats=solved[&#x27;stats&#x27;]));print(h,len(mesh[&#x27;elements&#x27;]),[(r[&#x27;point_relative_disagreement&#x27;],r[&#x27;cell_relative_disagreement&#x27;],r[&#x27;sampling_relative_difference&#x27;],r[&#x27;cell_quadrature_relative_change&#x27;]) for r in observations],flush=True)  </code></td><td> Preserve exact mesh/project identity and actual unresolved numerical results for each real solve.</td></tr><tr><td>66</td><td><code>Path(&#x27;s006/results.json&#x27;).write_text(json.dumps(dict(segment_crosscheck_relative=segment_checks,rows=rows,volume_cubature_levels=[8,16],axial_quadrature_points=256,limits=&#x27;Free-space versus closed-box fields; cell residual includes boundary, FE/source representation and quadrature. No certified bound, finite copper, core, AC, Maxwell/hardware or new runtime qualification.&#x27;),indent=2)+&#x27;\n&#x27;)  </code></td><td> Save complete real evidence without inventing an accuracy pass.</td></tr></table><h4>Complete exact source</h4><pre>&quot;&quot;&quot;S006: separate point sampling from cell-average discrepancy; verification only.&quot;&quot;&quot;
+import hashlib,json,math,sys,time  #: Record exact inputs, vector magnitudes and actual solve timing without changing runtime code.
+import numpy as np  #: Use the already-installed numerical package only to accelerate development-reference quadrature.
+from pathlib import Path  #: Resolve the explicitly selected preceding source checkout.
+ROOT=Path(sys.argv[1]).resolve();sys.path.insert(0,str(ROOT))  #: Bind all FEM calls to the source whose digest is reported.
+from engine.project import validate  #: Preserve original physical schema and current conventions.
+from engine.mesh import build_mesh,tetra_geometry,dot,sub,cross  #: Inspect actual tetrahedral geometry and containing cells.
+from engine.analysis import _solve_on_mesh  #: Execute unchanged reference spatial assembly and field extraction.
+MU0=4*math.pi*1e-7  #: Use air permeability in henries per metre for both independent references.
+
+def reference(point,n=128):  #: Integrate sheet height numerically while evaluating each finite directed side analytically.
+    result=[0.,0.,0.];corners=[(.4,.4),(.6,.4),(.6,.6),(.4,.6)]  #: Keep the same positive-z unit-turn closed rectangular source and full return path as S005.
+    for iz in range(n):  #: Independently midpoint-integrate the uniform turn distribution along its0.2m axial height.
+        z=.4+.2*(iz+.5)/n  #: Use physical source positions in the original unshifted coordinate frame.
+        for start,end in zip(corners,corners[1:]+corners[:1]):  #: Include all four directed straight current sides.
+            u=(start[0]-point[0],start[1]-point[1],z-point[2]);v=(end[0]-point[0],end[1]-point[1],z-point[2]);a=math.sqrt(dot(u,u));b=math.sqrt(dot(v,v));c=cross(u,v);den=a*b*(a*b+dot(u,v))  #: Form the exact finite-segment Biot–Savart endpoint geometry.
+            if den&lt;=0:raise ValueError(&#x27;Observation on a singular source line&#x27;)  #: Reject undefined singular evaluations rather than clamp an infinite field.
+            for k in range(3):result[k]+=MU0/(4*math.pi*n)*c[k]*(a+b)/den  #: Sum exact side integrals with unit current and uniform unit total turns.
+    return result  #: Return the full free-space vector B in tesla.
+
+def norm(v):  #: Keep vector comparisons independent of signed component cancellation.
+    return math.sqrt(dot(v,v))  #: Evaluate Euclidean tesla magnitude.
+
+def reference_batch(points,n=256):  #: Independently vectorize the exact finite-side expression and axial midpoint rule for bounded point batches.
+    out=[];corners=[(.4,.4),(.6,.4),(.6,.6),(.4,.6)];zs=.4+.2*(np.arange(n)+.5)/n  #: Preserve original source geometry, orientation and unit total turns.
+    for start_index in range(0,len(points),128):  #: Bound temporary allocation independently of the full cubature size.
+        p=np.asarray(points[start_index:start_index+128],dtype=float)[:,None,:];result=np.zeros((len(p),n,3))  #: Allocate only a bounded observation-by-height vector array.
+        for start,end in zip(corners,corners[1:]+corners[:1]):  #: Include every active and return side with exact directed endpoint geometry.
+            a=np.zeros((len(p),n,3));b=np.zeros_like(a);a[:,:,0]=start[0];a[:,:,1]=start[1];b[:,:,0]=end[0];b[:,:,1]=end[1];a[:,:,2]=zs;b[:,:,2]=zs;a-=p;b-=p  #: Construct source-endpoint minus observation vectors for all bounded quadrature pairs.
+            ra=np.linalg.norm(a,axis=2);rb=np.linalg.norm(b,axis=2);den=ra*rb*(ra*rb+np.sum(a*b,axis=2))  #: Evaluate the exact finite-wire distance denominator without modifying singular physics.
+            if np.any(den&lt;=0):raise ValueError(&#x27;Singular batch observation&#x27;)  #: Refuse an undefined reference rather than invent a finite clamped field.
+            result+=np.cross(a,b)*((ra+rb)/den)[:,:,None]  #: Accumulate the full signed finite-segment vector contribution.
+        out.extend((MU0/(4*math.pi*n)*np.sum(result,axis=1)).tolist())  #: Integrate unit current uniformly over the source height and retain all three tesla components.
+    return out  #: Return bounded-batch evaluations in exactly the supplied point order.
+
+def cell_reference(vertices,level):  #: Approximate a tetrahedron-volume mean with nested deterministic midpoint cubature.
+    points=[];weights=[]  #: Retain physical quadrature positions and exact Duffy-transform weights separately.
+    for i in range(level):  #: Resolve the first unit-cube coordinate of the tetrahedral transform.
+        u=(i+.5)/level  #: Use interior quadrature positions, avoiding element-boundary coincidences.
+        for j in range(level):  #: Resolve the second transformed coordinate independently.
+            v=(j+.5)/level  #: Use midpoint evaluation throughout the unit cube.
+            for k in range(level):  #: Resolve the third transformed coordinate.
+                w=(k+.5)/level;l=[1-u,u*(1-v),u*v*(1-w),u*v*w];points.append([sum(l[t]*vertices[t][d] for t in range(4)) for d in range(3)]);weights.append(u*u*v)  #: Map to physical coordinates with barycentric weights and Jacobian u²v.
+    values=np.asarray(reference_batch(points));return (np.sum(values*np.asarray(weights)[:,None],axis=0)/sum(weights)).tolist()  #: Normalize the independent signed vector integral explicitly to a volume mean.
+
+old=json.loads((ROOT/&#x27;sample_results/local_field_s005/results.json&#x27;).read_text());probes=old[&#x27;probes_m&#x27;];point_reference=[reference(p,256) for p in probes]  #: Retain the preceding exact physical probes and refine the independent axial quadrature.
+batch=reference_batch(probes);assert max(norm(sub(a,b))/norm(a) for a,b in zip(batch,point_reference))&lt;1e-12  #: Check optimized batch evaluation against the independent scalar implementation at every physical probe.
+segment_checks=[norm(sub(a,b))/norm(a) for a,b in zip(point_reference,old[&#x27;free_space_B_T&#x27;])];assert max(segment_checks)&lt;.001  #: Cross-check exact-side integration against S005&#x27;s separately discretized side/height quadrature.
+assert norm(sub(point_reference[1],point_reference[2]))/norm(point_reference[1])&lt;1e-10  #: Enforce physical inversion symmetry independently of any FEM result.
+base=old[&#x27;rows&#x27;][0][&#x27;project&#x27;];rows=[]  #: Reuse the complete preceding air-only physical model, without adding magnetic material or changing currents.
+for h in [1,2,4]:  #: Compare genuinely nested meshes at the same1m closed exterior boundary.
+    p=validate(base);p[&#x27;domain&#x27;][&#x27;budget&#x27;]=&#x27;extended&#x27;;mesh=build_mesh(p,interval_factor=h);started=time.perf_counter();solved=_solve_on_mesh(p,mesh,False);observations=[]  #: Explicitly select the existing larger direct-QA memory budget; GUI study ceilings remain unchanged.
+    for point,truth in zip(probes,point_reference):  #: Compare point and cell-average observables at identical source-relative locations.
+        ids=[];vertices=[]  #: Identify every incident tetrahedron using actual mesh connectivity.
+        for index,e in enumerate(mesh[&#x27;elements&#x27;]):  #: Search actual solved cells, never use coordinates from another mesh.
+            v=[mesh[&#x27;nodes&#x27;][n] for n in e];_,g=tetra_geometry(v);delta=sub(point,v[0]);lam=[1+dot(g[0],delta)]+[dot(x,delta) for x in g[1:]]  #: Locate the physical point with independent barycentric containment.
+            if min(lam)&gt;=-1e-10 and max(lam)&lt;=1+1e-10:ids.append(index);vertices.append(v)  #: Preserve all incident traces under the same explicit averaging convention as S005.
+        assert ids  #: Refuse an unresolved or exterior probe.
+        fem=[sum(solved[&#x27;fields&#x27;][&#x27;B&#x27;][i][d] for i in ids)/len(ids) for d in range(3)];averages=[]  #: Define the actual piecewise-constant FEM observable before comparing it with a smooth reference.
+        for level in [8,16]:  #: Measure empirical tetrahedral-volume quadrature sensitivity separately.
+            vals=[cell_reference(v,level) for v in vertices];averages.append([sum(x[d] for x in vals)/len(vals) for d in range(3)])  #: Average exact reference cell means using the same incident-cell weights as the FEM sample.
+        point_error=sub(fem,truth);cell_error=sub(fem,averages[1]);sampling_error=sub(averages[1],truth)  #: Decompose the complete signed vector error without adding unrelated scalar percentages.
+        assert norm(sub(point_error,[a+b for a,b in zip(cell_error,sampling_error)]))&lt;1e-18  #: Verify the exported vector decomposition closes to floating-point tolerance.
+        observations.append(dict(point_m=point,incident_cells=len(ids),fem_B_T=fem,point_reference_B_T=truth,cell_reference_B_T=averages[1],point_relative_disagreement=norm(point_error)/norm(truth),cell_relative_disagreement=norm(cell_error)/norm(truth),sampling_relative_difference=norm(sampling_error)/norm(truth),cell_quadrature_relative_change=norm(sub(*averages))/norm(truth),point_error_T=point_error,cell_error_T=cell_error,sampling_error_T=sampling_error))  #: Retain all actual vectors and independently distinguish sampling, cell and cubature discrepancies.
+    rows.append(dict(interval_factor=h,elements=len(mesh[&#x27;elements&#x27;]),nodes=len(mesh[&#x27;nodes&#x27;]),seconds=time.perf_counter()-started,mesh_sha256=hashlib.sha256(json.dumps({k:mesh[k] for k in [&#x27;nodes&#x27;,&#x27;elements&#x27;,&#x27;tags&#x27;]},sort_keys=True).encode()).hexdigest(),project=p,observations=observations,stats=solved[&#x27;stats&#x27;]));print(h,len(mesh[&#x27;elements&#x27;]),[(r[&#x27;point_relative_disagreement&#x27;],r[&#x27;cell_relative_disagreement&#x27;],r[&#x27;sampling_relative_difference&#x27;],r[&#x27;cell_quadrature_relative_change&#x27;]) for r in observations],flush=True)  #: Preserve exact mesh/project identity and actual unresolved numerical results for each real solve.
+Path(&#x27;s006/results.json&#x27;).write_text(json.dumps(dict(segment_crosscheck_relative=segment_checks,rows=rows,volume_cubature_levels=[8,16],axial_quadrature_points=256,limits=&#x27;Free-space versus closed-box fields; cell residual includes boundary, FE/source representation and quadrature. No certified bound, finite copper, core, AC, Maxwell/hardware or new runtime qualification.&#x27;),indent=2)+&#x27;\n&#x27;)  #: Save complete real evidence without inventing an accuracy pass.
+</pre><h4>Exact added-file patch</h4><pre>--- /dev/null
++++ verification/verify_cell_projection_s006.py
+@@ -0,0 +1,66 @@
++&quot;&quot;&quot;S006: separate point sampling from cell-average discrepancy; verification only.&quot;&quot;&quot;
++import hashlib,json,math,sys,time  #: Record exact inputs, vector magnitudes and actual solve timing without changing runtime code.
++import numpy as np  #: Use the already-installed numerical package only to accelerate development-reference quadrature.
++from pathlib import Path  #: Resolve the explicitly selected preceding source checkout.
++ROOT=Path(sys.argv[1]).resolve();sys.path.insert(0,str(ROOT))  #: Bind all FEM calls to the source whose digest is reported.
++from engine.project import validate  #: Preserve original physical schema and current conventions.
++from engine.mesh import build_mesh,tetra_geometry,dot,sub,cross  #: Inspect actual tetrahedral geometry and containing cells.
++from engine.analysis import _solve_on_mesh  #: Execute unchanged reference spatial assembly and field extraction.
++MU0=4*math.pi*1e-7  #: Use air permeability in henries per metre for both independent references.
++
++def reference(point,n=128):  #: Integrate sheet height numerically while evaluating each finite directed side analytically.
++    result=[0.,0.,0.];corners=[(.4,.4),(.6,.4),(.6,.6),(.4,.6)]  #: Keep the same positive-z unit-turn closed rectangular source and full return path as S005.
++    for iz in range(n):  #: Independently midpoint-integrate the uniform turn distribution along its0.2m axial height.
++        z=.4+.2*(iz+.5)/n  #: Use physical source positions in the original unshifted coordinate frame.
++        for start,end in zip(corners,corners[1:]+corners[:1]):  #: Include all four directed straight current sides.
++            u=(start[0]-point[0],start[1]-point[1],z-point[2]);v=(end[0]-point[0],end[1]-point[1],z-point[2]);a=math.sqrt(dot(u,u));b=math.sqrt(dot(v,v));c=cross(u,v);den=a*b*(a*b+dot(u,v))  #: Form the exact finite-segment Biot–Savart endpoint geometry.
++            if den&lt;=0:raise ValueError(&#x27;Observation on a singular source line&#x27;)  #: Reject undefined singular evaluations rather than clamp an infinite field.
++            for k in range(3):result[k]+=MU0/(4*math.pi*n)*c[k]*(a+b)/den  #: Sum exact side integrals with unit current and uniform unit total turns.
++    return result  #: Return the full free-space vector B in tesla.
++
++def norm(v):  #: Keep vector comparisons independent of signed component cancellation.
++    return math.sqrt(dot(v,v))  #: Evaluate Euclidean tesla magnitude.
++
++def reference_batch(points,n=256):  #: Independently vectorize the exact finite-side expression and axial midpoint rule for bounded point batches.
++    out=[];corners=[(.4,.4),(.6,.4),(.6,.6),(.4,.6)];zs=.4+.2*(np.arange(n)+.5)/n  #: Preserve original source geometry, orientation and unit total turns.
++    for start_index in range(0,len(points),128):  #: Bound temporary allocation independently of the full cubature size.
++        p=np.asarray(points[start_index:start_index+128],dtype=float)[:,None,:];result=np.zeros((len(p),n,3))  #: Allocate only a bounded observation-by-height vector array.
++        for start,end in zip(corners,corners[1:]+corners[:1]):  #: Include every active and return side with exact directed endpoint geometry.
++            a=np.zeros((len(p),n,3));b=np.zeros_like(a);a[:,:,0]=start[0];a[:,:,1]=start[1];b[:,:,0]=end[0];b[:,:,1]=end[1];a[:,:,2]=zs;b[:,:,2]=zs;a-=p;b-=p  #: Construct source-endpoint minus observation vectors for all bounded quadrature pairs.
++            ra=np.linalg.norm(a,axis=2);rb=np.linalg.norm(b,axis=2);den=ra*rb*(ra*rb+np.sum(a*b,axis=2))  #: Evaluate the exact finite-wire distance denominator without modifying singular physics.
++            if np.any(den&lt;=0):raise ValueError(&#x27;Singular batch observation&#x27;)  #: Refuse an undefined reference rather than invent a finite clamped field.
++            result+=np.cross(a,b)*((ra+rb)/den)[:,:,None]  #: Accumulate the full signed finite-segment vector contribution.
++        out.extend((MU0/(4*math.pi*n)*np.sum(result,axis=1)).tolist())  #: Integrate unit current uniformly over the source height and retain all three tesla components.
++    return out  #: Return bounded-batch evaluations in exactly the supplied point order.
++
++def cell_reference(vertices,level):  #: Approximate a tetrahedron-volume mean with nested deterministic midpoint cubature.
++    points=[];weights=[]  #: Retain physical quadrature positions and exact Duffy-transform weights separately.
++    for i in range(level):  #: Resolve the first unit-cube coordinate of the tetrahedral transform.
++        u=(i+.5)/level  #: Use interior quadrature positions, avoiding element-boundary coincidences.
++        for j in range(level):  #: Resolve the second transformed coordinate independently.
++            v=(j+.5)/level  #: Use midpoint evaluation throughout the unit cube.
++            for k in range(level):  #: Resolve the third transformed coordinate.
++                w=(k+.5)/level;l=[1-u,u*(1-v),u*v*(1-w),u*v*w];points.append([sum(l[t]*vertices[t][d] for t in range(4)) for d in range(3)]);weights.append(u*u*v)  #: Map to physical coordinates with barycentric weights and Jacobian u²v.
++    values=np.asarray(reference_batch(points));return (np.sum(values*np.asarray(weights)[:,None],axis=0)/sum(weights)).tolist()  #: Normalize the independent signed vector integral explicitly to a volume mean.
++
++old=json.loads((ROOT/&#x27;sample_results/local_field_s005/results.json&#x27;).read_text());probes=old[&#x27;probes_m&#x27;];point_reference=[reference(p,256) for p in probes]  #: Retain the preceding exact physical probes and refine the independent axial quadrature.
++batch=reference_batch(probes);assert max(norm(sub(a,b))/norm(a) for a,b in zip(batch,point_reference))&lt;1e-12  #: Check optimized batch evaluation against the independent scalar implementation at every physical probe.
++segment_checks=[norm(sub(a,b))/norm(a) for a,b in zip(point_reference,old[&#x27;free_space_B_T&#x27;])];assert max(segment_checks)&lt;.001  #: Cross-check exact-side integration against S005&#x27;s separately discretized side/height quadrature.
++assert norm(sub(point_reference[1],point_reference[2]))/norm(point_reference[1])&lt;1e-10  #: Enforce physical inversion symmetry independently of any FEM result.
++base=old[&#x27;rows&#x27;][0][&#x27;project&#x27;];rows=[]  #: Reuse the complete preceding air-only physical model, without adding magnetic material or changing currents.
++for h in [1,2,4]:  #: Compare genuinely nested meshes at the same1m closed exterior boundary.
++    p=validate(base);p[&#x27;domain&#x27;][&#x27;budget&#x27;]=&#x27;extended&#x27;;mesh=build_mesh(p,interval_factor=h);started=time.perf_counter();solved=_solve_on_mesh(p,mesh,False);observations=[]  #: Explicitly select the existing larger direct-QA memory budget; GUI study ceilings remain unchanged.
++    for point,truth in zip(probes,point_reference):  #: Compare point and cell-average observables at identical source-relative locations.
++        ids=[];vertices=[]  #: Identify every incident tetrahedron using actual mesh connectivity.
++        for index,e in enumerate(mesh[&#x27;elements&#x27;]):  #: Search actual solved cells, never use coordinates from another mesh.
++            v=[mesh[&#x27;nodes&#x27;][n] for n in e];_,g=tetra_geometry(v);delta=sub(point,v[0]);lam=[1+dot(g[0],delta)]+[dot(x,delta) for x in g[1:]]  #: Locate the physical point with independent barycentric containment.
++            if min(lam)&gt;=-1e-10 and max(lam)&lt;=1+1e-10:ids.append(index);vertices.append(v)  #: Preserve all incident traces under the same explicit averaging convention as S005.
++        assert ids  #: Refuse an unresolved or exterior probe.
++        fem=[sum(solved[&#x27;fields&#x27;][&#x27;B&#x27;][i][d] for i in ids)/len(ids) for d in range(3)];averages=[]  #: Define the actual piecewise-constant FEM observable before comparing it with a smooth reference.
++        for level in [8,16]:  #: Measure empirical tetrahedral-volume quadrature sensitivity separately.
++            vals=[cell_reference(v,level) for v in vertices];averages.append([sum(x[d] for x in vals)/len(vals) for d in range(3)])  #: Average exact reference cell means using the same incident-cell weights as the FEM sample.
++        point_error=sub(fem,truth);cell_error=sub(fem,averages[1]);sampling_error=sub(averages[1],truth)  #: Decompose the complete signed vector error without adding unrelated scalar percentages.
++        assert norm(sub(point_error,[a+b for a,b in zip(cell_error,sampling_error)]))&lt;1e-18  #: Verify the exported vector decomposition closes to floating-point tolerance.
++        observations.append(dict(point_m=point,incident_cells=len(ids),fem_B_T=fem,point_reference_B_T=truth,cell_reference_B_T=averages[1],point_relative_disagreement=norm(point_error)/norm(truth),cell_relative_disagreement=norm(cell_error)/norm(truth),sampling_relative_difference=norm(sampling_error)/norm(truth),cell_quadrature_relative_change=norm(sub(*averages))/norm(truth),point_error_T=point_error,cell_error_T=cell_error,sampling_error_T=sampling_error))  #: Retain all actual vectors and independently distinguish sampling, cell and cubature discrepancies.
++    rows.append(dict(interval_factor=h,elements=len(mesh[&#x27;elements&#x27;]),nodes=len(mesh[&#x27;nodes&#x27;]),seconds=time.perf_counter()-started,mesh_sha256=hashlib.sha256(json.dumps({k:mesh[k] for k in [&#x27;nodes&#x27;,&#x27;elements&#x27;,&#x27;tags&#x27;]},sort_keys=True).encode()).hexdigest(),project=p,observations=observations,stats=solved[&#x27;stats&#x27;]));print(h,len(mesh[&#x27;elements&#x27;]),[(r[&#x27;point_relative_disagreement&#x27;],r[&#x27;cell_relative_disagreement&#x27;],r[&#x27;sampling_relative_difference&#x27;],r[&#x27;cell_quadrature_relative_change&#x27;]) for r in observations],flush=True)  #: Preserve exact mesh/project identity and actual unresolved numerical results for each real solve.
++Path(&#x27;s006/results.json&#x27;).write_text(json.dumps(dict(segment_crosscheck_relative=segment_checks,rows=rows,volume_cubature_levels=[8,16],axial_quadrature_points=256,limits=&#x27;Free-space versus closed-box fields; cell residual includes boundary, FE/source representation and quadrature. No certified bound, finite copper, core, AC, Maxwell/hardware or new runtime qualification.&#x27;),indent=2)+&#x27;\n&#x27;)  #: Save complete real evidence without inventing an accuracy pass.</pre><h3>verification/s006_preliminary.py</h3><p>SHA256 417044a7d4184b42b0859af01afa5b2a88d7daad6f01d80af822941d09c1bbd2</p><table><tr><td>2</td><td><code>import hashlib,json,math,sys,time  </code></td><td> Record exact inputs, vector magnitudes and actual solve timing without changing runtime code.</td></tr><tr><td>3</td><td><code>from pathlib import Path  </code></td><td> Resolve the explicitly selected preceding source checkout.</td></tr><tr><td>4</td><td><code>ROOT=Path(sys.argv[1]).resolve();sys.path.insert(0,str(ROOT))  </code></td><td> Bind all FEM calls to the source whose digest is reported.</td></tr><tr><td>5</td><td><code>from engine.project import validate  </code></td><td> Preserve original physical schema and current conventions.</td></tr><tr><td>6</td><td><code>from engine.mesh import build_mesh,tetra_geometry,dot,sub,cross  </code></td><td> Inspect actual tetrahedral geometry and containing cells.</td></tr><tr><td>7</td><td><code>from engine.analysis import _solve_on_mesh  </code></td><td> Execute unchanged reference spatial assembly and field extraction.</td></tr><tr><td>8</td><td><code>MU0=4*math.pi*1e-7  </code></td><td> Use air permeability in henries per metre for both independent references.</td></tr><tr><td>10</td><td><code>def reference(point,n=128):  </code></td><td> Integrate sheet height numerically while evaluating each finite directed side analytically.</td></tr><tr><td>11</td><td><code>    result=[0.,0.,0.];corners=[(.4,.4),(.6,.4),(.6,.6),(.4,.6)]  </code></td><td> Keep the same positive-z unit-turn closed rectangular source and full return path as S005.</td></tr><tr><td>12</td><td><code>    for iz in range(n):  </code></td><td> Independently midpoint-integrate the uniform turn distribution along its0.2m axial height.</td></tr><tr><td>13</td><td><code>        z=.4+.2*(iz+.5)/n  </code></td><td> Use physical source positions in the original unshifted coordinate frame.</td></tr><tr><td>14</td><td><code>        for start,end in zip(corners,corners[1:]+corners[:1]):  </code></td><td> Include all four directed straight current sides.</td></tr><tr><td>15</td><td><code>            u=(start[0]-point[0],start[1]-point[1],z-point[2]);v=(end[0]-point[0],end[1]-point[1],z-point[2]);a=math.sqrt(dot(u,u));b=math.sqrt(dot(v,v));c=cross(u,v);den=a*b*(a*b+dot(u,v))  </code></td><td> Form the exact finite-segment Biot–Savart endpoint geometry.</td></tr><tr><td>16</td><td><code>            if den&lt;=0:raise ValueError(&#x27;Observation on a singular source line&#x27;)  </code></td><td> Reject undefined singular evaluations rather than clamp an infinite field.</td></tr><tr><td>17</td><td><code>            for k in range(3):result[k]+=MU0/(4*math.pi*n)*c[k]*(a+b)/den  </code></td><td> Sum exact side integrals with unit current and uniform unit total turns.</td></tr><tr><td>18</td><td><code>    return result  </code></td><td> Return the full free-space vector B in tesla.</td></tr><tr><td>20</td><td><code>def norm(v):  </code></td><td> Keep vector comparisons independent of signed component cancellation.</td></tr><tr><td>21</td><td><code>    return math.sqrt(dot(v,v))  </code></td><td> Evaluate Euclidean tesla magnitude.</td></tr><tr><td>23</td><td><code>def cell_reference(vertices,level):  </code></td><td> Approximate a tetrahedron-volume mean with nested deterministic midpoint cubature.</td></tr><tr><td>24</td><td><code>    total=[0.,0.,0.];weight=0.  </code></td><td> Accumulate the Duffy-transformed tetrahedral integral and normalization.</td></tr><tr><td>25</td><td><code>    for i in range(level):  </code></td><td> Resolve the first unit-cube coordinate of the tetrahedral transform.</td></tr><tr><td>26</td><td><code>        u=(i+.5)/level  </code></td><td> Use interior quadrature positions, avoiding element-boundary coincidences.</td></tr><tr><td>27</td><td><code>        for j in range(level):  </code></td><td> Resolve the second transformed coordinate independently.</td></tr><tr><td>28</td><td><code>            v=(j+.5)/level  </code></td><td> Use midpoint evaluation throughout the unit cube.</td></tr><tr><td>29</td><td><code>            for k in range(level):  </code></td><td> Resolve the third transformed coordinate.</td></tr><tr><td>30</td><td><code>                w=(k+.5)/level;l=[1-u,u*(1-v),u*v*(1-w),u*v*w];jac=u*u*v;p=[sum(l[t]*vertices[t][d] for t in range(4)) for d in range(3)];b=reference(p)  </code></td><td> Map to barycentric coordinates with Jacobian u²v and independently evaluate physical free-space B.</td></tr><tr><td>31</td><td><code>                for d in range(3):total[d]+=jac*b[d]  </code></td><td> Integrate each signed vector component, not just its magnitude.</td></tr><tr><td>32</td><td><code>                weight+=jac  </code></td><td> Normalize the cubature explicitly to the cell-volume mean.</td></tr><tr><td>33</td><td><code>    return [v/weight for v in total]  </code></td><td> Return the reference constant field appropriate to an elementwise-constant observable.</td></tr><tr><td>35</td><td><code>old=json.loads((ROOT/&#x27;sample_results/local_field_s005/results.json&#x27;).read_text());probes=old[&#x27;probes_m&#x27;];point_reference=[reference(p,256) for p in probes]  </code></td><td> Retain the preceding exact physical probes and refine the independent axial quadrature.</td></tr><tr><td>36</td><td><code>segment_checks=[norm(sub(a,b))/norm(a) for a,b in zip(point_reference,old[&#x27;free_space_B_T&#x27;])];assert max(segment_checks)&lt;.001  </code></td><td> Cross-check exact-side integration against S005&#x27;s separately discretized side/height quadrature.</td></tr><tr><td>37</td><td><code>assert norm(sub(point_reference[1],point_reference[2]))/norm(point_reference[1])&lt;1e-10  </code></td><td> Enforce physical inversion symmetry independently of any FEM result.</td></tr><tr><td>38</td><td><code>base=old[&#x27;rows&#x27;][0][&#x27;project&#x27;];rows=[]  </code></td><td> Reuse the complete preceding air-only physical model, without adding magnetic material or changing currents.</td></tr><tr><td>39</td><td><code>for h in [1,2,4]:  </code></td><td> Compare genuinely nested meshes at the same1m closed exterior boundary.</td></tr><tr><td>40</td><td><code>    p=validate(base);p[&#x27;domain&#x27;][&#x27;budget&#x27;]=&#x27;extended&#x27;;mesh=build_mesh(p,interval_factor=h);started=time.perf_counter();solved=_solve_on_mesh(p,mesh,False);observations=[]  </code></td><td> Explicitly select the existing larger direct-QA memory budget; GUI study ceilings remain unchanged.</td></tr><tr><td>41</td><td><code>    for point,truth in zip(probes,point_reference):  </code></td><td> Compare point and cell-average observables at identical source-relative locations.</td></tr><tr><td>42</td><td><code>        ids=[];vertices=[]  </code></td><td> Identify every incident tetrahedron using actual mesh connectivity.</td></tr><tr><td>43</td><td><code>        for index,e in enumerate(mesh[&#x27;elements&#x27;]):  </code></td><td> Search actual solved cells, never use coordinates from another mesh.</td></tr><tr><td>44</td><td><code>            v=[mesh[&#x27;nodes&#x27;][n] for n in e];_,g=tetra_geometry(v);delta=sub(point,v[0]);lam=[1+dot(g[0],delta)]+[dot(x,delta) for x in g[1:]]  </code></td><td> Locate the physical point with independent barycentric containment.</td></tr><tr><td>45</td><td><code>            if min(lam)&gt;=-1e-10 and max(lam)&lt;=1+1e-10:ids.append(index);vertices.append(v)  </code></td><td> Preserve all incident traces under the same explicit averaging convention as S005.</td></tr><tr><td>46</td><td><code>        assert ids  </code></td><td> Refuse an unresolved or exterior probe.</td></tr><tr><td>47</td><td><code>        fem=[sum(solved[&#x27;fields&#x27;][&#x27;B&#x27;][i][d] for i in ids)/len(ids) for d in range(3)];averages=[]  </code></td><td> Define the actual piecewise-constant FEM observable before comparing it with a smooth reference.</td></tr><tr><td>48</td><td><code>        for level in [2,4]:  </code></td><td> Measure empirical tetrahedral-volume quadrature sensitivity separately.</td></tr><tr><td>49</td><td><code>            vals=[cell_reference(v,level) for v in vertices];averages.append([sum(x[d] for x in vals)/len(vals) for d in range(3)])  </code></td><td> Average exact reference cell means using the same incident-cell weights as the FEM sample.</td></tr><tr><td>50</td><td><code>        point_error=sub(fem,truth);cell_error=sub(fem,averages[1]);sampling_error=sub(averages[1],truth)  </code></td><td> Decompose the complete signed vector error without adding unrelated scalar percentages.</td></tr><tr><td>51</td><td><code>        assert norm(sub(point_error,[a+b for a,b in zip(cell_error,sampling_error)]))&lt;1e-18  </code></td><td> Verify the exported vector decomposition closes to floating-point tolerance.</td></tr><tr><td>52</td><td><code>        observations.append(dict(point_m=point,incident_cells=len(ids),fem_B_T=fem,point_reference_B_T=truth,cell_reference_B_T=averages[1],point_relative_disagreement=norm(point_error)/norm(truth),cell_relative_disagreement=norm(cell_error)/norm(truth),sampling_relative_difference=norm(sampling_error)/norm(truth),cell_quadrature_relative_change=norm(sub(*averages))/norm(truth),point_error_T=point_error,cell_error_T=cell_error,sampling_error_T=sampling_error))  </code></td><td> Retain all actual vectors and independently distinguish sampling, cell and cubature discrepancies.</td></tr><tr><td>53</td><td><code>    rows.append(dict(interval_factor=h,elements=len(mesh[&#x27;elements&#x27;]),nodes=len(mesh[&#x27;nodes&#x27;]),seconds=time.perf_counter()-started,mesh_sha256=hashlib.sha256(json.dumps({k:mesh[k] for k in [&#x27;nodes&#x27;,&#x27;elements&#x27;,&#x27;tags&#x27;]},sort_keys=True).encode()).hexdigest(),project=p,observations=observations,stats=solved[&#x27;stats&#x27;]));print(h,len(mesh[&#x27;elements&#x27;]),[(r[&#x27;point_relative_disagreement&#x27;],r[&#x27;cell_relative_disagreement&#x27;],r[&#x27;sampling_relative_difference&#x27;],r[&#x27;cell_quadrature_relative_change&#x27;]) for r in observations],flush=True)  </code></td><td> Preserve exact mesh/project identity and actual unresolved numerical results for each real solve.</td></tr><tr><td>54</td><td><code>Path(&#x27;s006/results.json&#x27;).write_text(json.dumps(dict(segment_crosscheck_relative=segment_checks,rows=rows,limits=&#x27;Free-space versus closed-box fields; cell residual includes boundary, FE/source representation and quadrature. No certified bound, finite copper, core, AC, Maxwell/hardware or new runtime qualification.&#x27;),indent=2)+&#x27;\n&#x27;)  </code></td><td> Save complete real evidence without inventing an accuracy pass.</td></tr></table><h4>Complete exact source</h4><pre>&quot;&quot;&quot;S006: separate point sampling from cell-average discrepancy; verification only.&quot;&quot;&quot;
+import hashlib,json,math,sys,time  #: Record exact inputs, vector magnitudes and actual solve timing without changing runtime code.
+from pathlib import Path  #: Resolve the explicitly selected preceding source checkout.
+ROOT=Path(sys.argv[1]).resolve();sys.path.insert(0,str(ROOT))  #: Bind all FEM calls to the source whose digest is reported.
+from engine.project import validate  #: Preserve original physical schema and current conventions.
+from engine.mesh import build_mesh,tetra_geometry,dot,sub,cross  #: Inspect actual tetrahedral geometry and containing cells.
+from engine.analysis import _solve_on_mesh  #: Execute unchanged reference spatial assembly and field extraction.
+MU0=4*math.pi*1e-7  #: Use air permeability in henries per metre for both independent references.
+
+def reference(point,n=128):  #: Integrate sheet height numerically while evaluating each finite directed side analytically.
+    result=[0.,0.,0.];corners=[(.4,.4),(.6,.4),(.6,.6),(.4,.6)]  #: Keep the same positive-z unit-turn closed rectangular source and full return path as S005.
+    for iz in range(n):  #: Independently midpoint-integrate the uniform turn distribution along its0.2m axial height.
+        z=.4+.2*(iz+.5)/n  #: Use physical source positions in the original unshifted coordinate frame.
+        for start,end in zip(corners,corners[1:]+corners[:1]):  #: Include all four directed straight current sides.
+            u=(start[0]-point[0],start[1]-point[1],z-point[2]);v=(end[0]-point[0],end[1]-point[1],z-point[2]);a=math.sqrt(dot(u,u));b=math.sqrt(dot(v,v));c=cross(u,v);den=a*b*(a*b+dot(u,v))  #: Form the exact finite-segment Biot–Savart endpoint geometry.
+            if den&lt;=0:raise ValueError(&#x27;Observation on a singular source line&#x27;)  #: Reject undefined singular evaluations rather than clamp an infinite field.
+            for k in range(3):result[k]+=MU0/(4*math.pi*n)*c[k]*(a+b)/den  #: Sum exact side integrals with unit current and uniform unit total turns.
+    return result  #: Return the full free-space vector B in tesla.
+
+def norm(v):  #: Keep vector comparisons independent of signed component cancellation.
+    return math.sqrt(dot(v,v))  #: Evaluate Euclidean tesla magnitude.
+
+def cell_reference(vertices,level):  #: Approximate a tetrahedron-volume mean with nested deterministic midpoint cubature.
+    total=[0.,0.,0.];weight=0.  #: Accumulate the Duffy-transformed tetrahedral integral and normalization.
+    for i in range(level):  #: Resolve the first unit-cube coordinate of the tetrahedral transform.
+        u=(i+.5)/level  #: Use interior quadrature positions, avoiding element-boundary coincidences.
+        for j in range(level):  #: Resolve the second transformed coordinate independently.
+            v=(j+.5)/level  #: Use midpoint evaluation throughout the unit cube.
+            for k in range(level):  #: Resolve the third transformed coordinate.
+                w=(k+.5)/level;l=[1-u,u*(1-v),u*v*(1-w),u*v*w];jac=u*u*v;p=[sum(l[t]*vertices[t][d] for t in range(4)) for d in range(3)];b=reference(p)  #: Map to barycentric coordinates with Jacobian u²v and independently evaluate physical free-space B.
+                for d in range(3):total[d]+=jac*b[d]  #: Integrate each signed vector component, not just its magnitude.
+                weight+=jac  #: Normalize the cubature explicitly to the cell-volume mean.
+    return [v/weight for v in total]  #: Return the reference constant field appropriate to an elementwise-constant observable.
+
+old=json.loads((ROOT/&#x27;sample_results/local_field_s005/results.json&#x27;).read_text());probes=old[&#x27;probes_m&#x27;];point_reference=[reference(p,256) for p in probes]  #: Retain the preceding exact physical probes and refine the independent axial quadrature.
+segment_checks=[norm(sub(a,b))/norm(a) for a,b in zip(point_reference,old[&#x27;free_space_B_T&#x27;])];assert max(segment_checks)&lt;.001  #: Cross-check exact-side integration against S005&#x27;s separately discretized side/height quadrature.
+assert norm(sub(point_reference[1],point_reference[2]))/norm(point_reference[1])&lt;1e-10  #: Enforce physical inversion symmetry independently of any FEM result.
+base=old[&#x27;rows&#x27;][0][&#x27;project&#x27;];rows=[]  #: Reuse the complete preceding air-only physical model, without adding magnetic material or changing currents.
+for h in [1,2,4]:  #: Compare genuinely nested meshes at the same1m closed exterior boundary.
+    p=validate(base);p[&#x27;domain&#x27;][&#x27;budget&#x27;]=&#x27;extended&#x27;;mesh=build_mesh(p,interval_factor=h);started=time.perf_counter();solved=_solve_on_mesh(p,mesh,False);observations=[]  #: Explicitly select the existing larger direct-QA memory budget; GUI study ceilings remain unchanged.
+    for point,truth in zip(probes,point_reference):  #: Compare point and cell-average observables at identical source-relative locations.
+        ids=[];vertices=[]  #: Identify every incident tetrahedron using actual mesh connectivity.
+        for index,e in enumerate(mesh[&#x27;elements&#x27;]):  #: Search actual solved cells, never use coordinates from another mesh.
+            v=[mesh[&#x27;nodes&#x27;][n] for n in e];_,g=tetra_geometry(v);delta=sub(point,v[0]);lam=[1+dot(g[0],delta)]+[dot(x,delta) for x in g[1:]]  #: Locate the physical point with independent barycentric containment.
+            if min(lam)&gt;=-1e-10 and max(lam)&lt;=1+1e-10:ids.append(index);vertices.append(v)  #: Preserve all incident traces under the same explicit averaging convention as S005.
+        assert ids  #: Refuse an unresolved or exterior probe.
+        fem=[sum(solved[&#x27;fields&#x27;][&#x27;B&#x27;][i][d] for i in ids)/len(ids) for d in range(3)];averages=[]  #: Define the actual piecewise-constant FEM observable before comparing it with a smooth reference.
+        for level in [2,4]:  #: Measure empirical tetrahedral-volume quadrature sensitivity separately.
+            vals=[cell_reference(v,level) for v in vertices];averages.append([sum(x[d] for x in vals)/len(vals) for d in range(3)])  #: Average exact reference cell means using the same incident-cell weights as the FEM sample.
+        point_error=sub(fem,truth);cell_error=sub(fem,averages[1]);sampling_error=sub(averages[1],truth)  #: Decompose the complete signed vector error without adding unrelated scalar percentages.
+        assert norm(sub(point_error,[a+b for a,b in zip(cell_error,sampling_error)]))&lt;1e-18  #: Verify the exported vector decomposition closes to floating-point tolerance.
+        observations.append(dict(point_m=point,incident_cells=len(ids),fem_B_T=fem,point_reference_B_T=truth,cell_reference_B_T=averages[1],point_relative_disagreement=norm(point_error)/norm(truth),cell_relative_disagreement=norm(cell_error)/norm(truth),sampling_relative_difference=norm(sampling_error)/norm(truth),cell_quadrature_relative_change=norm(sub(*averages))/norm(truth),point_error_T=point_error,cell_error_T=cell_error,sampling_error_T=sampling_error))  #: Retain all actual vectors and independently distinguish sampling, cell and cubature discrepancies.
+    rows.append(dict(interval_factor=h,elements=len(mesh[&#x27;elements&#x27;]),nodes=len(mesh[&#x27;nodes&#x27;]),seconds=time.perf_counter()-started,mesh_sha256=hashlib.sha256(json.dumps({k:mesh[k] for k in [&#x27;nodes&#x27;,&#x27;elements&#x27;,&#x27;tags&#x27;]},sort_keys=True).encode()).hexdigest(),project=p,observations=observations,stats=solved[&#x27;stats&#x27;]));print(h,len(mesh[&#x27;elements&#x27;]),[(r[&#x27;point_relative_disagreement&#x27;],r[&#x27;cell_relative_disagreement&#x27;],r[&#x27;sampling_relative_difference&#x27;],r[&#x27;cell_quadrature_relative_change&#x27;]) for r in observations],flush=True)  #: Preserve exact mesh/project identity and actual unresolved numerical results for each real solve.
+Path(&#x27;s006/results.json&#x27;).write_text(json.dumps(dict(segment_crosscheck_relative=segment_checks,rows=rows,limits=&#x27;Free-space versus closed-box fields; cell residual includes boundary, FE/source representation and quadrature. No certified bound, finite copper, core, AC, Maxwell/hardware or new runtime qualification.&#x27;),indent=2)+&#x27;\n&#x27;)  #: Save complete real evidence without inventing an accuracy pass.
+</pre><h4>Exact added-file patch</h4><pre>--- /dev/null
++++ verification/s006_preliminary.py
+@@ -0,0 +1,54 @@
++&quot;&quot;&quot;S006: separate point sampling from cell-average discrepancy; verification only.&quot;&quot;&quot;
++import hashlib,json,math,sys,time  #: Record exact inputs, vector magnitudes and actual solve timing without changing runtime code.
++from pathlib import Path  #: Resolve the explicitly selected preceding source checkout.
++ROOT=Path(sys.argv[1]).resolve();sys.path.insert(0,str(ROOT))  #: Bind all FEM calls to the source whose digest is reported.
++from engine.project import validate  #: Preserve original physical schema and current conventions.
++from engine.mesh import build_mesh,tetra_geometry,dot,sub,cross  #: Inspect actual tetrahedral geometry and containing cells.
++from engine.analysis import _solve_on_mesh  #: Execute unchanged reference spatial assembly and field extraction.
++MU0=4*math.pi*1e-7  #: Use air permeability in henries per metre for both independent references.
++
++def reference(point,n=128):  #: Integrate sheet height numerically while evaluating each finite directed side analytically.
++    result=[0.,0.,0.];corners=[(.4,.4),(.6,.4),(.6,.6),(.4,.6)]  #: Keep the same positive-z unit-turn closed rectangular source and full return path as S005.
++    for iz in range(n):  #: Independently midpoint-integrate the uniform turn distribution along its0.2m axial height.
++        z=.4+.2*(iz+.5)/n  #: Use physical source positions in the original unshifted coordinate frame.
++        for start,end in zip(corners,corners[1:]+corners[:1]):  #: Include all four directed straight current sides.
++            u=(start[0]-point[0],start[1]-point[1],z-point[2]);v=(end[0]-point[0],end[1]-point[1],z-point[2]);a=math.sqrt(dot(u,u));b=math.sqrt(dot(v,v));c=cross(u,v);den=a*b*(a*b+dot(u,v))  #: Form the exact finite-segment Biot–Savart endpoint geometry.
++            if den&lt;=0:raise ValueError(&#x27;Observation on a singular source line&#x27;)  #: Reject undefined singular evaluations rather than clamp an infinite field.
++            for k in range(3):result[k]+=MU0/(4*math.pi*n)*c[k]*(a+b)/den  #: Sum exact side integrals with unit current and uniform unit total turns.
++    return result  #: Return the full free-space vector B in tesla.
++
++def norm(v):  #: Keep vector comparisons independent of signed component cancellation.
++    return math.sqrt(dot(v,v))  #: Evaluate Euclidean tesla magnitude.
++
++def cell_reference(vertices,level):  #: Approximate a tetrahedron-volume mean with nested deterministic midpoint cubature.
++    total=[0.,0.,0.];weight=0.  #: Accumulate the Duffy-transformed tetrahedral integral and normalization.
++    for i in range(level):  #: Resolve the first unit-cube coordinate of the tetrahedral transform.
++        u=(i+.5)/level  #: Use interior quadrature positions, avoiding element-boundary coincidences.
++        for j in range(level):  #: Resolve the second transformed coordinate independently.
++            v=(j+.5)/level  #: Use midpoint evaluation throughout the unit cube.
++            for k in range(level):  #: Resolve the third transformed coordinate.
++                w=(k+.5)/level;l=[1-u,u*(1-v),u*v*(1-w),u*v*w];jac=u*u*v;p=[sum(l[t]*vertices[t][d] for t in range(4)) for d in range(3)];b=reference(p)  #: Map to barycentric coordinates with Jacobian u²v and independently evaluate physical free-space B.
++                for d in range(3):total[d]+=jac*b[d]  #: Integrate each signed vector component, not just its magnitude.
++                weight+=jac  #: Normalize the cubature explicitly to the cell-volume mean.
++    return [v/weight for v in total]  #: Return the reference constant field appropriate to an elementwise-constant observable.
++
++old=json.loads((ROOT/&#x27;sample_results/local_field_s005/results.json&#x27;).read_text());probes=old[&#x27;probes_m&#x27;];point_reference=[reference(p,256) for p in probes]  #: Retain the preceding exact physical probes and refine the independent axial quadrature.
++segment_checks=[norm(sub(a,b))/norm(a) for a,b in zip(point_reference,old[&#x27;free_space_B_T&#x27;])];assert max(segment_checks)&lt;.001  #: Cross-check exact-side integration against S005&#x27;s separately discretized side/height quadrature.
++assert norm(sub(point_reference[1],point_reference[2]))/norm(point_reference[1])&lt;1e-10  #: Enforce physical inversion symmetry independently of any FEM result.
++base=old[&#x27;rows&#x27;][0][&#x27;project&#x27;];rows=[]  #: Reuse the complete preceding air-only physical model, without adding magnetic material or changing currents.
++for h in [1,2,4]:  #: Compare genuinely nested meshes at the same1m closed exterior boundary.
++    p=validate(base);p[&#x27;domain&#x27;][&#x27;budget&#x27;]=&#x27;extended&#x27;;mesh=build_mesh(p,interval_factor=h);started=time.perf_counter();solved=_solve_on_mesh(p,mesh,False);observations=[]  #: Explicitly select the existing larger direct-QA memory budget; GUI study ceilings remain unchanged.
++    for point,truth in zip(probes,point_reference):  #: Compare point and cell-average observables at identical source-relative locations.
++        ids=[];vertices=[]  #: Identify every incident tetrahedron using actual mesh connectivity.
++        for index,e in enumerate(mesh[&#x27;elements&#x27;]):  #: Search actual solved cells, never use coordinates from another mesh.
++            v=[mesh[&#x27;nodes&#x27;][n] for n in e];_,g=tetra_geometry(v);delta=sub(point,v[0]);lam=[1+dot(g[0],delta)]+[dot(x,delta) for x in g[1:]]  #: Locate the physical point with independent barycentric containment.
++            if min(lam)&gt;=-1e-10 and max(lam)&lt;=1+1e-10:ids.append(index);vertices.append(v)  #: Preserve all incident traces under the same explicit averaging convention as S005.
++        assert ids  #: Refuse an unresolved or exterior probe.
++        fem=[sum(solved[&#x27;fields&#x27;][&#x27;B&#x27;][i][d] for i in ids)/len(ids) for d in range(3)];averages=[]  #: Define the actual piecewise-constant FEM observable before comparing it with a smooth reference.
++        for level in [2,4]:  #: Measure empirical tetrahedral-volume quadrature sensitivity separately.
++            vals=[cell_reference(v,level) for v in vertices];averages.append([sum(x[d] for x in vals)/len(vals) for d in range(3)])  #: Average exact reference cell means using the same incident-cell weights as the FEM sample.
++        point_error=sub(fem,truth);cell_error=sub(fem,averages[1]);sampling_error=sub(averages[1],truth)  #: Decompose the complete signed vector error without adding unrelated scalar percentages.
++        assert norm(sub(point_error,[a+b for a,b in zip(cell_error,sampling_error)]))&lt;1e-18  #: Verify the exported vector decomposition closes to floating-point tolerance.
++        observations.append(dict(point_m=point,incident_cells=len(ids),fem_B_T=fem,point_reference_B_T=truth,cell_reference_B_T=averages[1],point_relative_disagreement=norm(point_error)/norm(truth),cell_relative_disagreement=norm(cell_error)/norm(truth),sampling_relative_difference=norm(sampling_error)/norm(truth),cell_quadrature_relative_change=norm(sub(*averages))/norm(truth),point_error_T=point_error,cell_error_T=cell_error,sampling_error_T=sampling_error))  #: Retain all actual vectors and independently distinguish sampling, cell and cubature discrepancies.
++    rows.append(dict(interval_factor=h,elements=len(mesh[&#x27;elements&#x27;]),nodes=len(mesh[&#x27;nodes&#x27;]),seconds=time.perf_counter()-started,mesh_sha256=hashlib.sha256(json.dumps({k:mesh[k] for k in [&#x27;nodes&#x27;,&#x27;elements&#x27;,&#x27;tags&#x27;]},sort_keys=True).encode()).hexdigest(),project=p,observations=observations,stats=solved[&#x27;stats&#x27;]));print(h,len(mesh[&#x27;elements&#x27;]),[(r[&#x27;point_relative_disagreement&#x27;],r[&#x27;cell_relative_disagreement&#x27;],r[&#x27;sampling_relative_difference&#x27;],r[&#x27;cell_quadrature_relative_change&#x27;]) for r in observations],flush=True)  #: Preserve exact mesh/project identity and actual unresolved numerical results for each real solve.
++Path(&#x27;s006/results.json&#x27;).write_text(json.dumps(dict(segment_crosscheck_relative=segment_checks,rows=rows,limits=&#x27;Free-space versus closed-box fields; cell residual includes boundary, FE/source representation and quadrature. No certified bound, finite copper, core, AC, Maxwell/hardware or new runtime qualification.&#x27;),indent=2)+&#x27;\n&#x27;)  #: Save complete real evidence without inventing an accuracy pass.</pre><h2>run.log</h2><pre>1 750 [(0.32218419066701987, 0.3220563440695241, 0.0004763661785011526, 0.0010009396006986308), (0.41523630243038434, 0.3902528757846721, 0.11878452772247967, 0.005241964675724264), (0.4152363022472226, 0.3885874087867783, 0.1188929273440497, 0.0030984890680173494)]
+2 6000 [(0.11158942963716209, 0.08654150245205523, 0.06683893565048668, 0.0004060394430266711), (0.328861512215616, 0.2421914252337702, 0.19104303474381007, 0.003940658832745831), (0.3288615121592544, 0.242922209579009, 0.19305885300522962, 0.0016376508392756115)]
+4 48000 [(0.032100587962132755, 0.02711976910390908, 0.016062067203265227, 5.5846367170773054e-05), (0.06672269946500725, 0.058912818221600695, 0.013674824146013042, 0.0004392317227731174), (0.06672269939862778, 0.05898475156426144, 0.013477201028758382, 0.00029133935577151993)]
+</pre><h2>preliminary.log</h2><pre>1 750 [(0.32218419066701987, 0.3218170265441635, 0.004060388503879447, 0.0024791639930129734), (0.41523630243038434, 0.40171343267962323, 0.11801585437705937, 0.05123293041435109), (0.4152363022472226, 0.3774932990805292, 0.11822412875925108, 0.037927377273341084)]
+2 6000 [(0.11158942963716209, 0.08659815886684709, 0.06525424812916934, 0.002392951169233052), (0.328861512215616, 0.23926980747193913, 0.17575273080530382, 0.03746286432366907), (0.3288615121592544, 0.24682913956649988, 0.1992103849176749, 0.02351701575250346)]
+4 48000 [(0.032100587962132755, 0.02713771666050029, 0.01580214452178572, 0.0005026605724023472), (0.06672269946500725, 0.05854375985262831, 0.015386889739310787, 0.0068157995422734674), (0.06672269939862778, 0.059653378536434265, 0.0121622463413627, 0.005036126311744236)]
+</pre><h2>preliminary_results.json</h2><pre>{
+  &quot;segment_crosscheck_relative&quot;: [
+    1.3086280130432487e-05,
+    1.3788144251901659e-05,
+    1.378814424915959e-05
+  ],
+  &quot;rows&quot;: [
+    {
+      &quot;interval_factor&quot;: 1,
+      &quot;elements&quot;: 750,
+      &quot;nodes&quot;: 216,
+      &quot;seconds&quot;: 1.0106494699999757,
+      &quot;mesh_sha256&quot;: &quot;b4e17dbcbd4c99475583bb0586abf4f2694a6ea82126cc4301cc037bb396ad5d&quot;,
+      &quot;project&quot;: {
+        &quot;version&quot;: &quot;0.2&quot;,
+        &quot;name&quot;: &quot;Air-core sheet solenoid \u00b7 3D&quot;,
+        &quot;mode&quot;: &quot;3d&quot;,
+        &quot;domain&quot;: {
+          &quot;width&quot;: 1,
+          &quot;height&quot;: 1,
+          &quot;depth&quot;: 1,
+          &quot;nx&quot;: 4,
+          &quot;ny&quot;: 4,
+          &quot;nz&quot;: 4,
+          &quot;budget&quot;: &quot;extended&quot;
+        },
+        &quot;materials&quot;: [
+          {
+            &quot;id&quot;: &quot;air&quot;,
+            &quot;name&quot;: &quot;Air / insulation&quot;,
+            &quot;mu_r&quot;: 1,
+            &quot;color&quot;: &quot;#71829a&quot;
+          },
+          {
+            &quot;id&quot;: &quot;copper&quot;,
+            &quot;name&quot;: &quot;Copper (magnetic model)&quot;,
+            &quot;mu_r&quot;: 1,
+            &quot;color&quot;: &quot;#d9924d&quot;
+          },
+          {
+            &quot;id&quot;: &quot;core&quot;,
+            &quot;name&quot;: &quot;Linear ferrite \u00b7 \u03bcr 2000&quot;,
+            &quot;mu_r&quot;: 2000,
+            &quot;color&quot;: &quot;#637389&quot;
+          }
+        ],
+        &quot;regions&quot;: [],
+        &quot;windings&quot;: [
+          {
+            &quot;id&quot;: &quot;coil&quot;,
+            &quot;name&quot;: &quot;coil&quot;,
+            &quot;turns&quot;: 1,
+            &quot;current&quot;: 1,
+            &quot;window&quot;: {
+              &quot;x0&quot;: 0.4,
+              &quot;x1&quot;: 0.6,
+              &quot;y0&quot;: 0.4,
+              &quot;y1&quot;: 0.6,
+              &quot;z0&quot;: 0.4,
+              &quot;z1&quot;: 0.6
+            }
+          }
+        ]
+      },
+      &quot;observations&quot;: [
+        {
+          &quot;point_m&quot;: [
+            0.5,
+            0.5,
+            0.5
+          ],
+          &quot;incident_cells&quot;: 6,
+          &quot;fem_B_T&quot;: [
+            -8.185995954688336e-08,
+            -8.185995926656758e-08,
+            2.8442080433833356e-06
+          ],
+          &quot;point_reference_B_T&quot;: [
+            0.0,
+            0.0,
+            4.188798035594791e-06
+          ],
+          &quot;cell_reference_B_T&quot;: [
+            -1.2025856668246353e-08,
+            -1.202585666824638e-08,
+            4.188611970045057e-06
+          ],
+          &quot;point_relative_disagreement&quot;: 0.32218419066701987,
+          &quot;cell_relative_disagreement&quot;: 0.3218170265441635,
+          &quot;sampling_relative_difference&quot;: 0.004060388503879447,
+          &quot;cell_quadrature_relative_change&quot;: 0.0024791639930129734,
+          &quot;point_error_T&quot;: [
+            -8.185995954688336e-08,
+            -8.185995926656758e-08,
+            -1.3445899922114553e-06
+          ],
+          &quot;cell_error_T&quot;: [
+            -6.9834102878637e-08,
+            -6.98341025983212e-08,
+            -1.3444039266617215e-06
+          ],
+          &quot;sampling_error_T&quot;: [
+            -1.2025856668246353e-08,
+            -1.202585666824638e-08,
+            -1.8606554973388213e-10
+          ]
+        },
+        {
+          &quot;point_m&quot;: [
+            0.53,
+            0.52,
+            0.54
+          ],
+          &quot;incident_cells&quot;: 1,
+          &quot;fem_B_T&quot;: [
+            -3.8339637066990673e-07,
+            -3.833963706096267e-07,
+            2.5426716320054014e-06
+          ],
+          &quot;point_reference_B_T&quot;: [
+            1.8571693409854132e-07,
+            1.2003261908197666e-07,
+            4.042057051585103e-06
+          ],
+          &quot;cell_reference_B_T&quot;: [
+            1.1919275653869733e-07,
+            -3.5072947718206404e-07,
+            4.0888888066064495e-06
+          ],
+          &quot;point_relative_disagreement&quot;: 0.41523630243038434,
+          &quot;cell_relative_disagreement&quot;: 0.40171343267962323,
+          &quot;sampling_relative_difference&quot;: 0.11801585437705937,
+          &quot;cell_quadrature_relative_change&quot;: 0.05123293041435109,
+          &quot;point_error_T&quot;: [
+            -5.69113304768448e-07,
+            -5.034289896916034e-07,
+            -1.4993854195797019e-06
+          ],
+          &quot;cell_error_T&quot;: [
+            -5.02589127208604e-07,
+            -3.266689342756264e-08,
+            -1.5462171746010482e-06
+          ],
+          &quot;sampling_error_T&quot;: [
+            -6.652417755984399e-08,
+            -4.707620962640407e-07,
+            4.6831755021346306e-08
+          ]
+        },
+        {
+          &quot;point_m&quot;: [
+            0.47,
+            0.48,
+            0.46
+          ],
+          &quot;incident_cells&quot;: 1,
+          &quot;fem_B_T&quot;: [
+            -3.8339637065792434e-07,
+            -3.833963703880472e-07,
+            2.5426716327576797e-06
+          ],
+          &quot;point_reference_B_T&quot;: [
+            1.8571693409854134e-07,
+            1.2003261908197648e-07,
+            4.0420570515850964e-06
+          ],
+          &quot;cell_reference_B_T&quot;: [
+            1.9549193515535184e-07,
+            -3.507456585472795e-07,
+            3.956534044388994e-06
+          ],
+          &quot;point_relative_disagreement&quot;: 0.4152363022472226,
+          &quot;cell_relative_disagreement&quot;: 0.3774932990805292,
+          &quot;sampling_relative_difference&quot;: 0.11822412875925108,
+          &quot;cell_quadrature_relative_change&quot;: 0.037927377273341084,
+          &quot;point_error_T&quot;: [
+            -5.691133047564657e-07,
+            -5.034289894700237e-07,
+            -1.4993854188274168e-06
+          ],
+          &quot;cell_error_T&quot;: [
+            -5.788883058132762e-07,
+            -3.265071184076771e-08,
+            -1.4138624116313147e-06
+          ],
+          &quot;sampling_error_T&quot;: [
+            9.775001056810497e-09,
+            -4.70778277629256e-07,
+            -8.552300719610209e-08
+          ]
+        }
+      ],
+      &quot;stats&quot;: {
+        &quot;mode&quot;: &quot;3d&quot;,
+        &quot;nodes&quot;: 216,
+        &quot;elements&quot;: 750,
+        &quot;dofs&quot;: 601,
+        &quot;peak_B_T&quot;: 3.5252051094203464e-06,
+        &quot;energy_J&quot;: 5.688416086764287e-08,
+        &quot;seconds&quot;: 0.3498963850000223,
+        &quot;solver&quot;: {
+          &quot;iterations&quot;: 178,
+          &quot;residual&quot;: 8.530771357178941e-10,
+          &quot;backend&quot;: &quot;PCG / installed SciPy matvec&quot;,
+          &quot;seconds&quot;: 0.04322842499999524,
+          &quot;nonlinear_iterations&quot;: 0,
+          &quot;gauge_residual&quot;: 8.48623282198292e-10
+        },
+        &quot;energy_consistency&quot;: 4.185623271672424e-13,
+        &quot;reciprocity&quot;: null,
+        &quot;nonlinear&quot;: false,
+        &quot;mesh_quality&quot;: {
+          &quot;smallest_axis_interval_m&quot;: 0.19999999999999996,
+          &quot;largest_cell_axis_aspect_ratio&quot;: 1.0000000000000007
+        }
+      }
+    },
+    {
+      &quot;interval_factor&quot;: 2,
+      &quot;elements&quot;: 6000,
+      &quot;nodes&quot;: 1331,
+      &quot;seconds&quot;: 3.462621510999952,
+      &quot;mesh_sha256&quot;: &quot;24da238b0c6b0fff3b92a1fc2904c9e4ef2e627ff6fda97b6c93475d62c1a4a3&quot;,
+      &quot;project&quot;: {
+        &quot;version&quot;: &quot;0.2&quot;,
+        &quot;name&quot;: &quot;Air-core sheet solenoid \u00b7 3D&quot;,
+        &quot;mode&quot;: &quot;3d&quot;,
+        &quot;domain&quot;: {
+          &quot;width&quot;: 1,
+          &quot;height&quot;: 1,
+          &quot;depth&quot;: 1,
+          &quot;nx&quot;: 4,
+          &quot;ny&quot;: 4,
+          &quot;nz&quot;: 4,
+          &quot;budget&quot;: &quot;extended&quot;
+        },
+        &quot;materials&quot;: [
+          {
+            &quot;id&quot;: &quot;air&quot;,
+            &quot;name&quot;: &quot;Air / insulation&quot;,
+            &quot;mu_r&quot;: 1,
+            &quot;color&quot;: &quot;#71829a&quot;
+          },
+          {
+            &quot;id&quot;: &quot;copper&quot;,
+            &quot;name&quot;: &quot;Copper (magnetic model)&quot;,
+            &quot;mu_r&quot;: 1,
+            &quot;color&quot;: &quot;#d9924d&quot;
+          },
+          {
+            &quot;id&quot;: &quot;core&quot;,
+            &quot;name&quot;: &quot;Linear ferrite \u00b7 \u03bcr 2000&quot;,
+            &quot;mu_r&quot;: 2000,
+            &quot;color&quot;: &quot;#637389&quot;
+          }
+        ],
+        &quot;regions&quot;: [],
+        &quot;windings&quot;: [
+          {
+            &quot;id&quot;: &quot;coil&quot;,
+            &quot;name&quot;: &quot;coil&quot;,
+            &quot;turns&quot;: 1,
+            &quot;current&quot;: 1,
+            &quot;window&quot;: {
+              &quot;x0&quot;: 0.4,
+              &quot;x1&quot;: 0.6,
+              &quot;y0&quot;: 0.4,
+              &quot;y1&quot;: 0.6,
+              &quot;z0&quot;: 0.4,
+              &quot;z1&quot;: 0.6
+            }
+          }
+        ]
+      },
+      &quot;observations&quot;: [
+        {
+          &quot;point_m&quot;: [
+            0.5,
+            0.5,
+            0.5
+          ],
+          &quot;incident_cells&quot;: 24,
+          &quot;fem_B_T&quot;: [
+            2.086679128201829e-07,
+            2.0866791320083424e-07,
+            3.826303786789332e-06
+          ],
+          &quot;point_reference_B_T&quot;: [
+            0.0,
+            0.0,
+            4.188798035594791e-06
+          ],
+          &quot;cell_reference_B_T&quot;: [
+            1.9327813900518442e-07,
+            1.9327813900518442e-07,
+            4.188392466174467e-06
+          ],
+          &quot;point_relative_disagreement&quot;: 0.11158942963716209,
+          &quot;cell_relative_disagreement&quot;: 0.08659815886684709,
+          &quot;sampling_relative_difference&quot;: 0.06525424812916934,
+          &quot;cell_quadrature_relative_change&quot;: 0.002392951169233052,
+          &quot;point_error_T&quot;: [
+            2.086679128201829e-07,
+            2.0866791320083424e-07,
+            -3.624942488054587e-07
+          ],
+          &quot;cell_error_T&quot;: [
+            1.5389773814998483e-08,
+            1.5389774195649822e-08,
+            -3.6208867938513445e-07
+          ],
+          &quot;sampling_error_T&quot;: [
+            1.9327813900518442e-07,
+            1.9327813900518442e-07,
+            -4.0556942032422686e-10
+          ]
+        },
+        {
+          &quot;point_m&quot;: [
+            0.53,
+            0.52,
+            0.54
+          ],
+          &quot;incident_cells&quot;: 1,
+          &quot;fem_B_T&quot;: [
+            1.4109628714009363e-07,
+            1.4109628768763222e-07,
+            2.7117070874359338e-06
+          ],
+          &quot;point_reference_B_T&quot;: [
+            1.8571693409854132e-07,
+            1.2003261908197666e-07,
+            4.042057051585103e-06
+          ],
+          &quot;cell_reference_B_T&quot;: [
+            6.557064361601599e-07,
+            2.52667386733394e-07,
+            3.524659602040052e-06
+          ],
+          &quot;point_relative_disagreement&quot;: 0.328861512215616,
+          &quot;cell_relative_disagreement&quot;: 0.23926980747193913,
+          &quot;sampling_relative_difference&quot;: 0.17575273080530382,
+          &quot;cell_quadrature_relative_change&quot;: 0.03746286432366907,
+          &quot;point_error_T&quot;: [
+            -4.462064695844769e-08,
+            2.1063668605655552e-08,
+            -1.3303499641491695e-06
+          ],
+          &quot;cell_error_T&quot;: [
+            -5.146101490200663e-07,
+            -1.1157109904576178e-07,
+            -8.129525146041183e-07
+          ],
+          &quot;sampling_error_T&quot;: [
+            4.699895020616186e-07,
+            1.3263476765141733e-07,
+            -5.173974495450512e-07
+          ]
+        },
+        {
+          &quot;point_m&quot;: [
+            0.47,
+            0.48,
+            0.46
+          ],
+          &quot;incident_cells&quot;: 1,
+          &quot;fem_B_T&quot;: [
+            1.4109628841636365e-07,
+            1.4109628715088274e-07,
+            2.7117070876129382e-06
+          ],
+          &quot;point_reference_B_T&quot;: [
+            1.8571693409854134e-07,
+            1.2003261908197648e-07,
+            4.0420570515850964e-06
+          ],
+          &quot;cell_reference_B_T&quot;: [
+            7.528647074185112e-07,
+            2.753976935017991e-07,
+            3.4902197034824065e-06
+          ],
+          &quot;point_relative_disagreement&quot;: 0.3288615121592544,
+          &quot;cell_relative_disagreement&quot;: 0.24682913956649988,
+          &quot;sampling_relative_difference&quot;: 0.1992103849176749,
+          &quot;cell_quadrature_relative_change&quot;: 0.02351701575250346,
+          &quot;point_error_T&quot;: [
+            -4.46206456821777e-08,
+            2.106366806890626e-08,
+            -1.3303499639721582e-06
+          ],
+          &quot;cell_error_T&quot;: [
+            -6.117684190021476e-07,
+            -1.3430140635091635e-07,
+            -7.785126158694683e-07
+          ],
+          &quot;sampling_error_T&quot;: [
+            5.671477733199698e-07,
+            1.553650744198226e-07,
+            -5.518373481026899e-07
+          ]
+        }
+      ],
+      &quot;stats&quot;: {
+        &quot;mode&quot;: &quot;3d&quot;,
+        &quot;nodes&quot;: 1331,
+        &quot;elements&quot;: 6000,
+        &quot;dofs&quot;: 5401,
+        &quot;peak_B_T&quot;: 4.5060129884804776e-06,
+        &quot;energy_J&quot;: 7.238776215106099e-08,
+        &quot;seconds&quot;: 1.231304071000011,
+        &quot;solver&quot;: {
+          &quot;iterations&quot;: 449,
+          &quot;residual&quot;: 9.675763246868056e-10,
+          &quot;backend&quot;: &quot;PCG / installed SciPy matvec&quot;,
+          &quot;seconds&quot;: 0.9144730479999907,
+          &quot;nonlinear_iterations&quot;: 0,
+          &quot;gauge_residual&quot;: 1.7966289581383417e-09
+        },
+        &quot;energy_consistency&quot;: 6.03349724386487e-14,
+        &quot;reciprocity&quot;: null,
+        &quot;nonlinear&quot;: false,
+        &quot;mesh_quality&quot;: {
+          &quot;smallest_axis_interval_m&quot;: 0.09999999999999998,
+          &quot;largest_cell_axis_aspect_ratio&quot;: 1.000000000000001
+        }
+      }
+    },
+    {
+      &quot;interval_factor&quot;: 4,
+      &quot;elements&quot;: 48000,
+      &quot;nodes&quot;: 9261,
+      &quot;seconds&quot;: 37.366648897999994,
+      &quot;mesh_sha256&quot;: &quot;4a0813e4c99c3d594565b8db73a19b7ca6cdd253fee441dbbd0da695c6f1ac93&quot;,
+      &quot;project&quot;: {
+        &quot;version&quot;: &quot;0.2&quot;,
+        &quot;name&quot;: &quot;Air-core sheet solenoid \u00b7 3D&quot;,
+        &quot;mode&quot;: &quot;3d&quot;,
+        &quot;domain&quot;: {
+          &quot;width&quot;: 1,
+          &quot;height&quot;: 1,
+          &quot;depth&quot;: 1,
+          &quot;nx&quot;: 4,
+          &quot;ny&quot;: 4,
+          &quot;nz&quot;: 4,
+          &quot;budget&quot;: &quot;extended&quot;
+        },
+        &quot;materials&quot;: [
+          {
+            &quot;id&quot;: &quot;air&quot;,
+            &quot;name&quot;: &quot;Air / insulation&quot;,
+            &quot;mu_r&quot;: 1,
+            &quot;color&quot;: &quot;#71829a&quot;
+          },
+          {
+            &quot;id&quot;: &quot;copper&quot;,
+            &quot;name&quot;: &quot;Copper (magnetic model)&quot;,
+            &quot;mu_r&quot;: 1,
+            &quot;color&quot;: &quot;#d9924d&quot;
+          },
+          {
+            &quot;id&quot;: &quot;core&quot;,
+            &quot;name&quot;: &quot;Linear ferrite \u00b7 \u03bcr 2000&quot;,
+            &quot;mu_r&quot;: 2000,
+            &quot;color&quot;: &quot;#637389&quot;
+          }
+        ],
+        &quot;regions&quot;: [],
+        &quot;windings&quot;: [
+          {
+            &quot;id&quot;: &quot;coil&quot;,
+            &quot;name&quot;: &quot;coil&quot;,
+            &quot;turns&quot;: 1,
+            &quot;current&quot;: 1,
+            &quot;window&quot;: {
+              &quot;x0&quot;: 0.4,
+              &quot;x1&quot;: 0.6,
+              &quot;y0&quot;: 0.4,
+              &quot;y1&quot;: 0.6,
+              &quot;z0&quot;: 0.4,
+              &quot;z1&quot;: 0.6
+            }
+          }
+        ]
+      },
+      &quot;observations&quot;: [
+        {
+          &quot;point_m&quot;: [
+            0.5,
+            0.5,
+            0.5
+          ],
+          &quot;incident_cells&quot;: 24,
+          &quot;fem_B_T&quot;: [
+            5.098407507783991e-08,
+            5.098407479136867e-08,
+            4.075301276832759e-06
+          ],
+          &quot;point_reference_B_T&quot;: [
+            0.0,
+            0.0,
+            4.188798035594791e-06
+          ],
+          &quot;cell_reference_B_T&quot;: [
+            4.680480330381519e-08,
+            4.680480330381519e-08,
+            4.1888219349951915e-06
+          ],
+          &quot;point_relative_disagreement&quot;: 0.032100587962132755,
+          &quot;cell_relative_disagreement&quot;: 0.02713771666050029,
+          &quot;sampling_relative_difference&quot;: 0.01580214452178572,
+          &quot;cell_quadrature_relative_change&quot;: 0.0005026605724023472,
+          &quot;point_error_T&quot;: [
+            5.098407507783991e-08,
+            5.098407479136867e-08,
+            -1.1349675876203165e-07
+          ],
+          &quot;cell_error_T&quot;: [
+            4.17927177402472e-09,
+            4.179271487553479e-09,
+            -1.1352065816243215e-07
+          ],
+          &quot;sampling_error_T&quot;: [
+            4.680480330381519e-08,
+            4.680480330381519e-08,
+            2.3899400400499455e-11
+          ]
+        },
+        {
+          &quot;point_m&quot;: [
+            0.53,
+            0.52,
+            0.54
+          ],
+          &quot;incident_cells&quot;: 1,
+          &quot;fem_B_T&quot;: [
+            4.100243078446429e-08,
+            4.1002430582163234e-08,
+            3.82812696124811e-06
+          ],
+          &quot;point_reference_B_T&quot;: [
+            1.8571693409854132e-07,
+            1.2003261908197666e-07,
+            4.042057051585103e-06
+          ],
+          &quot;cell_reference_B_T&quot;: [
+            1.4753527405757039e-07,
+            7.10141826323238e-08,
+            4.0376855792719855e-06
+          ],
+          &quot;point_relative_disagreement&quot;: 0.06672269946500725,
+          &quot;cell_relative_disagreement&quot;: 0.05854375985262831,
+          &quot;sampling_relative_difference&quot;: 0.015386889739310787,
+          &quot;cell_quadrature_relative_change&quot;: 0.0068157995422734674,
+          &quot;point_error_T&quot;: [
+            -1.4471450331407702e-07,
+            -7.903018849981342e-08,
+            -2.139300903369932e-07
+          ],
+          &quot;cell_error_T&quot;: [
+            -1.065328432731061e-07,
+            -3.001175205016056e-08,
+            -2.0955861802387542e-07
+          ],
+          &quot;sampling_error_T&quot;: [
+            -3.818166004097093e-08,
+            -4.901843644965287e-08,
+            -4.371472313117771e-09
+          ]
+        },
+        {
+          &quot;point_m&quot;: [
+            0.47,
+            0.48,
+            0.46
+          ],
+          &quot;incident_cells&quot;: 1,
+          &quot;fem_B_T&quot;: [
+            4.1002430920510955e-08,
+            4.100243023204405e-08,
+            3.82812696162468e-06
+          ],
+          &quot;point_reference_B_T&quot;: [
+            1.8571693409854134e-07,
+            1.2003261908197648e-07,
+            4.0420570515850964e-06
+          ],
+          &quot;cell_reference_B_T&quot;: [
+            1.6100830086885353e-07,
+            7.814883927154896e-08,
+            4.034361620715038e-06
+          ],
+          &quot;point_relative_disagreement&quot;: 0.06672269939862778,
+          &quot;cell_relative_disagreement&quot;: 0.059653378536434265,
+          &quot;sampling_relative_difference&quot;: 0.0121622463413627,
+          &quot;cell_quadrature_relative_change&quot;: 0.005036126311744236,
+          &quot;point_error_T&quot;: [
+            -1.447145031780304e-07,
+            -7.903018884993243e-08,
+            -2.1393008996041674e-07
+          ],
+          &quot;cell_error_T&quot;: [
+            -1.2000586994834258e-07,
+            -3.714640903950491e-08,
+            -2.0623465909035838e-07
+          ],
+          &quot;sampling_error_T&quot;: [
+            -2.4708633229687812e-08,
+            -4.188377981042752e-08,
+            -7.695430870058362e-09
+          ]
+        }
+      ],
+      &quot;stats&quot;: {
+        &quot;mode&quot;: &quot;3d&quot;,
+        &quot;nodes&quot;: 9261,
+        &quot;elements&quot;: 48000,
+        &quot;dofs&quot;: 45601,
+        &quot;peak_B_T&quot;: 4.991354404152575e-06,
+        &quot;energy_J&quot;: 7.929588328711035e-08,
+        &quot;seconds&quot;: 33.93450408699999,
+        &quot;solver&quot;: {
+          &quot;iterations&quot;: 1181,
+          &quot;residual&quot;: 9.965551015073462e-10,
+          &quot;backend&quot;: &quot;PCG / installed SciPy matvec&quot;,
+          &quot;seconds&quot;: 30.854603854999993,
+          &quot;nonlinear_iterations&quot;: 0,
+          &quot;gauge_residual&quot;: 2.5587461358025942e-09
+        },
+        &quot;energy_consistency&quot;: 1.8359564428106627e-15,
+        &quot;reciprocity&quot;: null,
+        &quot;nonlinear&quot;: false,
+        &quot;mesh_quality&quot;: {
+          &quot;smallest_axis_interval_m&quot;: 0.04999999999999993,
+          &quot;largest_cell_axis_aspect_ratio&quot;: 1.0000000000000022
+        }
+      }
+    }
+  ],
+  &quot;limits&quot;: &quot;Free-space versus closed-box fields; cell residual includes boundary, FE/source representation and quadrature. No certified bound, finite copper, core, AC, Maxwell/hardware or new runtime qualification.&quot;
+}
+</pre>
