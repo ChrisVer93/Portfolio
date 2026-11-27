@@ -1,3 +1,7 @@
+# S007
+
+[Native higher-order pilot](Task_S007_Native_Order_Report.html): bounded actual native space selection, original defaults, transactional guards, matched-mesh physical comparisons, field-sampling limits, every changed executable line and actual evidence.
+
 # S006
 
 [Cell and point field verification](Task_S006_Cell_Field_Verification_Report.html): independent reference decomposition, actual nested-mesh improvement, unresolved accuracy, exhaustive source and real logs.

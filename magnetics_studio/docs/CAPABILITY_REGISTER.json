@@ -1,7 +1,7 @@
 {
   "reference_release": "Maxwell 2026 R1",
   "scope": "stationary magnetics; motion deferred",
-  "implementation_release": "0.9.35",
+  "implementation_release": "0.9.36",
   "inventory_complete": false,
   "note": "Initial register; full release-specific combination audit is still pending. No feature is declared Maxwell-equivalent without reference evidence.",
   "features": [
@@ -304,6 +304,11 @@
       "id": "s006_point_cell_field_decomposition",
       "status": "accuracy_unqualified",
       "evidence_or_next": "Actual48000tet refinement reduces centre/offaxis point discrepancies to3.210%/6.672%; cell residual2.712%/5.89%, sampling norm1.606%/1.35%, empirical cubaturechange<=0.043924%. No runtime change; expanded-domain/native higher-order comparison pending."
+    },
+    {
+      "id": "native_hcurl_order_3d",
+      "status": "implemented_internally_verified",
+      "evidence_or_next": "S007: bounded NGSolve HCurl0/2/3; higher order single-pass only; pure transactional preflight, actual native field/matrix/DOM/CLI comparisons, unchanged default2D3D results. Saved viewer/exports remain centroid samples. Nine illustrative cases, no accuracy bound, higher-order adaptation/continuous export or commercial/hardware qualification. See NATIVE_HIGHER_ORDER.md and S007 report. Final45module259pass21skip audit; real native tests and frozen Windows order3 pass after explicit OCCT DLL/metadata relocation. Pages passes on retry. Final clean-Windows/physical qualification pending."
     }
   ],
   "requirements_revision": "2026-11-22 user authorises development executable and GitHub preview now; final clean-Windows release/physical qualification requirements remain",
