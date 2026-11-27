@@ -16,9 +16,10 @@ def main():  #: Keep CLI execution separate from imports and testing.
     parser.add_argument('--output', default='native_fields.html')  #: Provide a read-only offline solved-field artifact.
     parser.add_argument('--json', default='native_result.json')  #: Preserve the exact mesh, fields and solve evidence.
     parser.add_argument('--no-matrix', action='store_true')  #: Allow a faster operating-point-only solve.
+    parser.add_argument('--hcurl-order',type=int,choices=[0,2,3],default=0)  #: Expose explicitly qualified native spatial order parameters while preserving the original default.
     args = parser.parse_args()  #: Apply the declared source-form CLI contract.
     project = json.loads(pathlib.Path(args.project).read_text(encoding='utf-8-sig'))  #: Preserve the normal model schema and UTF-8 BOM support.
-    result = run_backend('ngsolve', {'project': project, 'options': {'maxh_m': args.maxh_mm/1000, 'max_passes': args.passes}, 'matrix': not args.no_matrix}, print)  #: Run the same native physical path exposed by the GUI.
+    result = run_backend('ngsolve', {'project': project, 'options': {'maxh_m': args.maxh_mm/1000, 'max_passes': args.passes, 'hcurl_order': args.hcurl_order}, 'matrix': not args.no_matrix}, print)  #: Run the same native physical path exposed by the GUI.
     write_report(result, args.output)  #: Generate a real offline field viewer from solved native data.
     pathlib.Path(args.json).write_text(json.dumps(result, allow_nan=False), encoding='utf-8')  #: Save complete reproducible result JSON.
     print(json.dumps(result['stats'], indent=2))  #: Show actual numerical evidence after successful export.

@@ -1,0 +1,27 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert'); // #: Load source reading, isolated script execution and assertions for actual browser-interface integration.
+const {JSDOM}=require('jsdom'); // #: Use a real DOM implementation as an authoring/test dependency, not an application runtime dependency.
+const {createCanvas}=require('@napi-rs/canvas'); // #: Provide a working raster canvas for the existing CAD and volume renderers.
+const base=require('path').resolve(__dirname,'..'); // #: Resolve the delivered source root from this stable test file.
+const child=require('child_process').spawn(process.env.MAGNETICS_TEST_PYTHON||'python',[base+'/studio.py','--no-open','--port','8877'],{cwd:base,stdio:'ignore'}); // #: Start the real source server in the caller-selected qualified Python environment on a dedicated test port.
+const stop=()=>child.kill('SIGTERM'); // #: Define explicit cleanup for the actual test server process.
+const dom=new JSDOM(fs.readFileSync(base+'/web/index.html','utf8'),{url:'http://127.0.0.1:8877/',runScripts:'outside-only',pretendToBeVisual:true}); // #: Load the actual delivered HTML into a DOM with the same local origin and manual script execution.
+const w=dom.window,ctx=dom.getInternalVMContext(),canvases=new WeakMap(),downloads=[]; // #: Retain the DOM execution context, canvas instances and actual download assertions.
+w.fetch=(url,opts)=>fetch('http://127.0.0.1:8877'+url,{...opts,signal:AbortSignal.timeout(15000)});w.Blob=Blob;w.URL=URL;w.ResizeObserver=class{observe(){}disconnect(){}};w.requestAnimationFrame=()=>0;w.devicePixelRatio=1; // #: Connect to the real local HTTP server with bounded fetches and provide required browser APIs.
+w.HTMLElement.prototype.getBoundingClientRect=function(){return {left:0,top:0,width:1000,height:650,right:1000,bottom:650}}; // #: Provide stable layout dimensions for headless canvas drawing.
+w.HTMLCanvasElement.prototype.getContext=function(){if(!canvases.has(this))canvases.set(this,createCanvas(1000,650));return canvases.get(this).getContext('2d')}; // #: Allocate real headless canvas contexts for the actual application renderers.
+w.HTMLCanvasElement.prototype.setPointerCapture=function(){};w.HTMLCanvasElement.prototype.toBlob=function(fn){fn(new Blob([canvases.get(this).toBuffer('image/png')]))}; // #: Supply pointer-capture/export APIs needed by the source canvas interface.
+w.HTMLAnchorElement.prototype.click=function(){downloads.push(this.download)}; // #: Record requested downloads without navigating a native browser.
+async function ready(){for(let i=0;i<100;i++){try{await fetch('http://127.0.0.1:8877/api/session',{signal:AbortSignal.timeout(500)});return}catch{}await new Promise(r=>setTimeout(r,50))}throw Error('Server startup failed')} // #: Wait for actual HTTP startup with bounded requests before executing application code.
+(async()=>{await ready(); // #: Begin the test only after the real server answers.
+for(const file of ['cad-view.js','field-view.js','digitiser.js','builder.js','workflow-ui.js','app.js','adaptive-ui.js','ac-ui.js','native-ui.js'])vm.runInContext(fs.readFileSync(base+'/web/'+file,'utf8'),ctx,{filename:file}); // #: Execute every actual application script in browser order, including all additive backend interfaces.
+const run=s=>vm.runInContext(s,ctx),wait=async predicate=>{for(let i=0;i<1200;i++){if(predicate())return;await new Promise(r=>setTimeout(r,50))}throw Error('UI wait timed out')}; // #: Expose isolated application-state inspection and a bounded asynchronous wait helper.
+(async()=>{ // #: Begin the actual interactive test sequence.
+ await wait(()=>run('S.p!==null && nativePackages!==null'));console.log('booted');run('resize()'); // #: Wait for real model/session/package discovery and initialise the original renderers.
+ await run("(async()=>applyProject(await api('/api/example/air_coil_3d')))()");run("S.tab='setup';renderLeft()"); // #: Open the original spatial project through real HTTP and render native Analysis controls.
+ const order=w.document.querySelector('[data-edit="nativeOrder"]');assert(order);order.value='3';order.onchange();assert.strictEqual(run('S.p.native_settings.hcurl_order'),3); // #: Deliver the actual native-order selection event and verify project persistence.
+ w.document.querySelector('[data-edit="nativeSize"]').value='40';w.document.querySelector('[data-edit="nativePasses"]').value='1';w.document.getElementById('matrixOption').checked=false;await w.document.getElementById('nativeRun').onclick(); // #: Submit a genuine bounded higher-order native field through original controls and worker isolation.
+ assert.strictEqual(run('S.result.stats.native_hcurl_order'),3);assert(run('S.result.stats.energy_J>0'));assert(run('S.result.warnings.some(s=>s.includes("centroid"))')); // #: Require actual higher-order solve metadata, nonzero magnetic energy and visible sampling limits.
+ console.log('PASS: actual DOM/native HTTP order3 selection, saved controls, higher-order field and centroid-sampling disclosure; synthetic layout, no OS-dialog qualification.'); // #: Report only genuinely executed interface/numerical scope.
+ dom.window.close();stop(); // #: Close the actual DOM and server after successful qualification.
+})().catch(e=>{console.error(e);dom.window.close();stop();process.exitCode=1}); // #: Preserve actual assertion/HTTP/native failures and clean up the running server.
+})().catch(e=>{console.error(e);stop();process.exitCode=1}); // #: Preserve startup failures without leaked child processes.

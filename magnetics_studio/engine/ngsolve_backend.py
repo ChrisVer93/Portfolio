@@ -6,6 +6,15 @@ from .project import validate, number  #: Preserve the current project boundary 
 from .materials import MU0  #: Use the same SI permeability convention as the reference backend.
 
 
+def check_native_order(project, options=None):  #: Validate the bounded spatial-order pilot without importing compiled FEM in the server process.
+    o=dict(options or project.get('native_settings',{}));order=o.get('hcurl_order',0)  #: Preserve explicit caller settings and the original saved-project fallback/default.
+    if type(order) is not int or order not in (0,2,3) or (project['mode']=='2d' and order!=0):raise ValueError('HCurl order must be0,2or3 in3D; use0 for unchanged2D')  #: Reject ambiguous types, the duplicate order1 no-gradient space and unsupported planar changes.
+    passes=number(o.get('max_passes',1),'Native passes',1,4)  #: Keep the original finite numeric pass guard in lightweight preflight.
+    if int(passes)!=passes:raise ValueError('Native passes must be an integer')  #: Reject fractional work requests before accepting a job.
+    if order and passes!=1:raise ValueError('Higher HCurl orders currently require exactly one mesh pass')  #: Exclude unqualified higher-order recovery-driven adaptation explicitly.
+    return order  #: Return the exact selected native polynomial-order parameter.
+
+
 def solve_native(project, options=None, matrix=True, progress=None):  #: Solve a validated ordinary project using the optional external backend.
     import ngsolve as ng  #: Load native FEM only inside the isolated worker process.
     from netgen.occ import Box, Pnt, WorkPlane, Glue, OCCGeometry  #: Reuse OpenCASCADE geometry and Netgen meshing.
@@ -21,6 +30,7 @@ def solve_native(project, options=None, matrix=True, progress=None):  #: Solve a
         raise ValueError('Native pilot supports at most 60 regions; use winding blocks or the reference backend')  #: Explain the current modelling capacity limit.
     o = dict(options or p.get('native_settings', {}))  #: Keep caller settings separate from the saved source project.
     dim = 2 if p['mode'] == '2d' else 3  #: Select scalar planar or vector spatial FEM explicitly.
+    order=check_native_order(p,o)  #: Share the exact pure server preflight contract with direct worker/CLI execution.
     d = p['domain']  #: Use SI geometry already validated by the existing project boundary.
     sizes = [d[k] for k in ['width', 'height', 'depth'][:dim]]  #: Keep true 3D depth distinct from planar model depth.
     h = number(o.get('maxh_m', max(sizes) / 8), 'Native maximum element size', min(sizes) / 10000, max(sizes))  #: Bound the requested Netgen size in metres.
@@ -90,7 +100,7 @@ def solve_native(project, options=None, matrix=True, progress=None):  #: Solve a
     for step in range(int(passes)):  #: Solve and estimate on each accepted native mesh.
         if mesh.ne > budget:  #: Check actual mesh capacity before assembling native matrices.
             raise ValueError('Native mesh exceeds element budget; increase maximum element size')  #: Preserve previous application results on failed jobs.
-        space = ng.H1(mesh, order=1, dirichlet='outer') if dim == 2 else ng.HCurl(mesh, order=0, dirichlet='outer', nograds=True)  #: Use scalar nodal or vector edge FEM with explicit exterior trace conditions.
+        space = ng.H1(mesh, order=1, dirichlet='outer') if dim == 2 else ng.HCurl(mesh, order=order, dirichlet='outer', nograds=True)  #: Use scalar nodal or vector edge FEM with explicit exterior trace conditions.
         if space.ndof > 45000:  #: Bound sparse factorisation size in the pilot.
             raise ValueError('Native finite-element space exceeds 45000 DOFs')  #: Avoid an uncontrolled direct-solver memory request.
         u, v = space.TnT()  #: Use the external engine's trial/test spaces and assembly.
@@ -170,6 +180,9 @@ def solve_native(project, options=None, matrix=True, progress=None):  #: Solve a
             bs.append(bv); hs.append(hv)  #: Keep B/H arrays aligned with the exported element order.
             measures.append(float(cell_measures[el.nr])*depth)  #: Export actual cell volume or planar area-times-depth.
         result = {'project': p, 'mesh': {'dimension': dim, 'nodes': nodes, 'elements': elements, 'tags': tags, 'grids': [[size*i/18 for i in range(19)] for size in sizes], 'quality': {'generator': 'Netgen', 'requested_maxh_m': h, 'largest_cell_axis_aspect_ratio': None}}, 'fields': {'B': bs, 'H': hs, 'measures': measures, 'energy_J': energy}, 'stats': {'mode': p['mode'], 'nodes': len(nodes), 'elements': len(elements), 'dofs': sum(space.FreeDofs()), 'peak_B_T': max((math.sqrt(sum(x*x for x in v)) for v in bs), default=0), 'energy_J': energy, 'seconds': time.perf_counter()-started, 'solver': {'backend': 'Netgen/NGSolve 6.2.2608', 'residual': relative, 'gauge_energy_fraction': gauge_energy/max(energy, 1e-30)}, 'nonlinear': False, 'energy_consistency': balance, 'reciprocity': None}, 'windings': [{'id': w['id'], 'name': w['name'], 'turns': w['turns'], 'current_A': w['current'], 'linkage_Wb_turn': link} for w, link in zip(p['windings'], links)], 'regions': [], 'warnings': ['Limited linear magnetostatic backend; no external FEMM/Maxwell validation.', 'Finite outer boundary: Az=0 in 2D; tangential A=0 in 3D. Check air-domain sensitivity.', '3D winding sources are ideal sheets, not finite solved copper.', 'Recovery indicators are uncalibrated; corner peaks and matrix accuracy require independent refinement studies.']}  #: Preserve compatibility with current field/CAD views while making physical limits explicit.
+        result['stats']['native_hcurl_order']=order if dim==3 else None  #: Bind solved space metadata to the actual native polynomial-order parameter, separately from the planar H1 order.
+        if order:result['fields']['representation']='native_higher_order_B_sampled_at_element_centroids'  #: Make the sampled export representation machine-readable instead of implying a continuous high-order field reconstruction.
+        if order:result['warnings'].append('Higher-order native B varies inside cells. Viewer, region/peak summaries and ordinary field exports retain centroid samples; direct probes and energy use the actual higher-order field. Single pass only; no certified accuracy or higher-order adaptation.')  #: Prevent the original piecewise-constant display/export representation from being mistaken for a continuous high-order reconstruction.
         edge_ratios = []  #: Measure actual simplex shape quality rather than treating requested size as achieved quality.
         for cell in elements:  #: Inspect all actual unstructured cell edges.
             lengths = [math.dist(nodes[cell[i]], nodes[cell[j]]) for i in range(len(cell)) for j in range(i) ]  #: Compute physical edge lengths directly from native connectivity.

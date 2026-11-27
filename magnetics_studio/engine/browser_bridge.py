@@ -43,7 +43,7 @@ def run(request,progress=None):  #: Perform genuine numerical work inside the ca
 
 def rpc(path,data=None):  #: Share original metadata/validation/import adapters without a Python HTTP server.
     data=data or {}  #: Keep read-only metadata calls independent of a request body.
-    if path=='/api/session':return dict(token='browser-local',version='0.9.35',examples=[p.stem for p in sorted((ROOT/'examples').glob('*.json')) if p.name!='transformer_design_request.json'])  #: Preserve original menu contents and explicit browser build identity.
+    if path=='/api/session':return dict(token='browser-local',version='0.9.36',examples=[p.stem for p in sorted((ROOT/'examples').glob('*.json')) if p.name!='transformer_design_request.json'])  #: Preserve original menu contents and explicit browser build identity.
     if path=='/api/backends':return dict(design_transformer=False,ngsolve=False,openmagnetics=False,geometry_cad=False,packages={},geometry_cad_packages={},runtime='Pyodide reference preview')  #: Make unavailable compiled native dependencies explicit to existing controls.
     if path.startswith('/api/example/') or path=='/api/designer/example':  #: Return the exact original source examples through the virtual filesystem.
         name=path.rsplit('/',1)[-1] if path!='/api/designer/example' else 'transformer_design_request';allowed={p.stem:p for p in (ROOT/'examples').glob('*.json')}  #: Bind reads to known example names, preventing traversal.
