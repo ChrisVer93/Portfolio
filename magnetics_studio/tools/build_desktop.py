@@ -1,4 +1,5 @@
 """Build a Windows one-folder development preview with installed native dependencies."""
+import csv  #: Write frozen distribution file records with paths relative to the actual bundle root.
 import argparse  #: Keep the exact output and build platform explicit.
 import importlib.metadata as metadata  #: Inventory actual distributions and preserve upstream licence files.
 import json  #: Record exact packaged source and dependency provenance.
@@ -7,6 +8,16 @@ import shutil  #: Copy exact runtime notices and deterministic source snapshots.
 import subprocess  #: Invoke PyInstaller through the selected build interpreter.
 import sys  #: Require a real Windows host and preserve its actual Python interpreter.
 ROOT=Path(__file__).resolve().parents[1]  #: Bind the build to this exact delivered checkout.
+
+
+def stage_netgen_occt(distribution, staging):  #: Preserve Netgen's metadata-driven DLL lookup within the frozen bundle instead of original installation-prefix paths.
+    members=list(distribution.files or []);dlls=[Path(distribution.locate_file(m)) for m in members if str(m).lower().endswith('.dll')]  #: Resolve exact declared installed Windows OCCT binaries without importing native libraries.
+    if not dlls or not any(p.name.lower()=='tkernel.dll' for p in dlls) or any(not p.is_file() for p in dlls):raise ValueError('Installed netgen-occt DLL inventory is incomplete')  #: Fail the build before generating an unusable frozen native backend.
+    source=next((Path(distribution.locate_file(m)).parent for m in members if str(m).endswith('.dist-info/METADATA')),None)  #: Locate the owning original metadata directory from declared wheel records.
+    if source is None:raise ValueError('Missing netgen-occt distribution metadata')  #: Require original version, licence and distribution identity.
+    target=staging/source.name;shutil.copytree(source,target,dirs_exist_ok=True)  #: Preserve original distribution metadata while relocating only its installed-file lookup record.
+    with (target/'RECORD').open('w',newline='',encoding='utf-8') as stream:csv.writer(stream).writerows(('netgen_occt_libs/'+p.name,'',p.stat().st_size) for p in dlls)  #: Bind upstream metadata.files lookup to actual packaged DLL paths without inventing hashes of relocated bytes.
+    return ['--add-data',str(target)+';'+target.name]+[v for p in dlls for v in ['--add-binary',str(p)+';netgen_occt_libs']]  #: Package exact OCCT binaries separately from OCP's libraries and install the matching metadata record.
 
 
 def main():  #: Produce a complete one-folder Windows preview rather than cross-label a Linux executable.
@@ -20,7 +31,7 @@ def main():  #: Produce a complete one-folder Windows preview rather than cross-
     command.extend(['--hidden-import','PyOpenMagnetics'])  #: Include the pinned extension module even though it is imported only by a native worker action.
     for distribution in metadata.distributions():  #: Inventory and preserve notices for the actual installed transitive environment, not guessed direct dependencies.
         name=distribution.metadata['Name'];record=dict(name=name,version=distribution.version,license=distribution.metadata.get('License-Expression') or distribution.metadata.get('License'),source=distribution.metadata.get('Home-page'),notices=[])  #: Retain actual upstream metadata and source attribution.
-        command.extend(['--copy-metadata',name])  #: Keep version guards and original dist-info licence data available inside frozen workers.
+        command.extend(stage_netgen_occt(distribution,ROOT/'build/frozen_metadata') if name.lower().replace('_','-')=='netgen-occt' else ['--copy-metadata',name])  #: Relocate Netgen OCCT lookup metadata and binaries while retaining original metadata handling for every other distribution.
         for member in distribution.files or []:  #: Inspect declared installed wheel members without importing native code.
             path=Path(distribution.locate_file(member));relative=str(member).replace('\\','/')  #: Resolve actual native/notice bytes from this Windows build environment.
             if path.is_file() and any(word in path.name.lower() for word in ['license','licence','copyright','notice']):  #: Preserve original legal notice contents rather than paraphrase them.
